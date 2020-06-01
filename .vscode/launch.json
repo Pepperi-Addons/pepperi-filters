@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run ts-mocha File",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/ts-mocha",
+            "runtimeArgs": [
+                "test/**.spec.ts"
+            ],
+            "protocol": "inspector"
+        }
+
+    ]
+}
