@@ -99,10 +99,10 @@ console.log(after);
 ```
 #### Output
 ``` JSON
-{
+[{
     "TSAString": "Hi",
     "TSADouble": 123.4
-}
+}]
 ```
 
 ## sqlWhereClause
