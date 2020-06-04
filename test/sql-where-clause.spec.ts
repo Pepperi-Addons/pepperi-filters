@@ -34,7 +34,7 @@ describe('One level - Guid', () => {
         },
         {
             title: 'IS NULL',
-            where: "UUID IS NULL OR UUID = '00000000-0000-0000-0000-00000000000'",
+            where: "UUID IS NULL OR UUID = '00000000-0000-0000-0000-000000000000'",
             filter: {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
@@ -44,7 +44,7 @@ describe('One level - Guid', () => {
         },
         {
             title: 'IS NOT NULL',
-            where: "UUID IS NOT NULL AND UUID != '00000000-0000-0000-0000-00000000000'",
+            where: "UUID IS NOT NULL AND UUID != '00000000-0000-0000-0000-000000000000'",
             filter: {
                 ApiName: 'UUID',
                 FieldType: 'Guid',

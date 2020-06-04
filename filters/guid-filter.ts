@@ -1,6 +1,6 @@
 import Filter from "./filter";
 import { BasicOperations } from "../json-filter";
-const emptyGuid = '00000000-0000-0000-0000-00000000000';
+const emptyGuid = '00000000-0000-0000-0000-000000000000';
 
 export class GuidFilter extends Filter {
     
@@ -9,19 +9,20 @@ export class GuidFilter extends Filter {
     }
     
     apply(value: any): boolean {
-        const val = (value as string || emptyGuid).toLowerCase().replace(/-/g, '');
-        const filterVal = (this.filterValue || emptyGuid).toLowerCase().replace(/-/g, '');
-
         switch (this.operation) {
             case 'IsEmpty':
-                return val === emptyGuid;
+                return this.standardize(value) === this.standardize(emptyGuid);
             case 'IsNotEmpty':
-                return val !== emptyGuid;
+                return this.standardize(value) !== this.standardize(emptyGuid);
             case 'IsEqual':
-                return val === filterVal;
+                return this.standardize(value) === this.standardize(this.filterValue);
             case 'IsNotEqual':
-                return val !== filterVal;
+                return this.standardize(value) !== this.standardize(this.filterValue);
         }
+    }
+
+    standardize(guid: any) {
+        return (((typeof guid === 'string') && guid) ? guid : emptyGuid).toLowerCase().replace(/-/g, '')
     }
 
     toSQLWhereClause(): string {

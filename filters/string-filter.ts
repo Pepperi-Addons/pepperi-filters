@@ -13,22 +13,24 @@ export class StringFilter extends Filter {
     }
 
     apply(value: any): boolean {
-        let stringVal = value ? value.toString() : '';
+        // anything that isn't a string is considered to be an empty value
+        let stringVal = typeof value === 'string' ? value : '';
+        
         switch (this.operation) {
             case 'IsEmpty':
-                return value ? false : true;
+                return stringVal === '';
             case 'IsNotEmpty':
-                return value ? true : false;
+                return stringVal !== '';
             case 'IsEqual':
                 return this.compare(stringVal);
             case 'IsNotEqual':
                 return !this.compare(stringVal);
             case 'Contains': 
-                return this.filterValues[0].toLocaleLowerCase().includes(stringVal.toLocaleLowerCase());
+                return stringVal.toLocaleLowerCase().includes(this.filterValues[0].toLocaleLowerCase());
             case 'StartWith':
-                return this.filterValues[0].toLocaleLowerCase().startsWith(stringVal.toLocaleLowerCase());
+                return stringVal.toLocaleLowerCase().startsWith(this.filterValues[0].toLocaleLowerCase());
             case 'EndWith':
-                return this.filterValues[0].toLocaleLowerCase().endsWith(stringVal.toLocaleLowerCase());
+                return stringVal.toLocaleLowerCase().endsWith(this.filterValues[0].toLocaleLowerCase());
             case 'IsLoggedInUser':
                 throw new Error('IsLoggedInUser isn\'t a supported filter');
         }
@@ -56,6 +58,10 @@ export class StringFilter extends Filter {
     }
 
     private compare(value: string): boolean {
+        if (typeof value !== 'string') {
+            return false;
+        }
+
         const first = this.filterValues.find(str => { 
             return str.localeCompare(value, undefined, { 
                 sensitivity: this.caseSensitive ? 'case' : 'base' 
@@ -63,5 +69,4 @@ export class StringFilter extends Filter {
         });
         return first != undefined;
     }
-
 }

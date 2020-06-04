@@ -10,9 +10,9 @@ export class DateFilter extends Filter {
     apply(value: any): boolean {
         switch (this.operation) {
             case 'IsEmpty':
-                return value == undefined;
+                return value === '' || value == undefined;
             case 'IsNotEmpty':
-                return value != undefined;
+                return value !== '' && value != undefined;
             case '=':
                 return new Date(value).getTime() == new Date(this.filterValues[0]).getTime();
             case '!=':

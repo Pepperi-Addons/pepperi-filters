@@ -6,6 +6,7 @@ import { StringFilter } from "./string-filter";
 import { NumberFilter } from "./number-filter";
 import { GuidFilter } from "./guid-filter";
 import { DateFilter } from "./date-filter";
+import { str2Bool } from "../converters"
 
 export class FilterFactory {
     createFilter(jsonFilter: JSONFilter): Filter {
@@ -25,7 +26,7 @@ export class FilterFactory {
             switch ((jsonFilter as JSONBaseFilter).FieldType) {
                 case 'JsonBool':
                 case 'Bool': {
-                    return new BooleanFilter(apiName, this.str2bool(values[0]));
+                    return new BooleanFilter(apiName, str2Bool(values[0]));
                 }
 
                 case 'String':
@@ -51,9 +52,5 @@ export class FilterFactory {
                 }
             }
         }
-    }
-
-    private str2bool(str: string | undefined): boolean {
-        return (str || '').toLocaleLowerCase().startsWith('t');
     }
 }

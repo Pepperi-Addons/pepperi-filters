@@ -1,4 +1,5 @@
 import Filter from "./filter";
+import { str2Bool } from "../converters";
 
 export class BooleanFilter extends Filter {
     
@@ -7,10 +8,20 @@ export class BooleanFilter extends Filter {
     }
     
     apply(value: any): boolean {
-        return value == this.filterValue;
+        let boolVal: boolean
+        
+        // for strings we go with the CPI definition of bool
+        if (typeof value === 'string') {
+            boolVal = str2Bool(value);
+        }
+        else { // for the rest of the types we will go with JS definition of truely values
+            boolVal = Boolean(value)
+        }
+
+        return boolVal === this.filterValue;
     }
     toSQLWhereClause(): string {
-        return `${this.apiName} = ${this.filterValue ? 'true' : 'false'}`;
+        return `${this.apiName} = ${this.filterValue ? '1' : '0'}`;
     }
 
 }
