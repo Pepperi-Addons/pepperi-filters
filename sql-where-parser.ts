@@ -222,20 +222,12 @@ export class SQLWhereParser {
         let res: DateOperation | undefined = undefined;
 
         switch (operator) {
-            case '=': {
-                res = 'On';
-                break;
-            }
-
+            case '=': 
             case '<=':
-            case '<': {
-                res = 'Before';
-                break;
-            }
-
+            case '<': 
             case '>=':
             case '>': {
-                res = 'After';
+                res = operator;
                 break;
             }
 

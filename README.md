@@ -8,22 +8,56 @@ Install by running
 npm install @pepperi-addons/pepperi-filters
 ```
 
-## SQLWhereParser
+## concat
+Convert 2 JSONFilters into 1.
+
+#### Usage
+``` Typescript
+import { concat } from '@pepperi-addons/pepperi-filters'
+
+const filter = concat({
+    FieldType: 'String',
+    ApiName: 'TSAString',
+    Operation: 'Contains'
+    Values: ['hi']
+}, {
+    FieldType: 'Double',
+    ApiName: 'TSADouble',
+    Operation: '='
+    Values: ['123.98']
+}, true);
+console.log(JSON.stringify(filter, null, 4)); 
+```
+#### Output
+``` JSON
+{
+    "Operation": "AND",
+    "LeftNode": {
+        "FieldType": "String",
+        "ApiName": "TSAString",
+        "Operation": "Contains",
+        "Values": [ "hi" ]
+    },
+    "RightNode": {
+        "FieldType": "Double",
+        "ApiName": "TSADouble",
+        "Operation": "=",
+        "Values": ["123.98"]
+    }
+}
+```
+
+## parse
 Convert an SQL clause into a JSON filter.
 
 #### Usage
 ``` Typescript
-import { SQLWhereParser } from '@pepperi-addons/pepperi-filters'
+import { parse } from '@pepperi-addons/pepperi-filters'
 
-const parser = new SQLWhereParser([
-    {
-        FieldType: 'String',
-        FieldName: 'TSAString'
-    }
-]);
-const filter = parser.parse("TSAString LIKE '%Hello%'");
+const filter = parse("TSAString LIKE '%Hello%'", new Map([
+    ['TSAString', 'String']
+]));
 console.log(filter); 
-}
 ```
 #### Output
 ``` JSON
@@ -37,7 +71,66 @@ console.log(filter);
 }
 ```
 
-## JSONFilterTransformer
+## filter 
+Filter JSON objects using a JSONFilter
+
+#### Usage
+``` Typescript
+import { filter } from '@pepperi-addons/pepperi-filters'
+
+const before = [
+    {
+        TSAString: 'Hi',
+        TSADouble: 123.4
+    },
+    {
+        TSAString: 'Bye',
+        TSADouble: 53.6
+    },
+]
+
+const after = filter(before, {
+    FieldType: 'String',
+    ApiName: 'TSAString',
+    Operation: 'StartWith',
+    Values: [ 'H' ]
+});
+console.log(after); 
+```
+#### Output
+``` JSON
+{
+    "TSAString": "Hi",
+    "TSADouble": 123.4
+}
+```
+
+## sqlWhereClause
+Convert a JSONFilter into a SQL style where clause
+
+#### Usage
+``` typescript
+import { sqlWhereClause, concat } from '@pepperi-addons/pepperi-filters'
+
+const where = sqlWhereClause(concat({
+    FieldType: 'String',
+    ApiName: 'TSAString',
+    Operation: 'Contains'
+    Values: ['hi']
+}, {
+    FieldType: 'Double',
+    ApiName: 'TSADouble',
+    Operation: '='
+    Values: ['123.98']
+}, true));
+console.log(where); 
+```
+#### Output
+``` SQL
+TSAString LIKE '%hi%' AND TSADouble = 123.0
+```
+
+## transform
 Travese through a JSON filter tree and transform nodes or emit them entirely.
 This is useful when we create an API than returns some tranformed model from one or more other APIs.
 
@@ -68,31 +161,15 @@ In summary the query we want to send the following filter to the UIControl API
 
 #### Usage
 ``` Typescript
-import { SQLWhereParser, JSONFilterTransformer } from '@pepperi-addons/pepperi-filters'
+import { transform, parse, sqlWhereClause } from '@pepperi-addons/pepperi-filters'
 
 const where = "(Hidden = false) AND (Context.Name = 'OrderMenu') AND (Type = 'Grid' OR CreationDate > '2020-06-01T07:33:33.707Z')";
 
 // first let's turn this into a JSON Filter
-const parser = new SQLWhereParser([
-    {
-        FieldType: 'Bool',
-        FieldName: 'Hidden'
-    },
-    {
-        FieldType: 'Context.Name',
-        FieldName: 'String'
-    },
-    {
-        FieldType: 'Type',
-        FieldName: 'String'
-    },
-    {
-        FieldType: 'CreationDate',
-        FieldName: 'DateTime'
-    },
-]);
-const filter = parser.parse(where);
-const transformer = new JSONFilterTransformer(new Map([
+const filter = parse(where, new Map([
+    ['Hidden', 'Bool'], ['Context.Name', 'String'], ['Type', 'String'], ['CreationDate', 'DateTime']
+]));
+const transformed = transform(filter, new Map([
     
     // Type doesn't exist on UIControls
     ['Type', (node: JSONBaseFilter): boolean => { return false } ],
@@ -106,28 +183,12 @@ const transformer = new JSONFilterTransformer(new Map([
 
         return true 
     } ]
-]));
-const transformed = transformer.transform(filter);
-console.log(transformed);
-
-// TODO: we need to add support for creating a SQL filter from this transformed JSON filter
-
+]);
+const where2 = sqlWhereClause(transformed);
+console.log(where2);
 ```
 #### Output
-``` JSON
-{
-    "Operation": "AND",
-    "LeftNode": {
-        "FieldType": "Bool",
-        "ApiName": "Hidden",
-        "Operation": "IsEqual",
-        "Values": []
-    },
-    "RigthNode": {
-        "FieldType": "String",
-        "ApiName": "Type",
-        "Operation": "Contains",
-        "Values": [ "OrderMenu" ]
-    }
-}
+
+``` SQL
+Hidden = true AND Type LIKE '%OrderMenu%'
 ```

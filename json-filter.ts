@@ -4,7 +4,7 @@ export type NumberOperation = BasicOperations | "=" | ">" | ">=" | "<" | "<=" | 
 
 export type StringOperation = BasicOperations | "Contains" | "StartWith" | "EndWith" | "IsLoggedInUser";
 
-export type DateOperation = "InTheLast" | "Today" | "ThisWeek" | "ThisMonth" | "Before" | "After" | "Between" | "DueIn" | "On" | "NotInTheLast" | "NotDueIn" | "IsEmpty" | "IsNotEmpty";
+export type DateOperation = "InTheLast" | "Today" | "ThisWeek" | "ThisMonth" | "Before" | "After" | "Between" | "DueIn" | "On" | "NotInTheLast" | "NotDueIn" | "IsEmpty" | "IsNotEmpty" | "=" | "!=" | ">=" | ">" | "<" | "<=";
 
 export type JSONBoolOperation = 'IsEqual';
 

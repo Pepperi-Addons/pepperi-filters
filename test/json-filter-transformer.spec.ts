@@ -1,7 +1,7 @@
 import 'mocha'
 import { expect } from 'chai'
-import { JSONFilterTransformer, JSONBaseFilter } from '../index'
-import { JSONFilter } from '../json-filter';
+import { JSONFilterTransformer } from '../json-filter-transformer'
+import { JSONFilter, JSONBaseFilter } from '../json-filter';
 
 // Creating tranformer for use in all the tests
 // The fieldNames are real life examples for the DataViews model 

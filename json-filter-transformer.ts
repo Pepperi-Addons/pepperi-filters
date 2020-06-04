@@ -1,19 +1,7 @@
 import { JSONFilter } from './index'
 import { JSONBaseFilter } from './json-filter';
 
-type JSONFilterNodeTransformer = (node: JSONBaseFilter) => boolean;
-
-type JSONFilterTransformerResult = {
-    /**
-     *  wheter the transformation succedded on the whole filter    
-     * */ 
-    whole: boolean,
-
-     /**
-     *  The transformed filter    
-     * */ 
-    result: JSONFilter
-}
+export type JSONFilterNodeTransformer = (node: JSONBaseFilter) => boolean;
 
 export class JSONFilterTransformer {
 
