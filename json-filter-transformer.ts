@@ -1,17 +1,20 @@
 import { JSONFilter } from './index'
 import { JSONBaseFilter } from './json-filter';
 
-export type JSONFilterNodeTransformer = (node: JSONBaseFilter) => boolean;
+export type NodeTransformer = ((node: JSONBaseFilter) => (boolean | undefined | void)) | false;
 
 export class JSONFilterTransformer {
 
-
-    constructor(private transformers: Map<string, JSONFilterNodeTransformer>) {
+    constructor(private transformers: { [key: string]: NodeTransformer }) {
 
     }
 
     transform(filter: JSONFilter): JSONFilter | undefined {
-        let res = this.transformNode(filter);
+        // create a deep copy of the JSON filter
+        let res: JSONFilter | undefined = JSON.parse(JSON.stringify(filter))
+        
+        // transform recursivly
+        res = this.transformNode(res as JSONFilter);
 
         // pass through the result to cleanup null nodes
         res = this.cleanNode(res);
@@ -31,9 +34,26 @@ export class JSONFilterTransformer {
     }
 
     private transformExpression(expression: JSONBaseFilter): JSONFilter | undefined {
-        const transformer = this.transformers.get(expression.ApiName);
+        const transformer = this.transformers[expression.ApiName];
 
-        const keep = transformer ? transformer(expression) : true;
+        let keep: boolean = false;
+        
+        // no transformer specified
+        if (transformer === undefined) {
+            keep = true;
+        }
+
+        // false specified 
+        if (transformer === false) {
+            keep = false;
+        }
+
+        // transformer specified
+        if (typeof transformer === 'function') {
+            const transformed = transformer(expression);
+            keep = transformed !== false;
+        }
+        
         return keep ? expression as JSONFilter : undefined;
     }
 

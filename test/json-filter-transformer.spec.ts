@@ -6,24 +6,21 @@ import { JSONFilter, JSONBaseFilter } from '../json-filter';
 // Creating tranformer for use in all the tests
 // The fieldNames are real life examples for the DataViews model 
 // which is built on the UIControl model
-const transformer = new JSONFilterTransformer(new Map([
+const transformer = new JSONFilterTransformer({
     
-    // Type doesn't exist on UIControls
-    ['Type', (node: JSONBaseFilter): boolean => { return false } ],
+    // // Type doesn't exist on UIControls
+    'Type': false,
     
-    // Context.Name maps to part of UIControl.Type
-    ['Context.Name', (node: JSONBaseFilter) => { 
+    // // Context.Name maps to part of UIControl.Type
+    'Context.Name': (node: JSONBaseFilter) => { 
 
         // no matter what the operation - it is alway only contains
         node.Operation = 'Contains'
         node.ApiName = 'Type'
+    },
 
-        return true 
-    } ],
-
-     // Context.ScreenSize maps to the suffix of UIControl.Type
-    ['Context.ScreenSize', (node: JSONBaseFilter) => { 
-
+    // Context.ScreenSize maps to the suffix of UIControl.Type
+    'Context.ScreenSize': (node: JSONBaseFilter) => { 
         const screenSize = node.Values[0];
         if (screenSize == 'Tablet') { // default
             return false;
@@ -31,11 +28,8 @@ const transformer = new JSONFilterTransformer(new Map([
         
         node.Operation = 'EndWith'
         node.ApiName = 'Type'
-
-        return true 
-    } ],
-]));
-
+    },
+});
 
 describe('One Level', () => {
     

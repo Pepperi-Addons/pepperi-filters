@@ -2,6 +2,7 @@ import 'mocha'
 import { expect } from 'chai'
 import { JSONFilter } from '../index'
 import { SQLWhereParser } from '../sql-where-parser';
+import { FieldType } from '../dist';
 
 interface Test {
     title: string, 
@@ -11,12 +12,9 @@ interface Test {
 
 describe('One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
-    const parser = new SQLWhereParser([
-        {
-            FieldName: 'UUID',
-            FieldType: 'Guid'
-        }
-    ]);
+    const parser = new SQLWhereParser({
+        UUID: 'Guid',
+    });
     
     const tests: Test[] = [
         {
@@ -32,16 +30,6 @@ describe('One level - Guid', () => {
         {
             title: 'Not Equal (!=)',
             where: `UUID != '${uuid1}'`,
-            filter: {
-                ApiName: 'UUID',
-                FieldType: 'Guid',
-                Operation: 'IsNotEqual',
-                Values: [uuid1]
-            }
-        },
-        {
-            title: 'Not Equal (<>)',
-            where: `UUID <> '${uuid1}'`,
             filter: {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
@@ -82,12 +70,9 @@ describe('One level - Guid', () => {
 describe('One level - Integer', () => {
     const fieldName = 'TSAInt';
     const fieldType = 'Integer';
-    const parser = new SQLWhereParser([
-        {
-            FieldName: fieldName,
-            FieldType: fieldType
-        }
-    ]);
+    const obj: { [key: string]: FieldType} = {};
+    obj[fieldName] = fieldType;
+    const parser = new SQLWhereParser(obj);
     
     const tests: Test[] = [
         {
@@ -103,16 +88,6 @@ describe('One level - Integer', () => {
         {
             title: 'Not Equal (!=)',
             where: `${fieldName} != 123`,
-            filter: {
-                ApiName: fieldName,
-                FieldType: fieldType,
-                Operation: 'IsNotEqual',
-                Values: ['123']
-            }
-        },
-        {
-            title: 'Not Equal (<>)',
-            where: `${fieldName} <> ${123}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -193,12 +168,9 @@ describe('One level - Integer', () => {
 describe('One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
-    const parser = new SQLWhereParser([
-        {
-            FieldName: fieldName,
-            FieldType: fieldType
-        }
-    ]);
+    const obj: { [key: string]: FieldType} = {};
+    obj[fieldName] = fieldType;
+    const parser = new SQLWhereParser(obj);
     
     const tests: Test[] = [
         {
@@ -214,16 +186,6 @@ describe('One level - Double', () => {
         {
             title: 'Not Equal (!=)',
             where: `${fieldName} != 123.5`,
-            filter: {
-                ApiName: fieldName,
-                FieldType: fieldType,
-                Operation: 'IsNotEqual',
-                Values: ['123.5']
-            }
-        },
-        {
-            title: 'Not Equal (<>)',
-            where: `${fieldName} <> ${123.5}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -304,12 +266,9 @@ describe('One level - Double', () => {
 describe('One level - String', () => {
     const fieldName = 'TSAString';
     const fieldType = 'String';
-    const parser = new SQLWhereParser([
-        {
-            FieldName: fieldName,
-            FieldType: fieldType
-        }
-    ]);
+    const obj: { [key: string]: FieldType} = {};
+    obj[fieldName] = fieldType;
+    const parser = new SQLWhereParser(obj);
     
     const tests: Test[] = [
         {
@@ -325,16 +284,6 @@ describe('One level - String', () => {
         {
             title: 'Not Equal (!=)',
             where: `${fieldName} != 'Hi'`,
-            filter: {
-                ApiName: fieldName,
-                FieldType: fieldType,
-                Operation: 'IsNotEqual',
-                Values: ['Hi']
-            }
-        },
-        {
-            title: 'Not Equal (<>)',
-            where: `${fieldName} <> 'Hi'`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -426,12 +375,9 @@ describe('One level - DateTime', () => {
     const fieldName = 'TSADateTime';
     const fieldType = 'DateTime';
     const now = (new Date()).toISOString();
-    const parser = new SQLWhereParser([
-        {
-            FieldName: fieldName,
-            FieldType: fieldType
-        }
-    ]);
+    const obj: { [key: string]: FieldType} = {};
+    obj[fieldName] = fieldType;
+    const parser = new SQLWhereParser(obj);
     
     const tests: Test[] = [
         {
@@ -516,16 +462,10 @@ describe('One level - DateTime', () => {
 
 describe('Two Levels - AND', () => {
 
-    const parser = new SQLWhereParser([
-        {
-            FieldName: 'TSAString',
-            FieldType: 'String'
-        },
-        {
-            FieldName: 'TSADouble',
-            FieldType: 'Double'
-        }
-    ]);
+    const parser = new SQLWhereParser({
+        TSAString: 'String',
+        TSADouble: 'Double'
+    });
 
     const result: JSONFilter = {
         Operation: 'AND',
@@ -580,16 +520,10 @@ describe('Two Levels - AND', () => {
 
 describe('Two Levels - OR', () => {
 
-    const parser = new SQLWhereParser([
-        {
-            FieldName: 'TSAString',
-            FieldType: 'String'
-        },
-        {
-            FieldName: 'TSADouble',
-            FieldType: 'Double'
-        }
-    ]);
+    const parser = new SQLWhereParser({
+        TSAString: 'String',
+        TSADouble: 'Double'
+    });
 
     const result: JSONFilter = {
         Operation: 'OR',
@@ -644,20 +578,11 @@ describe('Two Levels - OR', () => {
 
 describe('Three Levels', () => {
 
-    const parser = new SQLWhereParser([
-        {
-            FieldName: 'TSAString',
-            FieldType: 'String'
-        },
-        {
-            FieldName: 'TSADouble',
-            FieldType: 'Double'
-        },
-        {
-            FieldName: 'TSAInteger',
-            FieldType: 'Integer'
-        }
-    ]);
+    const parser = new SQLWhereParser({
+        TSAString: 'String',
+        TSADouble: 'Double',
+        TSAInteger: 'Integer'
+    });
 
     const f1: JSONFilter = {
         FieldType: 'String',

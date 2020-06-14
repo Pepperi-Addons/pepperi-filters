@@ -1,28 +1,9 @@
-import { Parser } from 'node-sql-parser'
+import parser from './parser'
 import { JSONFilter, FieldType, BasicOperations, DateOperation, StringOperation, AnyOperation, JSONBoolOperation, NumberOperation } from './json-filter';
-
-type SQLWhereOperation = {
-    type: 'binary_expr'
-    operator: string
-    left: SQLWhereOperation | SQLWhereColumn
-    right: SQLWhereOperation | SQLWhereValue
-}
-
-type SQLWhereColumn = {
-    type: 'column_ref',
-    column: string
-}
-
-type SQLWhereValue = {
-    type: string,
-    value: any
-}
-
-type SQLWherePart = SQLWhereOperation | SQLWhereColumn | SQLWhereValue;
 
 export class SQLWhereParser {
 
-    constructor(private fieldNames: { FieldName: string, FieldType: FieldType }[] ) {
+    constructor(private fields: { [key: string]: FieldType } ) {
 
     }
 
@@ -31,90 +12,103 @@ export class SQLWhereParser {
      * @param where An SQL style WHERE clause
      */
     parse(where: string): JSONFilter {
-        const parser = new Parser();
-        const ast = parser.astify('SELECT * FROM t WHERE ' + where) as any;
-        return this.parseNode(ast.where);
+        const ast = parser(where);
+        return this.parseNode(ast);
     }
 
-
-    private getField(fieldName: string) {
-        return this.fieldNames.find(x => x.FieldName === fieldName);
-    }
-
-    private parseNode(operation: SQLWhereOperation): JSONFilter {
-        if (operation.operator == 'AND' || operation.operator == 'OR') {
+    private parseNode(node: any): JSONFilter {
+        if (node.AND) {
             return {
-                Operation: operation.operator,
-                RightNode: this.parseNode(operation.right as SQLWhereOperation),
-                LeftNode: this.parseNode(operation.left as SQLWhereOperation)
+                Operation: 'AND',
+                LeftNode: this.parseNode(node.AND[0]),
+                RightNode: this.parseNode(node.AND[1]),
+            }
+        }
+        else if (node.OR) {
+            return {
+                Operation: 'OR',
+                LeftNode: this.parseNode(node.OR[0]),
+                RightNode: this.parseNode(node.OR[1]),
             }
         }
         else {
-            return this.parseExpression(operation)
+            return this.parseExpression(node)
         }
     }
 
-    private parseExpression(expression: SQLWhereOperation): JSONFilter {
+    private parseExpression(expression: any): JSONFilter {
+
+        let operation = Object.keys(expression)[0]
+
+        // NOT IN 
+        if (operation === 'IN' && typeof expression[operation][0] === 'object' && Object.keys(expression[operation][0])[0] === 'NOT') {
+            expression = {
+                'NOT IN': [
+                    expression[operation][0].NOT[0],
+                    expression[operation][1]
+                ]
+            }
+            operation = 'NOT IN';
+        }
         
         // We only support where clauses that the ApiName is on the left side of each operation
-        const apiName = (expression.left as SQLWhereColumn).column;
+        const apiName = expression[operation][0];
         if (!apiName) {
             throw new Error("Left side isn't an FieldName");
         }
 
         // make sure this field is registered
-        const field = this.getField(apiName);
-        if (!field) {
-            throw new Error(`Missing apifield when trying to parse queryString. FieldName: ${apiName}`)
+        const fieldType = this.fields[apiName];
+        if (fieldType === undefined) {
+            throw new Error(`Missing FieldID when trying to parse queryString. FieldID: ${apiName}`)
         }
 
-        let values = this.parseValues(expression.right as SQLWhereValue);
+        let values = this.parseValues(expression[operation][1]);
 
         let operator: AnyOperation | undefined = undefined;
-        switch (field.FieldType) {
+        switch (fieldType) {
             case 'Bool': {
                 break; // operation doesn't matter
             }
 
             case 'JsonBool': {
-                operator = this.parseJsonBoolOperation(expression.operator);
+                operator = this.parseJsonBoolOperation(operation);
                 break;
             }
 
             case 'Integer':
             case 'Double': {
-                operator = this.parseNumberOperation(expression.operator, values);
+                operator = this.parseNumberOperation(operation, values);
                 break;
             }
 
             case 'String': {
-                operator = this.parseStringOperation(expression.operator, values);
+                operator = this.parseStringOperation(operation, values);
                 break;
             }
 
             case 'Date': 
             case 'DateTime': {
-                operator = this.parseDateOperation(expression.operator, values);
+                operator = this.parseDateOperation(operation, values);
                 break;
             }
 
             case 'Guid': {
-                operator = this.parseBasicExpression(expression.operator, values);
+                operator = this.parseBasicExpression(operation, values);
                 break;
             }
                 
-
             default:
                 break;
         }
 
         if (!operator) {
-            throw new Error(`Could not parse operator ${expression.operator} with values: ${values} for type: ${field.FieldType}`);
+            throw new Error(`Could not parse operator ${operation} with values: ${values} for type: ${fieldType}`);
         } 
 
         const res: any = {
-            ApiName: field.FieldName,
-            FieldType: field.FieldType as string,
+            ApiName: apiName,
+            FieldType: fieldType,
             Operation: operator,
             Values: values
         }
@@ -136,21 +130,17 @@ export class SQLWhereParser {
                 break;
             }
 
-            case '!=':
-            case '<>': {
+            case '!=': {
                 res = 'IsNotEqual';
                 break;
             }
 
             case 'IS': {
-                if (values.pop() === 'null') {
+                const value = values.pop()
+                if (value === 'null') {
                     res = 'IsEmpty';
                 }
-                break;
-            }
-
-            case 'IS NOT': {
-                if (values.pop() === 'null') {
+                else if (value === 'not null') {
                     res = 'IsNotEmpty';
                 }
                 break;
@@ -232,14 +222,11 @@ export class SQLWhereParser {
             }
 
             case 'IS': {
-                if (values.pop() === 'null') {
+                const value = values.pop()
+                if (value === 'null') {
                     res = 'IsEmpty';
                 }
-                break;
-            }
-
-            case 'IS NOT': {
-                if (values.pop() === 'null') {
+                else if (value === 'not null') {
                     res = 'IsNotEmpty';
                 }
                 break;
@@ -249,35 +236,26 @@ export class SQLWhereParser {
         return res;
     }
 
-    private parseValues(expression: SQLWhereValue): string[] {
+    private parseValues(value: any): string[] {
         let res = [];
 
-        switch (expression.type) {
-            case 'string': {
-                res.push(expression.value);
-                break;
-            }
-
-            case 'number': {
-                res.push(expression.value.toString());
-                break;
-            }
-
-            case 'null': {
-                res.push('null');
-                break;
-            }
-
-            case 'expr_list': {
-                expression.value.forEach((val: SQLWhereValue) => {
-                    res.push(this.parseValues(val)[0]);
-                });
-                break;
-            }
-
-            default: {
-                throw new Error(`Could no parse values from expression: ${JSON.stringify(expression)}`);
-            }
+        if (typeof value === 'string') {
+            res.push(value);
+        }
+        else if (typeof value === 'number') {
+            res.push(value.toString());
+        }
+        else if (value === null) {
+            res.push('null')
+        }
+        else if (typeof value === 'object' && value.NOT && value.NOT[0] === null) {
+            res.push('not null');
+        }
+        else if (Array.isArray(value)) {
+            res = value.map(val => this.parseValues(val)[0])
+        }
+        else {
+            throw new Error(`Could no parse values from expression: ${value}`);
         }
 
         return res;

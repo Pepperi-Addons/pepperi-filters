@@ -1,6 +1,6 @@
 import 'mocha'
 import { expect } from 'chai'
-import { JSONFilter, sqlWhereClause } from '../index'
+import { JSONFilter, toApiQueryString } from '../index'
 
 interface Test {
     title: string, 
@@ -56,7 +56,7 @@ describe('One level - Guid', () => {
 
     tests.forEach(test => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(sqlWhereClause(test.filter)).to.be.equal(test.where);
+            expect(toApiQueryString(test.filter)).to.be.equal(test.where);
         })
     })
 
@@ -151,7 +151,7 @@ describe('One level - Integer', () => {
 
     tests.forEach(test => {
         it(test.title.padStart(20, ' ') + ' | ' + test.where, () => {
-            expect(sqlWhereClause(test.filter)).to.be.equal(test.where);
+            expect(toApiQueryString(test.filter)).to.be.equal(test.where);
         })
     })
 
@@ -246,7 +246,7 @@ describe('One level - Double', () => {
 
     tests.forEach(test => {
         it(`${test.title.padStart(20, ' ')} | ${test.where.padEnd(10, ' ')}`, () => {
-            expect(sqlWhereClause(test.filter)).to.be.equal(test.where);
+            expect(toApiQueryString(test.filter)).to.be.equal(test.where);
         })
     })
 
@@ -331,7 +331,7 @@ describe('One level - String', () => {
 
     tests.forEach(test => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(sqlWhereClause(test.filter)).to.be.equal(test.where);
+            expect(toApiQueryString(test.filter)).to.be.equal(test.where);
         })
     })
 
@@ -417,7 +417,7 @@ describe('One level - DateTime', () => {
 
     tests.forEach(test => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(sqlWhereClause(test.filter)).to.eql(test.where);
+            expect(toApiQueryString(test.filter)).to.eql(test.where);
         })
     })
 
@@ -468,7 +468,7 @@ describe('Two Levels', () => {
 
     tests.forEach(test => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(sqlWhereClause(test.filter)).to.eql(test.where);
+            expect(toApiQueryString(test.filter)).to.eql(test.where);
         })
     })
 })
