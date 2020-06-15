@@ -3,7 +3,6 @@ import { FilterFactory } from './filters/filter-factory';
 import Filter from './filters/filter';
 import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
-import { combineWhereClauses, combineJSONFilters } from './converters';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -11,7 +10,7 @@ import { combineWhereClauses, combineJSONFilters } from './converters';
  * @param f2 Another JSON Filter
  * @param and use and operation. `true` by default.
  */
-export function concat(f1: JSONFilter | undefined, f2: JSONFilter | undefined, and: boolean): JSONFilter | undefined;
+export function concat(and: boolean, f1: JSONFilter, ...args: (JSONFilter | undefined)[]): JSONFilter | undefined;
 
 /**
  * Concat two Api query strings by combining them into one
@@ -19,17 +18,33 @@ export function concat(f1: JSONFilter | undefined, f2: JSONFilter | undefined, a
  * @param f2 Another where clause
  * @param and use and operation. `true` by default.
  */
-export function concat(s1: string | undefined, s2: string | undefined, and: boolean): string;
+export function concat(and: boolean, s1: string, ...args: (string | undefined)[]): string;
 
 export function concat(
-    f1: JSONFilter | string | undefined,
-    f2: JSONFilter | string | undefined,
-    and = true,
+    and: boolean,
+    f1: JSONFilter | string,
+    ...args: (JSONFilter | string | undefined)[]
 ): JSONFilter | string | undefined {
-    if (typeof f1 === 'string' && typeof f2 === 'string') {
-        return combineWhereClauses(f1, f2, and);
-    } else if (typeof f1 === 'object' && typeof f2 === 'object') {
-        return combineJSONFilters(f1, f2, and);
+    if (typeof f1 === 'string') {
+        const expressions = [f1, args as (string | undefined)[]].flat().filter(Boolean) as string[];
+        if (expressions.length === 0) {
+            return '';
+        }
+        if (expressions.length === 1) {
+            return expressions[0];
+        }
+        return `(${expressions.join(` ${and ? 'AND' : 'OR'} `)})`;
+    } else if (typeof f1 === 'object') {
+        return [f1, args as (JSONFilter | undefined)[]]
+            .flat()
+            .filter(Boolean)
+            .reduce((left, right) => {
+                return {
+                    Operation: and ? 'AND' : 'OR',
+                    LeftNode: left,
+                    RightNode: right,
+                } as JSONFilter;
+            });
     }
 
     throw new Error('Invalid parameters');

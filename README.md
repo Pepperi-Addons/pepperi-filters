@@ -9,23 +9,27 @@ npm install @pepperi-addons/pepperi-filters
 ```
 
 ## concat
-Convert 2 JSONFilters into 1.
+concat multiple filters into one
 
 #### Usage
 ``` Typescript
 import { concat } from '@pepperi-addons/pepperi-filters'
 
-const filter = concat({
-    FieldType: 'String',
-    ApiName: 'TSAString',
-    Operation: 'Contains'
-    Values: ['hi']
-}, {
-    FieldType: 'Double',
-    ApiName: 'TSADouble',
-    Operation: '='
-    Values: ['123.98']
-}, true);
+const filter = concat(
+    true, 
+    {
+        FieldType: 'String',
+        ApiName: 'TSAString',
+        Operation: 'Contains'
+        Values: ['hi']
+    }, 
+    {
+        FieldType: 'Double',
+        ApiName: 'TSADouble',
+        Operation: '='
+        Values: ['123.98']
+    }
+);
 console.log(JSON.stringify(filter, null, 4)); 
 ```
 #### Output
@@ -46,6 +50,20 @@ console.log(JSON.stringify(filter, null, 4));
     }
 }
 ```
+
+It also works on sql like filters
+``` Typescript
+import { concat } from '@pepperi-addons/pepperi-filters'
+
+const result = concat(
+    true, 
+    "TSAString LIKE '%Hello%'", 
+    'TSADouble >= 1.2'
+);
+console.log(result); 
+```
+#### Output
+`(TSAString LIKE '%Hello%' AND TSADouble >= 1.2)`
 
 ## parse
 Convert an SQL clause into a JSON filter.

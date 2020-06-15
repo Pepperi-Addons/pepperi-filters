@@ -241,7 +241,7 @@ export class SQLWhereParser {
     }
 
     private parseValues(value: any): string[] {
-        let res = [];
+        let res: string[] = [];
 
         if (typeof value === 'string') {
             res.push(value);
