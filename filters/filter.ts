@@ -1,9 +1,6 @@
 export default abstract class Filter {
-    
-    constructor(protected apiName: string) {
+    constructor(protected apiName: string) {}
 
-    }
-    
     abstract apply(value: any): boolean;
     abstract toSQLWhereClause(): string;
 
@@ -13,7 +10,7 @@ export default abstract class Filter {
     }
 
     static filter(objects: any[], filter: Filter) {
-        return objects.filter(obj => filter.filter(obj));
+        return objects.filter((obj) => filter.filter(obj));
     }
 
     getValue(object: any, apiName: string): any {
@@ -32,7 +29,7 @@ export default abstract class Filter {
 
         // support nested object & arrays
         apiName = apiName.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        let arr = apiName.split('.');
+        const arr = apiName.split('.');
         return this.getValue(object[arr[0]], arr.slice(1).join('.'));
     }
 }

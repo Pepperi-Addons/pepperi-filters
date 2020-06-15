@@ -1,16 +1,16 @@
-import 'mocha'
-import { expect } from 'chai'
-import { JSONFilter, toApiQueryString } from '../index'
+import 'mocha';
+import { expect } from 'chai';
+import { JSONFilter, toApiQueryString } from '../index';
 
 interface Test {
-    title: string, 
-    where: string,
-    filter: JSONFilter
+    title: string;
+    where: string;
+    filter: JSONFilter;
 }
 
 describe('One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -19,8 +19,8 @@ describe('One level - Guid', () => {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsEqual',
-                Values: [uuid1]
-            }
+                Values: [uuid1],
+            },
         },
         {
             title: 'Not Equal (!=)',
@@ -29,8 +29,8 @@ describe('One level - Guid', () => {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsNotEqual',
-                Values: [uuid1]
-            }
+                Values: [uuid1],
+            },
         },
         {
             title: 'IS NULL',
@@ -39,8 +39,8 @@ describe('One level - Guid', () => {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -49,23 +49,22 @@ describe('One level - Guid', () => {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(toApiQueryString(test.filter)).to.be.equal(test.where);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - Integer', () => {
     const fieldName = 'TSAInt';
     const fieldType = 'Integer';
-    
+
     const tests: Test[] = [
         {
             title: 'IsEqual',
@@ -74,8 +73,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['123', '23']
-            }
+                Values: ['123', '23'],
+            },
         },
         {
             title: 'Not Equal',
@@ -84,8 +83,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['123', '23']
-            }
+                Values: ['123', '23'],
+            },
         },
         {
             title: 'BiggerThanOrEquals',
@@ -94,8 +93,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'BiggerThan',
@@ -104,8 +103,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'SmallerThanOrEquals',
@@ -114,8 +113,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'SmallerThan',
@@ -124,8 +123,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'IS NULL',
@@ -134,8 +133,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -144,23 +143,22 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(20, ' ') + ' | ' + test.where, () => {
             expect(toApiQueryString(test.filter)).to.be.equal(test.where);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -169,8 +167,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['123.5', '23.1']
-            }
+                Values: ['123.5', '23.1'],
+            },
         },
         {
             title: 'Not Equal',
@@ -179,8 +177,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['123.5', '23.1']
-            }
+                Values: ['123.5', '23.1'],
+            },
         },
         {
             title: 'BiggerThanOrEquals',
@@ -189,8 +187,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'BiggerThan',
@@ -199,8 +197,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'SmallerThanOrEquals',
@@ -209,8 +207,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'SmallerThan',
@@ -219,8 +217,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'IS NULL',
@@ -229,8 +227,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -239,23 +237,22 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(`${test.title.padStart(20, ' ')} | ${test.where.padEnd(10, ' ')}`, () => {
             expect(toApiQueryString(test.filter)).to.be.equal(test.where);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - String', () => {
     const fieldName = 'TSAString';
     const fieldType = 'String';
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -264,8 +261,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['Hi', 'Bye']
-            }
+                Values: ['Hi', 'Bye'],
+            },
         },
         {
             title: 'Not Equal',
@@ -274,8 +271,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['Hi', 'Bye']
-            }
+                Values: ['Hi', 'Bye'],
+            },
         },
         {
             title: 'Contains',
@@ -284,8 +281,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'Contains',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'StartsWith',
@@ -294,8 +291,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'StartWith',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'EndsWith',
@@ -304,8 +301,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'EndWith',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -314,8 +311,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NULL',
@@ -324,24 +321,23 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(toApiQueryString(test.filter)).to.be.equal(test.where);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - DateTime', () => {
     const fieldName = 'TSADateTime';
     const fieldType = 'DateTime';
-    const now = (new Date()).toISOString();
-    
+    const now = new Date().toISOString();
+
     const tests: Test[] = [
         {
             title: '=',
@@ -350,8 +346,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '=',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '>',
@@ -360,8 +356,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '>=',
@@ -370,8 +366,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '<=',
@@ -380,8 +376,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '<',
@@ -390,8 +386,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -400,8 +396,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -410,21 +406,19 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(toApiQueryString(test.filter)).to.eql(test.where);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('Two Levels', () => {
-    
     const tests: Test[] = [
         {
             title: 'AND',
@@ -435,15 +429,15 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     Operation: 'Contains',
                     ApiName: 'TSAString',
-                    Values: [ 'HI' ]
+                    Values: ['HI'],
                 },
                 RightNode: {
                     FieldType: 'Double',
                     Operation: '>=',
                     ApiName: 'TSADouble',
-                    Values: [ '123.23' ]
-                }
-            }
+                    Values: ['123.23'],
+                },
+            },
         },
         {
             title: 'OR',
@@ -454,21 +448,21 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     Operation: 'Contains',
                     ApiName: 'TSAString',
-                    Values: [ 'HI' ]
+                    Values: ['HI'],
                 },
                 RightNode: {
                     FieldType: 'Double',
                     Operation: '>=',
                     ApiName: 'TSADouble',
-                    Values: [ '123.23' ]
-                }
-            }
-        }
+                    Values: ['123.23'],
+                },
+            },
+        },
     ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(toApiQueryString(test.filter)).to.eql(test.where);
-        })
-    })
-})
+        });
+    });
+});

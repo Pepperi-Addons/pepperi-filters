@@ -1,10 +1,9 @@
-import { JSONFilter, FieldType } from './json-filter'
-import { FilterFactory } from './filters/filter-factory'
-import Filter from './filters/filter'
-import { SQLWhereParser } from './sql-where-parser'
-import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer'
-import { combineWhereClauses, combineJSONFilters } from './converters'
-
+import { JSONFilter, FieldType } from './json-filter';
+import { FilterFactory } from './filters/filter-factory';
+import Filter from './filters/filter';
+import { SQLWhereParser } from './sql-where-parser';
+import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
+import { combineWhereClauses, combineJSONFilters } from './converters';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -22,11 +21,14 @@ export function concat(f1: JSONFilter | undefined, f2: JSONFilter | undefined, a
  */
 export function concat(s1: string | undefined, s2: string | undefined, and: boolean): string;
 
-export function concat(f1: JSONFilter | string | undefined, f2: JSONFilter | string | undefined, and: boolean = true): JSONFilter | string | undefined {
+export function concat(
+    f1: JSONFilter | string | undefined,
+    f2: JSONFilter | string | undefined,
+    and = true,
+): JSONFilter | string | undefined {
     if (typeof f1 === 'string' && typeof f2 === 'string') {
         return combineWhereClauses(f1, f2, and);
-    }
-    else if (typeof f1 === 'object' && typeof f2 === 'object') {
+    } else if (typeof f1 === 'object' && typeof f2 === 'object') {
         return combineJSONFilters(f1, f2, and);
     }
 
@@ -67,4 +69,4 @@ export function filter<T>(objects: T[], jsonFilter: JSONFilter | undefined): T[]
     return objects;
 }
 
-export * from './json-filter'
+export * from './json-filter';

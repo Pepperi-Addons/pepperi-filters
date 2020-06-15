@@ -1,18 +1,15 @@
-import { JSONFilter } from './index'
+import { JSONFilter } from './index';
 import { JSONBaseFilter } from './json-filter';
 
-export type NodeTransformer = ((node: JSONBaseFilter) => (boolean | undefined | void)) | false;
+export type NodeTransformer = ((node: JSONBaseFilter) => boolean | undefined | void) | false;
 
 export class JSONFilterTransformer {
-
-    constructor(private transformers: { [key: string]: NodeTransformer }) {
-
-    }
+    constructor(private transformers: { [key: string]: NodeTransformer }) {}
 
     transform(filter: JSONFilter): JSONFilter | undefined {
         // create a deep copy of the JSON filter
-        let res: JSONFilter | undefined = JSON.parse(JSON.stringify(filter))
-        
+        let res: JSONFilter | undefined = JSON.parse(JSON.stringify(filter));
+
         // transform recursivly
         res = this.transformNode(res as JSONFilter);
 
@@ -27,8 +24,7 @@ export class JSONFilterTransformer {
             node.LeftNode = this.transformNode(node.LeftNode);
             node.RightNode = this.transformNode(node.RightNode);
             return node;
-        }
-        else {
+        } else {
             return this.transformExpression(node as JSONBaseFilter);
         }
     }
@@ -36,14 +32,14 @@ export class JSONFilterTransformer {
     private transformExpression(expression: JSONBaseFilter): JSONFilter | undefined {
         const transformer = this.transformers[expression.ApiName];
 
-        let keep: boolean = false;
-        
+        let keep = false;
+
         // no transformer specified
         if (transformer === undefined) {
             keep = true;
         }
 
-        // false specified 
+        // false specified
         if (transformer === false) {
             keep = false;
         }
@@ -53,8 +49,8 @@ export class JSONFilterTransformer {
             const transformed = transformer(expression);
             keep = transformed !== false;
         }
-        
-        return keep ? expression as JSONFilter : undefined;
+
+        return keep ? (expression as JSONFilter) : undefined;
     }
 
     private cleanNode(node: JSONFilter | undefined): JSONFilter | undefined {
@@ -76,12 +72,11 @@ export class JSONFilterTransformer {
             if (!node.LeftNode) {
                 return node.Operation === 'AND' ? node.RightNode : undefined;
             }
-            
+
             if (!node.RightNode) {
                 return node.Operation === 'AND' ? node.LeftNode : undefined;
             }
-        }
-        else {
+        } else {
             return node;
         }
     }

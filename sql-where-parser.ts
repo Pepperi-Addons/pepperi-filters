@@ -1,11 +1,17 @@
-import parser from './parser'
-import { JSONFilter, FieldType, BasicOperations, DateOperation, StringOperation, AnyOperation, JSONBoolOperation, NumberOperation } from './json-filter';
+import parser from './parser';
+import {
+    JSONFilter,
+    FieldType,
+    BasicOperations,
+    DateOperation,
+    StringOperation,
+    AnyOperation,
+    JSONBoolOperation,
+    NumberOperation,
+} from './json-filter';
 
 export class SQLWhereParser {
-
-    constructor(private fields: { [key: string]: FieldType } ) {
-
-    }
+    constructor(private fields: { [key: string]: FieldType }) {}
 
     /**
      * Parse a SQL where clause into a JSON Filter
@@ -22,35 +28,33 @@ export class SQLWhereParser {
                 Operation: 'AND',
                 LeftNode: this.parseNode(node.AND[0]),
                 RightNode: this.parseNode(node.AND[1]),
-            }
-        }
-        else if (node.OR) {
+            };
+        } else if (node.OR) {
             return {
                 Operation: 'OR',
                 LeftNode: this.parseNode(node.OR[0]),
                 RightNode: this.parseNode(node.OR[1]),
-            }
-        }
-        else {
-            return this.parseExpression(node)
+            };
+        } else {
+            return this.parseExpression(node);
         }
     }
 
     private parseExpression(expression: any): JSONFilter {
+        let operation = Object.keys(expression)[0];
 
-        let operation = Object.keys(expression)[0]
-
-        // NOT IN 
-        if (operation === 'IN' && typeof expression[operation][0] === 'object' && Object.keys(expression[operation][0])[0] === 'NOT') {
+        // NOT IN
+        if (
+            operation === 'IN' &&
+            typeof expression[operation][0] === 'object' &&
+            Object.keys(expression[operation][0])[0] === 'NOT'
+        ) {
             expression = {
-                'NOT IN': [
-                    expression[operation][0].NOT[0],
-                    expression[operation][1]
-                ]
-            }
+                'NOT IN': [expression[operation][0].NOT[0], expression[operation][1]],
+            };
             operation = 'NOT IN';
         }
-        
+
         // We only support where clauses that the ApiName is on the left side of each operation
         const apiName = expression[operation][0];
         if (!apiName) {
@@ -60,10 +64,10 @@ export class SQLWhereParser {
         // make sure this field is registered
         const fieldType = this.fields[apiName];
         if (fieldType === undefined) {
-            throw new Error(`Missing FieldID when trying to parse queryString. FieldID: ${apiName}`)
+            throw new Error(`Missing FieldID when trying to parse queryString. FieldID: ${apiName}`);
         }
 
-        let values = this.parseValues(expression[operation][1]);
+        const values = this.parseValues(expression[operation][1]);
 
         let operator: AnyOperation | undefined = undefined;
         switch (fieldType) {
@@ -72,7 +76,7 @@ export class SQLWhereParser {
             }
 
             case 'JsonBool': {
-                operator = this.parseJsonBoolOperation(operation);
+                operator = this.parseJsonBoolOperation();
                 break;
             }
 
@@ -87,7 +91,7 @@ export class SQLWhereParser {
                 break;
             }
 
-            case 'Date': 
+            case 'Date':
             case 'DateTime': {
                 operator = this.parseDateOperation(operation, values);
                 break;
@@ -97,29 +101,29 @@ export class SQLWhereParser {
                 operator = this.parseBasicExpression(operation, values);
                 break;
             }
-                
+
             default:
                 break;
         }
 
         if (!operator) {
             throw new Error(`Could not parse operator ${operation} with values: ${values} for type: ${fieldType}`);
-        } 
+        }
 
         const res: any = {
             ApiName: apiName,
             FieldType: fieldType,
             Operation: operator,
-            Values: values
-        }
+            Values: values,
+        };
 
         return res as JSONFilter;
     }
 
-    private parseJsonBoolOperation(operator: string): JSONBoolOperation {
+    private parseJsonBoolOperation(): JSONBoolOperation {
         // todo - make sure this is the right one
         return 'IsEqual';
-    } 
+    }
 
     private parseBasicExpression(operator: string, values: string[]) {
         let res: BasicOperations | undefined;
@@ -136,11 +140,10 @@ export class SQLWhereParser {
             }
 
             case 'IS': {
-                const value = values.pop()
+                const value = values.pop();
                 if (value === 'null') {
                     res = 'IsEmpty';
-                }
-                else if (value === 'not null') {
+                } else if (value === 'not null') {
                     res = 'IsNotEmpty';
                 }
                 break;
@@ -176,17 +179,19 @@ export class SQLWhereParser {
                 case 'LIKE': {
                     if (values.length == 1) {
                         let val = values[0];
-                        if (val.charAt(0) === '%') { // LIKE '%acbd....
-                            if (val.charAt(val.length - 1) === '%') { // LIKE '%acbd%'
+                        if (val.charAt(0) === '%') {
+                            // LIKE '%acbd....
+                            if (val.charAt(val.length - 1) === '%') {
+                                // LIKE '%acbd%'
                                 val = val.slice(1, val.length - 1);
                                 res = 'Contains';
-                            }
-                            else { // LIKE '%acbd'
+                            } else {
+                                // LIKE '%acbd'
                                 val = val.slice(1, val.length);
                                 res = 'EndWith';
                             }
-                        }
-                        else if (val.charAt(val.length - 1) === '%') { // LIKE 'abcd%'
+                        } else if (val.charAt(val.length - 1) === '%') {
+                            // LIKE 'abcd%'
                             val = val.slice(0, val.length - 1);
                             res = 'StartWith';
                         }
@@ -212,9 +217,9 @@ export class SQLWhereParser {
         let res: DateOperation | undefined = undefined;
 
         switch (operator) {
-            case '=': 
+            case '=':
             case '<=':
-            case '<': 
+            case '<':
             case '>=':
             case '>': {
                 res = operator;
@@ -222,11 +227,10 @@ export class SQLWhereParser {
             }
 
             case 'IS': {
-                const value = values.pop()
+                const value = values.pop();
                 if (value === 'null') {
                     res = 'IsEmpty';
-                }
-                else if (value === 'not null') {
+                } else if (value === 'not null') {
                     res = 'IsNotEmpty';
                 }
                 break;
@@ -241,20 +245,15 @@ export class SQLWhereParser {
 
         if (typeof value === 'string') {
             res.push(value);
-        }
-        else if (typeof value === 'number') {
+        } else if (typeof value === 'number') {
             res.push(value.toString());
-        }
-        else if (value === null) {
-            res.push('null')
-        }
-        else if (typeof value === 'object' && value.NOT && value.NOT[0] === null) {
+        } else if (value === null) {
+            res.push('null');
+        } else if (typeof value === 'object' && value.NOT && value.NOT[0] === null) {
             res.push('not null');
-        }
-        else if (Array.isArray(value)) {
-            res = value.map(val => this.parseValues(val)[0])
-        }
-        else {
+        } else if (Array.isArray(value)) {
+            res = value.map((val) => this.parseValues(val)[0]);
+        } else {
             throw new Error(`Could no parse values from expression: ${value}`);
         }
 

@@ -1,13 +1,12 @@
-import 'mocha'
-import { expect } from 'chai'
-import { JSONFilter } from '../index'
+import 'mocha';
+import { expect } from 'chai';
+import { JSONFilter, FieldType } from '../index';
 import { SQLWhereParser } from '../sql-where-parser';
-import { FieldType } from '../dist';
 
 interface Test {
-    title: string, 
-    where: string,
-    filter: JSONFilter
+    title: string;
+    where: string;
+    filter: JSONFilter;
 }
 
 describe('One level - Guid', () => {
@@ -15,7 +14,7 @@ describe('One level - Guid', () => {
     const parser = new SQLWhereParser({
         UUID: 'Guid',
     });
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -24,8 +23,8 @@ describe('One level - Guid', () => {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsEqual',
-                Values: [uuid1]
-            }
+                Values: [uuid1],
+            },
         },
         {
             title: 'Not Equal (!=)',
@@ -34,46 +33,45 @@ describe('One level - Guid', () => {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsNotEqual',
-                Values: [uuid1]
-            }
+                Values: [uuid1],
+            },
         },
         {
             title: 'IS NULL',
-            where: "UUID IS NULL",
+            where: 'UUID IS NULL',
             filter: {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
-            where: "UUID IS NOT NULL",
+            where: 'UUID IS NOT NULL',
             filter: {
                 ApiName: 'UUID',
                 FieldType: 'Guid',
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - Integer', () => {
     const fieldName = 'TSAInt';
     const fieldType = 'Integer';
-    const obj: { [key: string]: FieldType} = {};
+    const obj: { [key: string]: FieldType } = {};
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -82,8 +80,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'Not Equal (!=)',
@@ -92,8 +90,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'BiggerThanOrEquals',
@@ -102,8 +100,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'BiggerThan',
@@ -112,8 +110,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'SmallerThanOrEquals',
@@ -122,8 +120,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'SmallerThan',
@@ -132,8 +130,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: ['123']
-            }
+                Values: ['123'],
+            },
         },
         {
             title: 'IS NULL',
@@ -142,8 +140,8 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -152,26 +150,25 @@ describe('One level - Integer', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(20, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
-    const obj: { [key: string]: FieldType} = {};
+    const obj: { [key: string]: FieldType } = {};
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -180,8 +177,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'Not Equal (!=)',
@@ -190,8 +187,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'BiggerThanOrEquals',
@@ -200,8 +197,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'BiggerThan',
@@ -210,8 +207,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'SmallerThanOrEquals',
@@ -220,8 +217,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'SmallerThan',
@@ -230,8 +227,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: ['123.5']
-            }
+                Values: ['123.5'],
+            },
         },
         {
             title: 'IS NULL',
@@ -240,8 +237,8 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -250,26 +247,25 @@ describe('One level - Double', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(`${test.title.padStart(20, ' ')} | ${test.where.padEnd(10, ' ')}`, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - String', () => {
     const fieldName = 'TSAString';
     const fieldType = 'String';
-    const obj: { [key: string]: FieldType} = {};
+    const obj: { [key: string]: FieldType } = {};
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
-    
+
     const tests: Test[] = [
         {
             title: 'Equals',
@@ -278,8 +274,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'Not Equal (!=)',
@@ -288,8 +284,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'Contains',
@@ -298,8 +294,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'Contains',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'StartsWith',
@@ -308,8 +304,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'StartWith',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'EndsWith',
@@ -318,8 +314,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'EndWith',
-                Values: ['Hi']
-            }
+                Values: ['Hi'],
+            },
         },
         {
             title: 'IN',
@@ -328,8 +324,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['Hi', 'Bye', 'SeeYa']
-            }
+                Values: ['Hi', 'Bye', 'SeeYa'],
+            },
         },
         {
             title: 'NOT IN',
@@ -338,8 +334,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['Hi', 'Bye', 'SeeYa']
-            }
+                Values: ['Hi', 'Bye', 'SeeYa'],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -348,8 +344,8 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -358,27 +354,26 @@ describe('One level - String', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('One level - DateTime', () => {
     const fieldName = 'TSADateTime';
     const fieldType = 'DateTime';
-    const now = (new Date()).toISOString();
-    const obj: { [key: string]: FieldType} = {};
+    const now = new Date().toISOString();
+    const obj: { [key: string]: FieldType } = {};
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
-    
+
     const tests: Test[] = [
         {
             title: '=',
@@ -387,8 +382,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '=',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '>',
@@ -397,8 +392,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '>=',
@@ -407,8 +402,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '<',
@@ -417,8 +412,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: '<=',
@@ -427,8 +422,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: [now]
-            }
+                Values: [now],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -437,8 +432,8 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'IS NOT NULL',
@@ -447,24 +442,22 @@ describe('One level - DateTime', () => {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-
-})
+        });
+    });
+});
 
 describe('Two Levels - AND', () => {
-
     const parser = new SQLWhereParser({
         TSAString: 'String',
-        TSADouble: 'Double'
+        TSADouble: 'Double',
     });
 
     const result: JSONFilter = {
@@ -473,56 +466,55 @@ describe('Two Levels - AND', () => {
             FieldType: 'String',
             Operation: 'Contains',
             ApiName: 'TSAString',
-            Values: [ 'HI' ]
+            Values: ['HI'],
         },
         RightNode: {
             FieldType: 'Double',
             Operation: '>=',
             ApiName: 'TSADouble',
-            Values: [ '123.23' ]
-        }
-    }
-    
+            Values: ['123.23'],
+        },
+    };
+
     const tests: Test[] = [
         {
-            title: 'No Paren\'s',
+            title: "No Paren's",
             where: `TSAString LIKE '%HI%' AND TSADouble >= 123.23`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'Single Paren\'s',
+            title: "Single Paren's",
             where: `(TSAString LIKE '%HI%') AND (TSADouble >= 123.23)`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'Outer Paren\'s',
+            title: "Outer Paren's",
             where: `(TSAString LIKE '%HI%' AND TSADouble >= 123.23)`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'All Paren\'s',
+            title: "All Paren's",
             where: `((TSAString LIKE '%HI%') AND (TSADouble >= 123.23))`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'Extra Paren\'s',
+            title: "Extra Paren's",
             where: `((((TSAString LIKE '%HI%')) AND ((TSADouble >= 123.23))))`,
-            filter: result
+            filter: result,
         },
     ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-})
+        });
+    });
+});
 
 describe('Two Levels - OR', () => {
-
     const parser = new SQLWhereParser({
         TSAString: 'String',
-        TSADouble: 'Double'
+        TSADouble: 'Double',
     });
 
     const result: JSONFilter = {
@@ -531,78 +523,77 @@ describe('Two Levels - OR', () => {
             FieldType: 'String',
             Operation: 'Contains',
             ApiName: 'TSAString',
-            Values: [ 'HI' ]
+            Values: ['HI'],
         },
         RightNode: {
             FieldType: 'Double',
             Operation: '>=',
             ApiName: 'TSADouble',
-            Values: [ '123.23' ]
-        }
-    }
-    
+            Values: ['123.23'],
+        },
+    };
+
     const tests: Test[] = [
         {
-            title: 'No Paren\'s',
+            title: "No Paren's",
             where: `TSAString LIKE '%HI%' OR TSADouble >= 123.23`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'Single Paren\'s',
+            title: "Single Paren's",
             where: `(TSAString LIKE '%HI%') OR (TSADouble >= 123.23)`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'Outer Paren\'s',
+            title: "Outer Paren's",
             where: `(TSAString LIKE '%HI%' OR TSADouble >= 123.23)`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'All Paren\'s',
+            title: "All Paren's",
             where: `((TSAString LIKE '%HI%') OR (TSADouble >= 123.23))`,
-            filter: result
+            filter: result,
         },
         {
-            title: 'Extra Paren\'s',
+            title: "Extra Paren's",
             where: `((((TSAString LIKE '%HI%')) OR ((TSADouble >= 123.23))))`,
-            filter: result
+            filter: result,
         },
     ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-})
+        });
+    });
+});
 
 describe('Three Levels', () => {
-
     const parser = new SQLWhereParser({
         TSAString: 'String',
         TSADouble: 'Double',
-        TSAInteger: 'Integer'
+        TSAInteger: 'Integer',
     });
 
     const f1: JSONFilter = {
         FieldType: 'String',
         Operation: 'Contains',
         ApiName: 'TSAString',
-        Values: [ 'HI' ]
+        Values: ['HI'],
     };
     const f2: JSONFilter = {
         FieldType: 'Double',
         Operation: '>=',
         ApiName: 'TSADouble',
-        Values: [ '123.23' ]
+        Values: ['123.23'],
     };
     const f3: JSONFilter = {
         FieldType: 'Integer',
         Operation: 'IsEqual',
         ApiName: 'TSAInteger',
-        Values: [ '123' ]
-    }
-    
+        Values: ['123'],
+    };
+
     const tests: Test[] = [
         {
             title: 'f1 AND f2 OR f3',
@@ -612,10 +603,10 @@ describe('Three Levels', () => {
                 LeftNode: {
                     Operation: 'AND',
                     LeftNode: f1,
-                    RightNode: f2
+                    RightNode: f2,
                 },
-                RightNode: f3
-            }
+                RightNode: f3,
+            },
         },
         {
             title: '(f1 AND f2) OR f3',
@@ -625,10 +616,10 @@ describe('Three Levels', () => {
                 LeftNode: {
                     Operation: 'AND',
                     LeftNode: f1,
-                    RightNode: f2
+                    RightNode: f2,
                 },
-                RightNode: f3
-            }
+                RightNode: f3,
+            },
         },
         {
             title: 'f1 AND (f2 OR f3)',
@@ -639,15 +630,15 @@ describe('Three Levels', () => {
                 RightNode: {
                     Operation: 'OR',
                     LeftNode: f2,
-                    RightNode: f3
-                }
-            }
+                    RightNode: f3,
+                },
+            },
         },
     ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(parser.parse(test.where)).to.eql(test.filter);
-        })
-    })
-})
+        });
+    });
+});

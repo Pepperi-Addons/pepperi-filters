@@ -1,53 +1,51 @@
-import 'mocha'
-import { expect } from 'chai'
-import { JSONFilterTransformer } from '../json-filter-transformer'
+import 'mocha';
+import { expect } from 'chai';
+import { JSONFilterTransformer } from '../json-filter-transformer';
 import { JSONFilter, JSONBaseFilter } from '../json-filter';
 
 // Creating tranformer for use in all the tests
-// The fieldNames are real life examples for the DataViews model 
+// The fieldNames are real life examples for the DataViews model
 // which is built on the UIControl model
 const transformer = new JSONFilterTransformer({
-    
     // // Type doesn't exist on UIControls
-    'Type': false,
-    
-    // // Context.Name maps to part of UIControl.Type
-    'Context.Name': (node: JSONBaseFilter) => { 
+    Type: false,
 
+    // // Context.Name maps to part of UIControl.Type
+    'Context.Name': (node: JSONBaseFilter) => {
         // no matter what the operation - it is alway only contains
-        node.Operation = 'Contains'
-        node.ApiName = 'Type'
+        node.Operation = 'Contains';
+        node.ApiName = 'Type';
     },
 
     // Context.ScreenSize maps to the suffix of UIControl.Type
-    'Context.ScreenSize': (node: JSONBaseFilter) => { 
+    'Context.ScreenSize': (node: JSONBaseFilter) => {
         const screenSize = node.Values[0];
-        if (screenSize == 'Tablet') { // default
+        if (screenSize == 'Tablet') {
+            // default
             return false;
         }
-        
-        node.Operation = 'EndWith'
-        node.ApiName = 'Type'
+
+        node.Operation = 'EndWith';
+        node.ApiName = 'Type';
     },
 });
 
 describe('One Level', () => {
-    
-    const tests: { title: string, input: JSONFilter, expected: JSONFilter | undefined }[] = [
+    const tests: { title: string; input: JSONFilter; expected: JSONFilter | undefined }[] = [
         {
             title: 'No changes',
             input: {
                 FieldType: 'Bool',
                 ApiName: 'Hidden',
                 Operation: 'IsEqual',
-                Values: []
+                Values: [],
             },
             expected: {
                 FieldType: 'Bool',
                 ApiName: 'Hidden',
                 Operation: 'IsEqual',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'Transformed',
@@ -55,14 +53,14 @@ describe('One Level', () => {
                 FieldType: 'String',
                 ApiName: 'Context.Name',
                 Operation: 'IsEqual',
-                Values: [ 'OrderMenu' ]
+                Values: ['OrderMenu'],
             },
             expected: {
                 FieldType: 'String',
                 ApiName: 'Type',
                 Operation: 'Contains',
-                Values: [ 'OrderMenu' ]
-            }
+                Values: ['OrderMenu'],
+            },
         },
         {
             title: 'Not supported',
@@ -70,23 +68,21 @@ describe('One Level', () => {
                 FieldType: 'String',
                 ApiName: 'Type',
                 Operation: 'IsEqual',
-                Values: [ 'Grid' ]
+                Values: ['Grid'],
             },
-            expected: undefined
-        }
+            expected: undefined,
+        },
+    ];
 
-    ]
-
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title, () => {
             expect(transformer.transform(test.input)).to.be.eql(test.expected);
-        })
-    })
-})
+        });
+    });
+});
 
 describe('Two Levels', () => {
-    
-    const tests: { title: string, input: JSONFilter, expected: JSONFilter | undefined }[] = [
+    const tests: { title: string; input: JSONFilter; expected: JSONFilter | undefined }[] = [
         {
             title: 'No changes (AND)',
             input: {
@@ -95,14 +91,14 @@ describe('Two Levels', () => {
                     FieldType: 'Bool',
                     ApiName: 'Hidden',
                     Operation: 'IsEqual',
-                    Values: []
+                    Values: [],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
+                    Values: [],
+                },
             },
             expected: {
                 Operation: 'AND',
@@ -110,15 +106,15 @@ describe('Two Levels', () => {
                     FieldType: 'Bool',
                     ApiName: 'Hidden',
                     Operation: 'IsEqual',
-                    Values: []
+                    Values: [],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
-            }
+                    Values: [],
+                },
+            },
         },
         {
             title: 'No changes (OR)',
@@ -128,14 +124,14 @@ describe('Two Levels', () => {
                     FieldType: 'Bool',
                     ApiName: 'Hidden',
                     Operation: 'IsEqual',
-                    Values: []
+                    Values: [],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
+                    Values: [],
+                },
             },
             expected: {
                 Operation: 'OR',
@@ -143,15 +139,15 @@ describe('Two Levels', () => {
                     FieldType: 'Bool',
                     ApiName: 'Hidden',
                     Operation: 'IsEqual',
-                    Values: []
+                    Values: [],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
-            }
+                    Values: [],
+                },
+            },
         },
         {
             title: 'Transformed (AND)',
@@ -161,14 +157,14 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     ApiName: 'Context.Name',
                     Operation: 'IsEqual',
-                    Values: [ 'OrderMenu' ]
+                    Values: ['OrderMenu'],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
+                    Values: [],
+                },
             },
             expected: {
                 Operation: 'AND',
@@ -176,15 +172,15 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'Contains',
-                    Values: [ 'OrderMenu' ]
+                    Values: ['OrderMenu'],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
-            }
+                    Values: [],
+                },
+            },
         },
         {
             title: 'One Unsupported (AND)',
@@ -194,21 +190,21 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'IsEqual',
-                    Values: [ 'Grid' ]
+                    Values: ['Grid'],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
+                    Values: [],
+                },
             },
             expected: {
                 FieldType: 'DateTime',
                 ApiName: 'CreationDate',
                 Operation: 'IsNotEmpty',
-                Values: []
-            }
+                Values: [],
+            },
         },
         {
             title: 'One Unsupported (OR)',
@@ -218,16 +214,16 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'IsEqual',
-                    Values: [ 'Grid' ]
+                    Values: ['Grid'],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
+                    Values: [],
+                },
             },
-            expected: undefined
+            expected: undefined,
         },
         {
             title: 'Both Unsupported (AND)',
@@ -237,16 +233,16 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'IsEqual',
-                    Values: [ 'Grid' ]
+                    Values: ['Grid'],
                 },
                 RightNode: {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'StartWith',
-                    Values: [ 'Gr' ]
-                }
+                    Values: ['Gr'],
+                },
             },
-            expected: undefined
+            expected: undefined,
         },
         {
             title: 'Both Unsupported (OR)',
@@ -256,29 +252,28 @@ describe('Two Levels', () => {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'IsEqual',
-                    Values: [ 'Grid' ]
+                    Values: ['Grid'],
                 },
                 RightNode: {
                     FieldType: 'String',
                     ApiName: 'Type',
                     Operation: 'StartWith',
-                    Values: [ 'Gr' ]
-                }
+                    Values: ['Gr'],
+                },
             },
-            expected: undefined
+            expected: undefined,
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title, () => {
             expect(transformer.transform(test.input)).to.be.eql(test.expected);
-        })
-    })
-})
+        });
+    });
+});
 
 describe('Three Levels', () => {
-    
-    const tests: { title: string, input: JSONFilter, expected: JSONFilter | undefined }[] = [
+    const tests: { title: string; input: JSONFilter; expected: JSONFilter | undefined }[] = [
         {
             title: 'Or till the top - undefined',
             input: {
@@ -289,14 +284,14 @@ describe('Three Levels', () => {
                         FieldType: 'Bool',
                         ApiName: 'Hidden',
                         Operation: 'IsEqual',
-                        Values: []
+                        Values: [],
                     },
                     RightNode: {
                         FieldType: 'DateTime',
                         ApiName: 'CreationDate',
                         Operation: 'IsNotEmpty',
-                        Values: []
-                    }
+                        Values: [],
+                    },
                 },
                 RightNode: {
                     Operation: 'OR',
@@ -304,17 +299,17 @@ describe('Three Levels', () => {
                         FieldType: 'String',
                         ApiName: 'Type',
                         Operation: 'IsEqual',
-                        Values: [ 'Grid' ]
+                        Values: ['Grid'],
                     },
                     RightNode: {
                         FieldType: 'DateTime',
                         ApiName: 'CreationDate',
                         Operation: 'IsNotEmpty',
-                        Values: []
-                    }
-                }
+                        Values: [],
+                    },
+                },
             },
-            expected: undefined
+            expected: undefined,
         },
         {
             title: 'AND at the top',
@@ -326,14 +321,14 @@ describe('Three Levels', () => {
                         FieldType: 'Bool',
                         ApiName: 'Hidden',
                         Operation: 'IsEqual',
-                        Values: []
+                        Values: [],
                     },
                     RightNode: {
                         FieldType: 'DateTime',
                         ApiName: 'CreationDate',
                         Operation: 'IsNotEmpty',
-                        Values: []
-                    }
+                        Values: [],
+                    },
                 },
                 RightNode: {
                     Operation: 'OR',
@@ -341,15 +336,15 @@ describe('Three Levels', () => {
                         FieldType: 'String',
                         ApiName: 'Type',
                         Operation: 'IsEqual',
-                        Values: [ 'Grid' ]
+                        Values: ['Grid'],
                     },
                     RightNode: {
                         FieldType: 'DateTime',
                         ApiName: 'CreationDate',
                         Operation: 'IsNotEmpty',
-                        Values: []
-                    }
-                }
+                        Values: [],
+                    },
+                },
             },
             expected: {
                 Operation: 'AND',
@@ -357,21 +352,21 @@ describe('Three Levels', () => {
                     FieldType: 'Bool',
                     ApiName: 'Hidden',
                     Operation: 'IsEqual',
-                    Values: []
+                    Values: [],
                 },
                 RightNode: {
                     FieldType: 'DateTime',
                     ApiName: 'CreationDate',
                     Operation: 'IsNotEmpty',
-                    Values: []
-                }
-            }
+                    Values: [],
+                },
+            },
         },
-    ]
+    ];
 
-    tests.forEach(test => {
+    tests.forEach((test) => {
         it(test.title, () => {
             expect(transformer.transform(test.input)).to.be.eql(test.expected);
-        })
-    })
-})
+        });
+    });
+});

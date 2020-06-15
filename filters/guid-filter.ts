@@ -1,13 +1,12 @@
-import Filter from "./filter";
-import { BasicOperations } from "../json-filter";
+import Filter from './filter';
+import { BasicOperations } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
 
 export class GuidFilter extends Filter {
-    
-    constructor(apiName:string, private operation: BasicOperations, private filterValue: string) {
+    constructor(apiName: string, private operation: BasicOperations, private filterValue: string) {
         super(apiName);
     }
-    
+
     apply(value: any): boolean {
         switch (this.operation) {
             case 'IsEmpty':
@@ -22,7 +21,7 @@ export class GuidFilter extends Filter {
     }
 
     standardize(guid: any) {
-        return (((typeof guid === 'string') && guid) ? guid : emptyGuid).toLowerCase().replace(/-/g, '')
+        return (typeof guid === 'string' && guid ? guid : emptyGuid).toLowerCase().replace(/-/g, '');
     }
 
     toSQLWhereClause(): string {
@@ -30,14 +29,13 @@ export class GuidFilter extends Filter {
 
         switch (this.operation) {
             case 'IsEmpty':
-                return `${this.apiName} IS NULL OR ${this.apiName} = '${emptyGuid}'`
+                return `${this.apiName} IS NULL OR ${this.apiName} = '${emptyGuid}'`;
             case 'IsNotEmpty':
-                return `${this.apiName} IS NOT NULL AND ${this.apiName} != '${emptyGuid}'`
+                return `${this.apiName} IS NOT NULL AND ${this.apiName} != '${emptyGuid}'`;
             case 'IsEqual':
-                return `${this.apiName} = '${filterVal}'`
+                return `${this.apiName} = '${filterVal}'`;
             case 'IsNotEqual':
-                return `${this.apiName} != '${filterVal}'`
+                return `${this.apiName} != '${filterVal}'`;
         }
     }
-
 }

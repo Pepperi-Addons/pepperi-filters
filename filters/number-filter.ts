@@ -1,13 +1,8 @@
-import Filter from "./filter";
-import { NumberOperation } from "../json-filter";
+import Filter from './filter';
+import { NumberOperation } from '../json-filter';
 
 export class NumberFilter extends Filter {
-    
-    constructor(
-        apiName: string,
-        private operation: NumberOperation,
-        private filterValues: number[] = []
-    ) {
+    constructor(apiName: string, private operation: NumberOperation, private filterValues: number[] = []) {
         super(apiName);
     }
 
@@ -18,22 +13,22 @@ export class NumberFilter extends Filter {
             case 'IsNotEmpty':
                 return value != undefined;
             case 'IsEqual':
-                return this.filterValues.find(x => value === x) !== undefined;
+                return this.filterValues.find((x) => value === x) !== undefined;
             case 'IsNotEqual':
-                return this.filterValues.find(x => value === x) === undefined;
-            case '=': 
+                return this.filterValues.find((x) => value === x) === undefined;
+            case '=':
                 return value === this.filterValues[0];
-            case '!=': 
+            case '!=':
                 return value !== this.filterValues[0];
-            case '>': 
+            case '>':
                 return value > this.filterValues[0];
-            case '>=': 
+            case '>=':
                 return value >= this.filterValues[0];
-            case '<': 
+            case '<':
                 return value < this.filterValues[0];
-            case '<=': 
+            case '<=':
                 return value <= this.filterValues[0];
-            case 'Between': 
+            case 'Between':
                 return value >= this.filterValues[0] && value <= this.filterValues[1];
         }
     }
@@ -44,24 +39,23 @@ export class NumberFilter extends Filter {
             case 'IsNotEmpty':
                 return `${this.apiName} IS NOT NULL`;
             case 'IsEqual':
-                return `${this.apiName} IN (${this.filterValues.map(val => val.toString()).join(', ')})`;
+                return `${this.apiName} IN (${this.filterValues.map((val) => val.toString()).join(', ')})`;
             case 'IsNotEqual':
-                return `${this.apiName} NOT IN (${this.filterValues.map(val => val.toString()).join(', ')})`;
-            case '=': 
+                return `${this.apiName} NOT IN (${this.filterValues.map((val) => val.toString()).join(', ')})`;
+            case '=':
                 return `${this.apiName} = ${this.filterValues[0]}`;
-            case '!=': 
+            case '!=':
                 return `${this.apiName} != ${this.filterValues[0]}`;
-            case '>': 
+            case '>':
                 return `${this.apiName} > ${this.filterValues[0]}`;
-            case '>=': 
+            case '>=':
                 return `${this.apiName} >= ${this.filterValues[0]}`;
-            case '<': 
+            case '<':
                 return `${this.apiName} < ${this.filterValues[0]}`;
-            case '<=': 
+            case '<=':
                 return `${this.apiName} <= ${this.filterValues[0]}`;
-            case 'Between': 
+            case 'Between':
                 return `${this.apiName} >= ${this.filterValues[0]} AND ${this.apiName} <= ${this.filterValues[0]}`;
         }
     }
-
 }

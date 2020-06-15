@@ -1,9 +1,8 @@
-import Filter from "./filter";
-import { DateOperation } from "../json-filter";
+import Filter from './filter';
+import { DateOperation } from '../json-filter';
 
 export class DateFilter extends Filter {
-    
-    constructor (apiName: string, private operation: DateOperation, private filterValues: string[]) {
+    constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
         super(apiName);
     }
 
@@ -40,7 +39,7 @@ export class DateFilter extends Filter {
             }
         }
     }
-    
+
     toSQLWhereClause(): string {
         switch (this.operation) {
             case 'IsEmpty':
@@ -74,5 +73,4 @@ export class DateFilter extends Filter {
             }
         }
     }
-
 }
