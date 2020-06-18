@@ -9,6 +9,7 @@ import {
     JSONBoolOperation,
     NumberOperation,
 } from './json-filter';
+import { str2Bool } from './converters';
 
 export class SQLWhereParser {
     constructor(private fields: { [key: string]: FieldType }) {}
@@ -71,12 +72,9 @@ export class SQLWhereParser {
 
         let operator: AnyOperation | undefined = undefined;
         switch (fieldType) {
-            case 'Bool': {
-                break; // operation doesn't matter
-            }
-
+            case 'Bool':
             case 'JsonBool': {
-                operator = this.parseJsonBoolOperation();
+                operator = this.parseBoolOperation(operation, values);
                 break;
             }
 
@@ -120,9 +118,23 @@ export class SQLWhereParser {
         return res as JSONFilter;
     }
 
-    private parseJsonBoolOperation(): JSONBoolOperation {
-        // todo - make sure this is the right one
-        return 'IsEqual';
+    private parseBoolOperation(operator: string, values: string[]): JSONBoolOperation {
+        const res: JSONBoolOperation = 'IsEqual';
+
+        switch (operator) {
+            case '=': {
+                break;
+            }
+
+            case '!=': {
+                // lets swap the value
+                const val = str2Bool(values[0]);
+                values[0] = val ? 'false' : 'true';
+                break;
+            }
+        }
+
+        return res;
     }
 
     private parseBasicExpression(operator: string, values: string[]) {
@@ -247,6 +259,8 @@ export class SQLWhereParser {
             res.push(value);
         } else if (typeof value === 'number') {
             res.push(value.toString());
+        } else if (typeof value === 'boolean') {
+            res.push(value ? 'true' : 'false');
         } else if (value === null) {
             res.push('null');
         } else if (typeof value === 'object' && value.NOT && value.NOT[0] === null) {

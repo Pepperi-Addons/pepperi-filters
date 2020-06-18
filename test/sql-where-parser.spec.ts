@@ -9,6 +9,81 @@ interface Test {
     filter: JSONFilter;
 }
 
+describe('One level - Boolean', () => {
+    const parser = new SQLWhereParser({
+        Hidden: 'Bool',
+    });
+
+    const tests: Test[] = [
+        {
+            title: '= true',
+            where: `Hidden = true`,
+            filter: {
+                ApiName: 'Hidden',
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['true'],
+            },
+        },
+        {
+            title: '!= true',
+            where: `Hidden != true`,
+            filter: {
+                ApiName: 'Hidden',
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['false'],
+            },
+        },
+        {
+            title: 'Equals 1',
+            where: `Hidden = 1`,
+            filter: {
+                ApiName: 'Hidden',
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['1'],
+            },
+        },
+        {
+            title: 'Equals 0',
+            where: `Hidden = 0`,
+            filter: {
+                ApiName: 'Hidden',
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['0'],
+            },
+        },
+        {
+            title: 'Equals false',
+            where: `Hidden = false`,
+            filter: {
+                ApiName: 'Hidden',
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['false'],
+            },
+        },
+        {
+            title: '!= false',
+            where: `Hidden != false`,
+            filter: {
+                ApiName: 'Hidden',
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['true'],
+            },
+        },
+    ];
+
+    tests.forEach((test) => {
+        it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
+            expect(parser.parse(test.where)).to.eql(test.filter);
+        });
+    });
+});
+
 describe('One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
     const parser = new SQLWhereParser({
