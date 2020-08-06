@@ -47,17 +47,17 @@ export class DateFilter extends Filter {
             case 'IsNotEmpty':
                 return `${this.apiName} IS NOT NULL`;
             case '=':
-                return `${this.apiName} = '${new Date(this.filterValues[0]).toISOString()}'`;
+                return `${this.apiName} = '${this.apiDateValue(this.filterValues[0])}'`;
             case '!=':
-                return `${this.apiName} != '${new Date(this.filterValues[0]).toISOString()}'`;
+                return `${this.apiName} != '${this.apiDateValue(this.filterValues[0])}'`;
             case '>':
-                return `${this.apiName} > '${new Date(this.filterValues[0]).toISOString()}'`;
+                return `${this.apiName} > '${this.apiDateValue(this.filterValues[0])}'`;
             case '>=':
-                return `${this.apiName} >= '${new Date(this.filterValues[0]).toISOString()}'`;
+                return `${this.apiName} >= '${this.apiDateValue(this.filterValues[0])}'`;
             case '<':
-                return `${this.apiName} < '${new Date(this.filterValues[0]).toISOString()}'`;
+                return `${this.apiName} < '${this.apiDateValue(this.filterValues[0])}'`;
             case '<=':
-                return `${this.apiName} <= '${new Date(this.filterValues[0]).toISOString()}'`;
+                return `${this.apiName} <= '${this.apiDateValue(this.filterValues[0])}'`;
             case 'Today':
             case 'ThisWeek':
             case 'ThisMonth':
@@ -72,5 +72,14 @@ export class DateFilter extends Filter {
                 throw new Error(`Operation ${this.operation} isn't supported`);
             }
         }
+    }
+
+    apiDateValue(val: string): string {
+        let res = new Date(val).toISOString();
+
+        // get rid of ms at the end - API doesn't support this
+        res = res.split('.')[0] + 'Z';
+
+        return res;
     }
 }

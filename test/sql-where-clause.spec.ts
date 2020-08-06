@@ -336,7 +336,7 @@ describe('One level - String', () => {
 describe('One level - DateTime', () => {
     const fieldName = 'TSADateTime';
     const fieldType = 'DateTime';
-    const now = new Date().toISOString();
+    const now = new Date().toISOString().split('.')[0] + 'Z';
 
     const tests: Test[] = [
         {
