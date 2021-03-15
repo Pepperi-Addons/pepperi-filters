@@ -177,6 +177,10 @@ export class SQLWhereParser {
                     res = operator;
                     break;
                 }
+                case 'IN': {
+                    res = 'IsEqual';
+                    break;
+                }
             }
         }
 

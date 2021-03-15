@@ -159,6 +159,26 @@ describe('One level - Integer', () => {
             },
         },
         {
+            title: 'In (one value)',
+            where: `${fieldName} IN (123)`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEqual',
+                Values: ['123'],
+            },
+        },
+        {
+            title: 'In (two values)',
+            where: `${fieldName} IN (123, 345)`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEqual',
+                Values: ['123', '345'],
+            },
+        },
+        {
             title: 'Not Equal (!=)',
             where: `${fieldName} != 123`,
             filter: {
@@ -253,6 +273,26 @@ describe('One level - Double', () => {
                 FieldType: fieldType,
                 Operation: 'IsEqual',
                 Values: ['123.5'],
+            },
+        },
+        {
+            title: 'In (one value)',
+            where: `${fieldName} IN (123.5)`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEqual',
+                Values: ['123.5'],
+            },
+        },
+        {
+            title: 'In (two values)',
+            where: `${fieldName} IN (123.5, 345.1)`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEqual',
+                Values: ['123.5', '345.1'],
             },
         },
         {
