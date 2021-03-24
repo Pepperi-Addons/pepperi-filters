@@ -210,8 +210,7 @@ export class SQLWhereParser {
                             // LIKE 'abcd%'
                             val = val.slice(0, val.length - 1);
                             res = 'StartWith';
-                        }
-                        else {
+                        } else {
                             // LIKE 'abcd'
                             res = 'IsEqual';
                         }
