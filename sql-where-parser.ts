@@ -211,6 +211,10 @@ export class SQLWhereParser {
                             val = val.slice(0, val.length - 1);
                             res = 'StartWith';
                         }
+                        else {
+                            // LIKE 'abcd'
+                            res = 'IsEqual';
+                        }
                         values[0] = val;
                     }
                     break;

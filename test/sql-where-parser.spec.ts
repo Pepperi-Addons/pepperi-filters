@@ -403,6 +403,16 @@ describe('One level - String', () => {
             },
         },
         {
+            title: 'LIKE - Equals',
+            where: `${fieldName} LIKE 'Hi'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEqual',
+                Values: ['Hi'],
+            },
+        },
+        {
             title: 'Contains',
             where: `${fieldName} LIKE '%Hi%'`,
             filter: {
