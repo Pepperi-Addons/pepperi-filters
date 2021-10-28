@@ -1,5 +1,6 @@
 import Filter from './filter';
 import { StringOperation } from '../json-filter';
+import esb, { Query, queryStringQuery, wildcardQuery } from 'elastic-builder';
 
 export class StringFilter extends Filter {
     constructor(
@@ -69,5 +70,34 @@ export class StringFilter extends Filter {
             );
         });
         return first != undefined;
+    }
+
+    toKibanaFilter(): Query {
+        const res = esb.boolQuery();
+        const existsFilter = esb.existsQuery(this.apiName);
+        const termQueryEmpty = esb.termQuery(`${this.apiName}.keyword`, '');
+        const termsQueryValues = esb.termsQuery(
+            `${this.apiName}.keyword`,
+            this.filterValues.map((val) => val.toString()),
+        );
+
+        switch (this.operation) {
+            case 'IsEmpty':
+                return res.should([esb.boolQuery().mustNot(existsFilter), esb.boolQuery().must(termQueryEmpty)]);
+            case 'IsNotEmpty':
+                return res.mustNot(termQueryEmpty).filter(existsFilter);
+            case 'IsEqual':
+                return res.must(termsQueryValues);
+            case 'IsNotEqual':
+                return res.mustNot(termsQueryValues);
+            case 'Contains':
+                return wildcardQuery(this.apiName, `*${this.filterValues[0]}*`);
+            case 'StartWith':
+                return wildcardQuery(this.apiName, `${this.filterValues[0]}*`);
+            case 'EndWith':
+                return wildcardQuery(this.apiName, `*${this.filterValues[0]}`);
+            case 'IsLoggedInUser':
+                throw new Error("IsLoggedInUser isn't a supported filter");
+        }
     }
 }

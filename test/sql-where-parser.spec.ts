@@ -2,12 +2,7 @@ import 'mocha';
 import { expect } from 'chai';
 import { JSONFilter, FieldType } from '../index';
 import { SQLWhereParser } from '../sql-where-parser';
-
-interface Test {
-    title: string;
-    where: string;
-    filter: JSONFilter;
-}
+import { Test } from '../models/test';
 
 describe('One level - Boolean', () => {
     const parser = new SQLWhereParser({

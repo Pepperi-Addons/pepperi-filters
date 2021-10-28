@@ -1,12 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { JSONFilter, toApiQueryString } from '../index';
-
-interface Test {
-    title: string;
-    where: string;
-    filter: JSONFilter;
-}
+import { Test } from '../models/test';
 
 describe('One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';

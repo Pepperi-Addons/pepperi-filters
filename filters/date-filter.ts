@@ -1,5 +1,6 @@
 import Filter from './filter';
 import { DateOperation } from '../json-filter';
+import esb, { Query, termQuery } from 'elastic-builder';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
@@ -81,5 +82,45 @@ export class DateFilter extends Filter {
         res = res.split('.')[0] + 'Z';
 
         return res;
+    }
+
+    toKibanaFilter(): Query {
+        const filterVal = this.filterValues[0];
+        const existsFilter = esb.existsQuery(`${this.apiName}`);
+        const boolQuery = esb.boolQuery();
+        const rangeQuery = esb.rangeQuery();
+        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, filterVal);
+
+        switch (this.operation) {
+            case 'IsEmpty':
+                return boolQuery.mustNot(existsFilter);
+            case 'IsNotEmpty':
+                return boolQuery.must(existsFilter);
+            case '=':
+                return boolQuery.must(termQueryValue);
+            case '!=':
+                return boolQuery.mustNot(termQueryValue);
+            case '>':
+                return rangeQuery.gt(filterVal);
+            case '>=':
+                return rangeQuery.gte(filterVal);
+            case '<':
+                return rangeQuery.lt(filterVal);
+            case '<=':
+                return rangeQuery.lte(filterVal);
+            case 'Today':
+            case 'ThisWeek':
+            case 'ThisMonth':
+            case 'On':
+            case 'After':
+            case 'Before':
+            case 'Between':
+            case 'InTheLast':
+            case 'NotInTheLast':
+            case 'DueIn':
+            case 'NotDueIn': {
+                throw new Error(`Operation ${this.operation} isn't supported`);
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 import Filter from './filter';
 import { NumberOperation } from '../json-filter';
+import esb, { Query } from 'elastic-builder';
 
 export class NumberFilter extends Filter {
     constructor(apiName: string, private operation: NumberOperation, private filterValues: number[] = []) {
@@ -56,6 +57,43 @@ export class NumberFilter extends Filter {
                 return `${this.apiName} <= ${this.filterValues[0]}`;
             case 'Between':
                 return `${this.apiName} >= ${this.filterValues[0]} AND ${this.apiName} <= ${this.filterValues[0]}`;
+        }
+    }
+
+    toKibanaFilter(): Query {
+        const existsFilter = esb.existsQuery(`${this.apiName}`);
+        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, this.filterValues[0]);
+        const rangeQuery = esb.rangeQuery(`${this.apiName}`);
+
+        const termsQueryValues = esb.termsQuery(
+            `${this.apiName}.keyword`,
+            this.filterValues.map((val) => val.toString()),
+        );
+
+        const res = esb.boolQuery();
+        switch (this.operation) {
+            case 'IsEmpty':
+                return res.mustNot(existsFilter);
+            case 'IsNotEmpty':
+                return res.must(existsFilter);
+            case 'IsEqual':
+                return res.must(termsQueryValues);
+            case 'IsNotEqual':
+                return res.mustNot(termsQueryValues);
+            case '=':
+                return res.must(termQueryValue);
+            case '!=':
+                return res.mustNot(termQueryValue);
+            case '>':
+                return rangeQuery.gt(this.filterValues[0]);
+            case '>=':
+                return rangeQuery.gte(this.filterValues[0]);
+            case '<':
+                return rangeQuery.lt(this.filterValues[0]);
+            case '<=':
+                return rangeQuery.lte(this.filterValues[0]);
+            case 'Between':
+                return rangeQuery.lte(this.filterValues[0]).gte(this.filterValues[0]);
         }
     }
 }

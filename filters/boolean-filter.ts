@@ -1,5 +1,6 @@
 import Filter from './filter';
 import { str2Bool } from '../converters';
+import esb, { Query } from 'elastic-builder';
 
 export class BooleanFilter extends Filter {
     constructor(apiName: string, private filterValue: boolean) {
@@ -21,5 +22,10 @@ export class BooleanFilter extends Filter {
     }
     toSQLWhereClause(): string {
         return `${this.apiName} = ${this.filterValue ? '1' : '0'}`;
+    }
+
+    toKibanaFilter(): Query {
+        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, 'true');
+        return esb.boolQuery().must(termQueryValue);
     }
 }
