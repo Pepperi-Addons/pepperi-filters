@@ -75,7 +75,7 @@ export function toApiQueryString(jsonFilter: JSONFilter | undefined) {
     return undefined;
 }
 
-export function toKQLQuery(jsonFilter: JSONFilter | undefined) {
+export function toKibanaQuery(jsonFilter: JSONFilter | undefined) {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);

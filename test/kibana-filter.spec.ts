@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { toKQLQuery } from '../index';
+import { toKibanaQuery } from '../index';
 import { KibanaTest } from '../models/kibana-test';
 
 describe('Kibana: One level - Guid', () => {
@@ -53,7 +53,7 @@ describe('Kibana: One level - Guid', () => {
     ];
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
         });
     });
 });
@@ -149,7 +149,7 @@ describe('Kibana: One level - Integer', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(20, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
         });
     });
 });
@@ -245,7 +245,7 @@ describe('Kibana: One level - Double', () => {
 
     tests.forEach((test) => {
         it(`${test.title.padStart(20, ' ')} | ${test.kibanaQuery.padEnd(10, ' ')}`, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -331,7 +331,7 @@ describe('Kibana: One level - String', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -416,7 +416,7 @@ describe('Kibana: One level - DateTime', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -469,7 +469,7 @@ describe('Kibana: Two Levels', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -517,7 +517,7 @@ describe('Kibana: Three Levels', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
         });
     });
 });
