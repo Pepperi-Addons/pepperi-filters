@@ -1,12 +1,12 @@
 import 'mocha';
 import { expect } from 'chai';
 import { JSONFilter, toApiQueryString } from '../index';
-import { Test } from '../models/test';
+import { SQLTest } from '../models/sql-test';
 
 describe('One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
 
-    const tests: Test[] = [
+    const tests: SQLTest[] = [
         {
             title: 'Equals',
             where: `UUID = '${uuid1}'`,
@@ -60,7 +60,7 @@ describe('One level - Integer', () => {
     const fieldName = 'TSAInt';
     const fieldType = 'Integer';
 
-    const tests: Test[] = [
+    const tests: SQLTest[] = [
         {
             title: 'IsEqual',
             where: `${fieldName} IN (123, 23)`,
@@ -154,7 +154,7 @@ describe('One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
 
-    const tests: Test[] = [
+    const tests: SQLTest[] = [
         {
             title: 'Equals',
             where: `${fieldName} IN (123.5, 23.1)`,
@@ -248,7 +248,7 @@ describe('One level - String', () => {
     const fieldName = 'TSAString';
     const fieldType = 'String';
 
-    const tests: Test[] = [
+    const tests: SQLTest[] = [
         {
             title: 'Equals',
             where: `${fieldName} IN ('Hi', 'Bye')`,
@@ -333,7 +333,7 @@ describe('One level - DateTime', () => {
     const fieldType = 'DateTime';
     const now = new Date().toISOString().split('.')[0] + 'Z';
 
-    const tests: Test[] = [
+    const tests: SQLTest[] = [
         {
             title: '=',
             where: `${fieldName} = '${now}'`,
@@ -395,7 +395,7 @@ describe('One level - DateTime', () => {
             },
         },
         {
-            title: 'IS NOT NULL',
+            title: 'IS NULL',
             where: `${fieldName} IS NULL`,
             filter: {
                 ApiName: fieldName,
@@ -414,7 +414,7 @@ describe('One level - DateTime', () => {
 });
 
 describe('Two Levels', () => {
-    const tests: Test[] = [
+    const tests: SQLTest[] = [
         {
             title: 'AND',
             where: `(TSAString LIKE '%HI%') AND (TSADouble >= 123.23)`,

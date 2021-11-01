@@ -1,57 +1,59 @@
 import 'mocha';
 import { expect } from 'chai';
 import { toKQLQuery } from '../index';
-import { Test } from '../models/test';
+import { KibanaTest } from '../models/kibana-test';
 
 describe('Kibana: One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
     const emptyUUID = '00000000-0000-0000-0000-000000000000';
+    const fieldName = 'UUID';
+    const fieldType = 'Guid';
 
-    const tests: Test[] = [
+    const tests: KibanaTest[] = [
         {
             title: 'Equals',
-            where: `{"bool":{"must":{"term":{"UUID.keyword":"${uuid1}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"term":{"UUID.keyword":"${uuid1}"}}}}`,
             filter: {
-                ApiName: 'UUID',
-                FieldType: 'Guid',
+                ApiName: fieldName,
+                FieldType: fieldType,
                 Operation: 'IsEqual',
                 Values: [uuid1],
             },
         },
         {
             title: 'Not Equal (!=)',
-            where: `{"bool":{"must_not":{"term":{"UUID.keyword":"${uuid1}"}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid1}"}}}}`,
             filter: {
-                ApiName: 'UUID',
-                FieldType: 'Guid',
+                ApiName: fieldName,
+                FieldType: fieldType,
                 Operation: 'IsNotEqual',
                 Values: [uuid1],
             },
         },
         {
             title: 'IS NULL',
-            where: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"UUID"}}}},{"bool":{"must":{"term":{"UUID.keyword":"${emptyUUID}"}}}}]}}`,
+            kibanaQuery: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}},{"bool":{"must":{"term":{"${fieldName}.keyword":"${emptyUUID}"}}}}]}}`,
             filter: {
-                ApiName: 'UUID',
-                FieldType: 'Guid',
+                ApiName: fieldName,
+                FieldType: fieldType,
                 Operation: 'IsEmpty',
                 Values: [],
             },
         },
         {
             title: 'IS NOT NULL',
-            where: `{"bool":{"filter":{"exists":{"field":"UUID"}},"must_not":{"term":{"UUID.keyword":"${emptyUUID}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}.keyword":"${emptyUUID}"}}}}`,
             filter: {
-                ApiName: 'UUID',
-                FieldType: 'Guid',
+                ApiName: fieldName,
+                FieldType: fieldType,
                 Operation: 'IsNotEmpty',
                 Values: [],
             },
         },
     ];
     tests.forEach((test) => {
-        it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.where);
+        it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
         });
     });
 });
@@ -59,71 +61,73 @@ describe('Kibana: One level - Guid', () => {
 describe('Kibana: One level - Integer', () => {
     const fieldName = 'TSAInt';
     const fieldType = 'Integer';
+    const values = ['123', '23'];
+    const value = '123';
 
-    const tests: Test[] = [
+    const tests: KibanaTest[] = [
         {
             title: 'IsEqual',
-            where: `{"bool":{"must":[{"terms": {"${fieldName}": [123,23]}]}}`,
+            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: ['123', '23'],
+                Values: values,
             },
         },
         {
             title: 'Not Equal',
-            where: `{"bool":{"must_not":[{"terms": {"${fieldName}": [123,23]}]}}`,
+            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: ['123', '23'],
+                Values: values,
             },
         },
         {
             title: 'BiggerThanOrEquals',
-            where: `{"range": {"${fieldName}": {"gte": 123}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"gte":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: ['123'],
+                Values: [value],
             },
         },
         {
             title: 'BiggerThan',
-            where: `{"range": {"${fieldName}": {"gt": 123}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"gt":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: ['123'],
+                Values: [value],
             },
         },
         {
             title: 'SmallerThanOrEquals',
-            where: `{"range": {"${fieldName}": {"lte": 123}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"lte":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: ['123'],
+                Values: [value],
             },
         },
         {
             title: 'SmallerThan',
-            where: `{"range": {"${fieldName}": {"lt": 123}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"lt":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: ['123'],
+                Values: [value],
             },
         },
         {
             title: 'IS NULL',
-            where: `{"bool": {"must_not": {	"exists": {	"field":"${fieldName}"}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -133,7 +137,7 @@ describe('Kibana: One level - Integer', () => {
         },
         {
             title: 'IS NOT NULL',
-            where: `{"bool": {"must":{"exists":{"field":"${fieldName}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"exists":{"field":"${fieldName}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -144,82 +148,82 @@ describe('Kibana: One level - Integer', () => {
     ];
 
     tests.forEach((test) => {
-        it(test.title.padStart(20, ' ') + ' | ' + test.where, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.where);
+        it(test.title.padStart(20, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
         });
     });
 });
 
-describe('One level - Double', () => {
+describe('Kibana: One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
-    const test2Values = ['123.5', '23.1'];
-    const testValue = ['123.5'];
+    const values = ['123.5', '23.1'];
+    const value = '123.5';
 
-    const tests: Test[] = [
+    const tests: KibanaTest[] = [
         {
             title: 'Equals',
-            where: `{"bool":{"must":[{"terms": {"${fieldName}": [${test2Values.join(',')}]}}`,
+            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsEqual',
-                Values: test2Values,
+                Values: values,
             },
         },
         {
             title: 'Not Equal',
-            where: `{"bool":{"must_not":[{"terms": {"${fieldName}": [${test2Values.join(',')}]}}`,
+            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: 'IsNotEqual',
-                Values: test2Values,
+                Values: values,
             },
         },
         {
             title: 'BiggerThanOrEquals',
-            where: `{"range": {"${fieldName}": {"gte": 123.5}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"gte":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>=',
-                Values: testValue,
+                Values: [value],
             },
         },
         {
             title: 'BiggerThan',
-            where: `{"range": {"${fieldName}": {"gt": 123.5}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"gt":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '>',
-                Values: testValue,
+                Values: [value],
             },
         },
         {
             title: 'SmallerThanOrEquals',
-            where: `{"range": {"${fieldName}": {"lte": 123.5}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"lte":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<=',
-                Values: testValue,
+                Values: [value],
             },
         },
         {
             title: 'SmallerThan',
-            where: `{"range": {"${fieldName}": {"lt": 123.5}}}`,
+            kibanaQuery: `{"range":{"${fieldName}":{"lt":${value}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
                 Operation: '<',
-                Values: testValue,
+                Values: [value],
             },
         },
         {
             title: 'IS NULL',
-            where: `{"bool": {"must_not": {	"exists": {	"field":"${fieldName}"}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -229,7 +233,7 @@ describe('One level - Double', () => {
         },
         {
             title: 'IS NOT NULL',
-            where: `{"bool":{"must":{"exists":{"field":"${fieldName}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"exists":{"field":"${fieldName}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -240,199 +244,203 @@ describe('One level - Double', () => {
     ];
 
     tests.forEach((test) => {
-        it(`${test.title.padStart(20, ' ')} | ${test.where.padEnd(10, ' ')}`, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.where);
+        it(`${test.title.padStart(20, ' ')} | ${test.kibanaQuery.padEnd(10, ' ')}`, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
         });
     });
 });
 
-// describe('One level - String', () => {
-//     const fieldName = 'TSAString';
-//     const fieldType = 'String';
+describe('Kibana: One level - String', () => {
+    const fieldName = 'TSAString';
+    const fieldType = 'String';
+    const values = ['Hi', 'Bye'];
+    const value = 'Hi';
 
-//     const tests: Test[] = [
-//         {
-//             title: 'Equals',
-//             where: `${fieldName} IN ('Hi', 'Bye')`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'IsEqual',
-//                 Values: ['Hi', 'Bye'],
-//             },
-//         },
-//         {
-//             title: 'Not Equal',
-//             where: `${fieldName} NOT IN ('Hi', 'Bye')`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'IsNotEqual',
-//                 Values: ['Hi', 'Bye'],
-//             },
-//         },
-//         {
-//             title: 'Contains',
-//             where: `${fieldName} LIKE '%Hi%'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'Contains',
-//                 Values: ['Hi'],
-//             },
-//         },
-//         {
-//             title: 'StartsWith',
-//             where: `${fieldName} LIKE 'Hi%'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'StartWith',
-//                 Values: ['Hi'],
-//             },
-//         },
-//         {
-//             title: 'EndsWith',
-//             where: `${fieldName} LIKE '%Hi'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'EndWith',
-//                 Values: ['Hi'],
-//             },
-//         },
-//         {
-//             title: 'IS NOT NULL',
-//             where: `${fieldName} IS NOT NULL AND ${fieldName} != ''`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'IsNotEmpty',
-//                 Values: [],
-//             },
-//         },
-//         {
-//             title: 'IS NULL',
-//             where: `${fieldName} IS NULL OR ${fieldName} = ''`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'IsEmpty',
-//                 Values: [],
-//             },
-//         },
-//     ];
+    const tests: KibanaTest[] = [
+        {
+            title: 'Equals',
+            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEqual',
+                Values: values,
+            },
+        },
+        {
+            title: 'Not Equal',
+            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsNotEqual',
+                Values: values,
+            },
+        },
+        {
+            title: 'Contains',
+            kibanaQuery: `{"wildcard":{"${fieldName}":"*${value}*"}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'Contains',
+                Values: [value],
+            },
+        },
+        {
+            title: 'StartsWith',
+            kibanaQuery: `{"wildcard":{"${fieldName}":"${value}*"}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'StartWith',
+                Values: [value],
+            },
+        },
+        {
+            title: 'EndsWith',
+            kibanaQuery: `{"wildcard":{"${fieldName}":"*${value}"}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'EndWith',
+                Values: [value],
+            },
+        },
+        {
+            title: 'IS NOT NULL',
+            kibanaQuery: `{"bool":{"filter":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}.keyword":""}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsNotEmpty',
+                Values: [],
+            },
+        },
+        {
+            title: 'IS NULL',
+            kibanaQuery: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}},{"bool":{"must":{"term":{"${fieldName}.keyword":""}}}}]}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEmpty',
+                Values: [],
+            },
+        },
+    ];
 
-//     tests.forEach((test) => {
-//         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-//             expect(toApiQueryString(test.filter)).to.be.equal(test.where);
-//         });
-//     });
-// });
+    tests.forEach((test) => {
+        it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+        });
+    });
+});
 
-// describe('One level - DateTime', () => {
-//     const fieldName = 'TSADateTime';
-//     const fieldType = 'DateTime';
-//     const now = new Date().toISOString().split('.')[0] + 'Z';
+describe('Kibana: One level - DateTime', () => {
+    const fieldName = 'TSADateTime';
+    const fieldType = 'DateTime';
+    const now = new Date().toISOString().split('.')[0] + 'Z';
 
-//     const tests: Test[] = [
-//         {
-//             title: '=',
-//             where: `${fieldName} = '${now}'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: '=',
-//                 Values: [now],
-//             },
-//         },
-//         {
-//             title: '>',
-//             where: `${fieldName} > '${now}'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: '>',
-//                 Values: [now],
-//             },
-//         },
-//         {
-//             title: '>=',
-//             where: `${fieldName} >= '${now}'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: '>=',
-//                 Values: [now],
-//             },
-//         },
-//         {
-//             title: '<=',
-//             where: `${fieldName} <= '${now}'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: '<=',
-//                 Values: [now],
-//             },
-//         },
-//         {
-//             title: '<',
-//             where: `${fieldName} < '${now}'`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: '<',
-//                 Values: [now],
-//             },
-//         },
-//         {
-//             title: 'IS NOT NULL',
-//             where: `${fieldName} IS NOT NULL`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'IsNotEmpty',
-//                 Values: [],
-//             },
-//         },
-//         {
-//             title: 'IS NOT NULL',
-//             where: `${fieldName} IS NULL`,
-//             filter: {
-//                 ApiName: fieldName,
-//                 FieldType: fieldType,
-//                 Operation: 'IsEmpty',
-//                 Values: [],
-//             },
-//         },
-//     ];
+    const tests: KibanaTest[] = [
+        {
+            title: '=',
+            kibanaQuery: `{"bool":{"must":{"term":{"${fieldName}.keyword":"${now}"}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: '=',
+                Values: [now],
+            },
+        },
+        {
+            title: '>',
+            kibanaQuery: `{"range":{"${fieldName}":{"gt":"${now}"}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: '>',
+                Values: [now],
+            },
+        },
+        {
+            title: '>=',
+            kibanaQuery: `{"range":{"${fieldName}":{"gte":"${now}"}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: '>=',
+                Values: [now],
+            },
+        },
+        {
+            title: '<=',
+            kibanaQuery: `{"range":{"${fieldName}":{"lte":"${now}"}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: '<=',
+                Values: [now],
+            },
+        },
+        {
+            title: '<',
+            kibanaQuery: `{"range":{"${fieldName}":{"lt":"${now}"}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: '<',
+                Values: [now],
+            },
+        },
+        {
+            title: 'IS NOT NULL',
+            kibanaQuery: `{"bool":{"must":{"exists":{"field":"${fieldName}"}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsNotEmpty',
+                Values: [],
+            },
+        },
+        {
+            title: 'IS NULL',
+            kibanaQuery: `{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'IsEmpty',
+                Values: [],
+            },
+        },
+    ];
 
-//     tests.forEach((test) => {
-//         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-//             expect(toApiQueryString(test.filter)).to.eql(test.where);
-//         });
-//     });
-// });
+    tests.forEach((test) => {
+        it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+        });
+    });
+});
 
 describe('Kibana: Two Levels', () => {
     const uuid2 = '2de02514-30f5-45c5-a55e-c2d9cea039b6';
+    const fieldName = 'UUID';
+    const fieldType = 'Guid';
 
-    const tests: Test[] = [
+    const tests: KibanaTest[] = [
         {
             title: 'AND',
-            where: `{"bool":{"must":[{"bool":{"must":{"term":{"UUID.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"UUID.keyword":"${uuid2}"}}}}]}}`,
+            kibanaQuery: `{"bool":{"must":[{"bool":{"must":{"term":{"${fieldName}.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid2}"}}}}]}}`,
             filter: {
                 Operation: 'AND',
                 LeftNode: {
-                    ApiName: 'UUID',
-                    FieldType: 'Guid',
+                    ApiName: fieldName,
+                    FieldType: fieldType,
                     Operation: 'IsEqual',
                     Values: [uuid2],
                 },
                 RightNode: {
-                    ApiName: 'UUID',
-                    FieldType: 'Guid',
+                    ApiName: fieldName,
+                    FieldType: fieldType,
                     Operation: 'IsNotEqual',
                     Values: [uuid2],
                 },
@@ -440,18 +448,18 @@ describe('Kibana: Two Levels', () => {
         },
         {
             title: 'OR',
-            where: `{"bool":{"should":[{"bool":{"must":{"term":{"UUID.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"UUID.keyword":"${uuid2}"}}}}]}}`,
+            kibanaQuery: `{"bool":{"should":[{"bool":{"must":{"term":{"${fieldName}.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid2}"}}}}]}}`,
             filter: {
                 Operation: 'OR',
                 LeftNode: {
-                    ApiName: 'UUID',
-                    FieldType: 'Guid',
+                    ApiName: fieldName,
+                    FieldType: fieldType,
                     Operation: 'IsEqual',
                     Values: [uuid2],
                 },
                 RightNode: {
-                    ApiName: 'UUID',
-                    FieldType: 'Guid',
+                    ApiName: fieldName,
+                    FieldType: fieldType,
                     Operation: 'IsNotEqual',
                     Values: [uuid2],
                 },
@@ -460,17 +468,17 @@ describe('Kibana: Two Levels', () => {
     ];
 
     tests.forEach((test) => {
-        it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.where);
+        it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
         });
     });
 });
 
 describe('Kibana: Three Levels', () => {
-    const tests: Test[] = [
+    const tests: KibanaTest[] = [
         {
             title: 'AND',
-            where: `{"bool":{"must":[{"bool":{"must":[{"range":{"TSADouble":{"lte":123.23}}},{"range":{"TSADouble":{"gte":123.23}}}]}},{"bool":{"should":[{"range":{"TSADouble":{"gte":123.23}}},{"range":{"TSADouble":{"gte":123.23}}}]}}]}}`,
+            kibanaQuery: `{"bool":{"must":[{"bool":{"must":[{"range":{"TSADouble":{"lte":123.23}}},{"range":{"TSADouble":{"gte":123.23}}}]}},{"bool":{"should":[{"range":{"TSADouble":{"gte":123.23}}},{"range":{"TSADouble":{"gte":123.23}}}]}}]}}`,
             filter: {
                 Operation: 'AND',
                 LeftNode: {
@@ -508,8 +516,8 @@ describe('Kibana: Three Levels', () => {
     ];
 
     tests.forEach((test) => {
-        it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
-            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.where);
+        it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKQLQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
         });
     });
 });

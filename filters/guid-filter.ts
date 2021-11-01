@@ -52,7 +52,7 @@ export class GuidFilter extends Filter {
                 res.should([esb.boolQuery().mustNot(existsFilter), esb.boolQuery().must(termQueryEmpty)]);
                 break;
             case 'IsNotEmpty':
-                res.mustNot(termQueryEmpty).filter(existsFilter);
+                res.mustNot(termQueryEmpty).must(existsFilter);
                 break;
             case 'IsEqual':
                 res.must(termQueryValue);

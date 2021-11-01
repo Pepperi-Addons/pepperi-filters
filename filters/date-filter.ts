@@ -88,7 +88,7 @@ export class DateFilter extends Filter {
         const filterVal = this.filterValues[0];
         const existsFilter = esb.existsQuery(`${this.apiName}`);
         const boolQuery = esb.boolQuery();
-        const rangeQuery = esb.rangeQuery();
+        const rangeQuery = esb.rangeQuery(this.apiName);
         const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, filterVal);
 
         switch (this.operation) {

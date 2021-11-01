@@ -1,7 +1,5 @@
-import { JSONFilter } from '../build';
-
+import { JSONFilter } from '../json-filter';
 export interface Test {
     title: string;
-    where: string;
     filter: JSONFilter;
 }
