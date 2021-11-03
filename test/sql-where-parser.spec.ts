@@ -2,14 +2,19 @@ import 'mocha';
 import { expect } from 'chai';
 import { JSONFilter, FieldType } from '../index';
 import { SQLWhereParser } from '../sql-where-parser';
-import { SQLTest } from '../models/sql-test';
+
+interface Test {
+    title: string;
+    filter: JSONFilter;
+    where: string;
+}
 
 describe('One level - Boolean', () => {
     const parser = new SQLWhereParser({
         Hidden: 'Bool',
     });
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: '= true',
             where: `Hidden = true`,
@@ -85,7 +90,7 @@ describe('One level - Guid', () => {
         UUID: 'Guid',
     });
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `UUID = '${uuid1}'`,
@@ -142,7 +147,7 @@ describe('One level - Integer', () => {
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `${fieldName} = 123`,
@@ -259,7 +264,7 @@ describe('One level - Double', () => {
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `${fieldName} = 123.5`,
@@ -376,7 +381,7 @@ describe('One level - String', () => {
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `${fieldName} = 'Hi'`,
@@ -494,7 +499,7 @@ describe('One level - DateTime', () => {
     obj[fieldName] = fieldType;
     const parser = new SQLWhereParser(obj);
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: '=',
             where: `${fieldName} = '${now}'`,
@@ -596,7 +601,7 @@ describe('Two Levels - AND', () => {
         },
     };
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: "No Paren's",
             where: `TSAString LIKE '%HI%' AND TSADouble >= 123.23`,
@@ -653,7 +658,7 @@ describe('Two Levels - OR', () => {
         },
     };
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: "No Paren's",
             where: `TSAString LIKE '%HI%' OR TSADouble >= 123.23`,
@@ -714,7 +719,7 @@ describe('Three Levels', () => {
         Values: ['123'],
     };
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'f1 AND f2 OR f3',
             where: `TSAString LIKE '%HI%' AND TSADouble >= 123.23 OR TSAInteger = 123`,

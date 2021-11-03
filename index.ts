@@ -79,7 +79,7 @@ export function toKibanaQuery(jsonFilter: JSONFilter | undefined) {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
-        return filter.toKibanaFilter();
+        return filter.toKibanaFilter().toJSON();
     }
     return undefined;
 }

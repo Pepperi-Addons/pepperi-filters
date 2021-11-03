@@ -1,12 +1,17 @@
 import 'mocha';
 import { expect } from 'chai';
 import { JSONFilter, toApiQueryString } from '../index';
-import { SQLTest } from '../models/sql-test';
+
+interface Test {
+    title: string;
+    filter: JSONFilter;
+    where: string;
+}
 
 describe('One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `UUID = '${uuid1}'`,
@@ -60,7 +65,7 @@ describe('One level - Integer', () => {
     const fieldName = 'TSAInt';
     const fieldType = 'Integer';
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'IsEqual',
             where: `${fieldName} IN (123, 23)`,
@@ -154,7 +159,7 @@ describe('One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `${fieldName} IN (123.5, 23.1)`,
@@ -248,7 +253,7 @@ describe('One level - String', () => {
     const fieldName = 'TSAString';
     const fieldType = 'String';
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             where: `${fieldName} IN ('Hi', 'Bye')`,
@@ -333,7 +338,7 @@ describe('One level - DateTime', () => {
     const fieldType = 'DateTime';
     const now = new Date().toISOString().split('.')[0] + 'Z';
 
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: '=',
             where: `${fieldName} = '${now}'`,
@@ -414,7 +419,7 @@ describe('One level - DateTime', () => {
 });
 
 describe('Two Levels', () => {
-    const tests: SQLTest[] = [
+    const tests: Test[] = [
         {
             title: 'AND',
             where: `(TSAString LIKE '%HI%') AND (TSADouble >= 123.23)`,

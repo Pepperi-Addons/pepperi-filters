@@ -48,18 +48,18 @@ export default class FilterCollection extends Filter {
 
     toKibanaFilter(): Query {
         const boolQuery = esb.boolQuery();
-        const test: esb.Query[] = [];
+        const query: Query[] = [];
         this.filters.forEach((filter) => {
             const innerClause = filter.toKibanaFilter();
             if (innerClause) {
-                test.push(innerClause);
+                query.push(innerClause);
             }
         });
 
         if (this.useAndOperation) {
-            boolQuery.must(test);
+            boolQuery.must(query);
         } else {
-            boolQuery.should(test);
+            boolQuery.should(query);
         }
 
         return boolQuery;

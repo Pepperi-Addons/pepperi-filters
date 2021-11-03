@@ -1,7 +1,12 @@
 import 'mocha';
 import { expect } from 'chai';
-import { toKibanaQuery } from '../index';
-import { KibanaTest } from '../models/kibana-test';
+import { JSONFilter, toKibanaQuery } from '../index';
+
+interface Test {
+    title: string;
+    filter: JSONFilter;
+    kibanaQuery: string;
+}
 
 describe('Kibana: One level - Guid', () => {
     const uuid1 = '6de02514-30f5-45c5-a55e-c2d9cea039b6';
@@ -9,7 +14,7 @@ describe('Kibana: One level - Guid', () => {
     const fieldName = 'UUID';
     const fieldType = 'Guid';
 
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             kibanaQuery: `{"bool":{"must":{"term":{"UUID.keyword":"${uuid1}"}}}}`,
@@ -53,7 +58,7 @@ describe('Kibana: One level - Guid', () => {
     ];
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.be.equal(test.kibanaQuery);
         });
     });
 });
@@ -64,7 +69,7 @@ describe('Kibana: One level - Integer', () => {
     const values = ['123', '23'];
     const value = '123';
 
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: 'IsEqual',
             kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
@@ -149,7 +154,7 @@ describe('Kibana: One level - Integer', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(20, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.be.equal(test.kibanaQuery);
         });
     });
 });
@@ -160,7 +165,7 @@ describe('Kibana: One level - Double', () => {
     const values = ['123.5', '23.1'];
     const value = '123.5';
 
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
@@ -245,7 +250,7 @@ describe('Kibana: One level - Double', () => {
 
     tests.forEach((test) => {
         it(`${test.title.padStart(20, ' ')} | ${test.kibanaQuery.padEnd(10, ' ')}`, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -256,7 +261,7 @@ describe('Kibana: One level - String', () => {
     const values = ['Hi', 'Bye'];
     const value = 'Hi';
 
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: 'Equals',
             kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
@@ -331,7 +336,7 @@ describe('Kibana: One level - String', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -341,7 +346,7 @@ describe('Kibana: One level - DateTime', () => {
     const fieldType = 'DateTime';
     const now = new Date().toISOString().split('.')[0] + 'Z';
 
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: '=',
             kibanaQuery: `{"bool":{"must":{"term":{"${fieldName}.keyword":"${now}"}}}}`,
@@ -416,7 +421,7 @@ describe('Kibana: One level - DateTime', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.eql(test.kibanaQuery);
         });
     });
 });
@@ -426,7 +431,7 @@ describe('Kibana: Two Levels', () => {
     const fieldName = 'UUID';
     const fieldType = 'Guid';
 
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: 'AND',
             kibanaQuery: `{"bool":{"must":[{"bool":{"must":{"term":{"${fieldName}.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid2}"}}}}]}}`,
@@ -469,13 +474,13 @@ describe('Kibana: Two Levels', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.eql(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.eql(test.kibanaQuery);
         });
     });
 });
 
 describe('Kibana: Three Levels', () => {
-    const tests: KibanaTest[] = [
+    const tests: Test[] = [
         {
             title: 'AND',
             kibanaQuery: `{"bool":{"must":[{"bool":{"must":[{"range":{"TSADouble":{"lte":123.23}}},{"range":{"TSADouble":{"gte":123.23}}}]}},{"bool":{"should":[{"range":{"TSADouble":{"gte":123.23}}},{"range":{"TSADouble":{"gte":123.23}}}]}}]}}`,
@@ -517,7 +522,7 @@ describe('Kibana: Three Levels', () => {
 
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-            expect(JSON.stringify(toKibanaQuery(test.filter)?.toJSON())).to.be.equal(test.kibanaQuery);
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.be.equal(test.kibanaQuery);
         });
     });
 });
