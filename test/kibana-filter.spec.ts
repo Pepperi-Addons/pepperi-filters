@@ -159,6 +159,39 @@ describe('Kibana: One level - Integer', () => {
     });
 });
 
+describe('Kibana: One level - boolean', () => {
+    const fieldName = 'TSABool';
+
+    const tests: Test[] = [
+        {
+            title: 'IsEqual',
+            kibanaQuery: `{"term":{"${fieldName}.keyword":"true"}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['true'],
+            },
+        },
+        {
+            title: 'IsEqual',
+            kibanaQuery: `{"term":{"${fieldName}.keyword":"false"}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: 'Bool',
+                Operation: 'IsEqual',
+                Values: ['false'],
+            },
+        },
+    ];
+
+    tests.forEach((test) => {
+        it(test.title.padStart(20, ' ') + ' | ' + test.kibanaQuery, () => {
+            expect(JSON.stringify(toKibanaQuery(test.filter))).to.be.equal(test.kibanaQuery);
+        });
+    });
+});
+
 describe('Kibana: One level - Double', () => {
     const fieldName = 'TSADouble';
     const fieldType = 'Double';
