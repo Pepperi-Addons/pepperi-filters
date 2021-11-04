@@ -1,8 +1,11 @@
+import { Query } from 'elastic-builder';
+
 export default abstract class Filter {
     constructor(protected apiName: string) {}
 
     abstract apply(value: any): boolean;
     abstract toSQLWhereClause(): string;
+    abstract toKibanaFilter(): Query;
 
     filter(object: any) {
         const value = this.getValue(object, this.apiName);

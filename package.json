@@ -29,6 +29,7 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "elastic-builder": "^2.16.0",
     "sql-where-parser": "^2.2.1"
   },
   "files": [

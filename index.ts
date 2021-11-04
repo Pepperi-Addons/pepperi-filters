@@ -75,6 +75,15 @@ export function toApiQueryString(jsonFilter: JSONFilter | undefined) {
     return undefined;
 }
 
+export function toKibanaQuery(jsonFilter: JSONFilter | undefined) {
+    if (jsonFilter) {
+        const filterFactory = new FilterFactory();
+        const filter = filterFactory.createFilter(jsonFilter);
+        return filter.toKibanaFilter().toJSON();
+    }
+    return undefined;
+}
+
 export function filter<T>(objects: T[], jsonFilter: JSONFilter | undefined): T[] {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();

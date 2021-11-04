@@ -4,8 +4,8 @@ import { JSONFilter, toApiQueryString } from '../index';
 
 interface Test {
     title: string;
-    where: string;
     filter: JSONFilter;
+    where: string;
 }
 
 describe('One level - Guid', () => {
@@ -400,7 +400,7 @@ describe('One level - DateTime', () => {
             },
         },
         {
-            title: 'IS NOT NULL',
+            title: 'IS NULL',
             where: `${fieldName} IS NULL`,
             filter: {
                 ApiName: fieldName,

@@ -5,8 +5,8 @@ import { SQLWhereParser } from '../sql-where-parser';
 
 interface Test {
     title: string;
-    where: string;
     filter: JSONFilter;
+    where: string;
 }
 
 describe('One level - Boolean', () => {

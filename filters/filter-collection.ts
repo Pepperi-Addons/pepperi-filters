@@ -1,3 +1,4 @@
+import esb, { Query } from 'elastic-builder';
 import Filter from './filter';
 
 export default class FilterCollection extends Filter {
@@ -43,5 +44,24 @@ export default class FilterCollection extends Filter {
         });
 
         return res;
+    }
+
+    toKibanaFilter(): Query {
+        const boolQuery = esb.boolQuery();
+        const query: Query[] = [];
+        this.filters.forEach((filter) => {
+            const innerClause = filter.toKibanaFilter();
+            if (innerClause) {
+                query.push(innerClause);
+            }
+        });
+
+        if (this.useAndOperation) {
+            boolQuery.must(query);
+        } else {
+            boolQuery.should(query);
+        }
+
+        return boolQuery;
     }
 }
