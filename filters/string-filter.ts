@@ -1,6 +1,6 @@
 import Filter from './filter';
 import { StringOperation } from '../json-filter';
-import esb, { Query, queryStringQuery, wildcardQuery } from 'elastic-builder';
+import esb, { Query, wildcardQuery } from 'elastic-builder';
 
 export class StringFilter extends Filter {
     constructor(

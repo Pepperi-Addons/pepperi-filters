@@ -1,6 +1,6 @@
 import Filter from './filter';
 import { DateOperation } from '../json-filter';
-import esb, { Query, termQuery } from 'elastic-builder';
+import esb, { Query } from 'elastic-builder';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
