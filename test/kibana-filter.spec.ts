@@ -17,7 +17,7 @@ describe('Kibana: One level - Guid', () => {
     const tests: Test[] = [
         {
             title: 'Equals',
-            kibanaQuery: `{"bool":{"must":{"term":{"UUID.keyword":"${uuid1}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"term":{"UUID":"${uuid1}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -27,7 +27,7 @@ describe('Kibana: One level - Guid', () => {
         },
         {
             title: 'Not Equal (!=)',
-            kibanaQuery: `{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid1}"}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"term":{"${fieldName}":"${uuid1}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -37,7 +37,7 @@ describe('Kibana: One level - Guid', () => {
         },
         {
             title: 'IS NULL',
-            kibanaQuery: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}},{"bool":{"must":{"term":{"${fieldName}.keyword":"${emptyUUID}"}}}}]}}`,
+            kibanaQuery: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}},{"bool":{"must":{"term":{"${fieldName}":"${emptyUUID}"}}}}]}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -47,7 +47,7 @@ describe('Kibana: One level - Guid', () => {
         },
         {
             title: 'IS NOT NULL',
-            kibanaQuery: `{"bool":{"must":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}.keyword":"${emptyUUID}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}":"${emptyUUID}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -72,7 +72,7 @@ describe('Kibana: One level - Integer', () => {
     const tests: Test[] = [
         {
             title: 'IsEqual',
-            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -82,7 +82,7 @@ describe('Kibana: One level - Integer', () => {
         },
         {
             title: 'Not Equal',
-            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -165,7 +165,7 @@ describe('Kibana: One level - boolean', () => {
     const tests: Test[] = [
         {
             title: 'IsEqual',
-            kibanaQuery: `{"term":{"${fieldName}.keyword":"true"}}`,
+            kibanaQuery: `{"term":{"${fieldName}":"true"}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: 'Bool',
@@ -175,7 +175,7 @@ describe('Kibana: One level - boolean', () => {
         },
         {
             title: 'IsEqual',
-            kibanaQuery: `{"term":{"${fieldName}.keyword":"false"}}`,
+            kibanaQuery: `{"term":{"${fieldName}":"false"}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: 'Bool',
@@ -201,7 +201,7 @@ describe('Kibana: One level - Double', () => {
     const tests: Test[] = [
         {
             title: 'Equals',
-            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -211,7 +211,7 @@ describe('Kibana: One level - Double', () => {
         },
         {
             title: 'Not Equal',
-            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -297,7 +297,7 @@ describe('Kibana: One level - String', () => {
     const tests: Test[] = [
         {
             title: 'Equals',
-            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            kibanaQuery: `{"bool":{"must":{"terms":{"${fieldName}":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -307,7 +307,7 @@ describe('Kibana: One level - String', () => {
         },
         {
             title: 'Not Equal',
-            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}.keyword":["${values.join('","')}"]}}}}`,
+            kibanaQuery: `{"bool":{"must_not":{"terms":{"${fieldName}":["${values.join('","')}"]}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -347,7 +347,7 @@ describe('Kibana: One level - String', () => {
         },
         {
             title: 'IS NOT NULL',
-            kibanaQuery: `{"bool":{"filter":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}.keyword":""}}}}`,
+            kibanaQuery: `{"bool":{"filter":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}":""}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -357,7 +357,7 @@ describe('Kibana: One level - String', () => {
         },
         {
             title: 'IS NULL',
-            kibanaQuery: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}},{"bool":{"must":{"term":{"${fieldName}.keyword":""}}}}]}}`,
+            kibanaQuery: `{"bool":{"should":[{"bool":{"must_not":{"exists":{"field":"${fieldName}"}}}},{"bool":{"must":{"term":{"${fieldName}":""}}}}]}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -382,7 +382,7 @@ describe('Kibana: One level - DateTime', () => {
     const tests: Test[] = [
         {
             title: '=',
-            kibanaQuery: `{"bool":{"must":{"term":{"${fieldName}.keyword":"${now}"}}}}`,
+            kibanaQuery: `{"bool":{"must":{"term":{"${fieldName}":"${now}"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -467,7 +467,7 @@ describe('Kibana: Two Levels', () => {
     const tests: Test[] = [
         {
             title: 'AND',
-            kibanaQuery: `{"bool":{"must":[{"bool":{"must":{"term":{"${fieldName}.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid2}"}}}}]}}`,
+            kibanaQuery: `{"bool":{"must":[{"bool":{"must":{"term":{"${fieldName}":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}":"${uuid2}"}}}}]}}`,
             filter: {
                 Operation: 'AND',
                 LeftNode: {
@@ -486,7 +486,7 @@ describe('Kibana: Two Levels', () => {
         },
         {
             title: 'OR',
-            kibanaQuery: `{"bool":{"should":[{"bool":{"must":{"term":{"${fieldName}.keyword":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}.keyword":"${uuid2}"}}}}]}}`,
+            kibanaQuery: `{"bool":{"should":[{"bool":{"must":{"term":{"${fieldName}":"${uuid2}"}}}},{"bool":{"must_not":{"term":{"${fieldName}":"${uuid2}"}}}}]}}`,
             filter: {
                 Operation: 'OR',
                 LeftNode: {

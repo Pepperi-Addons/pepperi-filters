@@ -3,6 +3,7 @@ import { FilterFactory } from './filters/filter-factory';
 import Filter from './filters/filter';
 import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
+import esb, { Query } from 'elastic-builder';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -75,13 +76,22 @@ export function toApiQueryString(jsonFilter: JSONFilter | undefined) {
     return undefined;
 }
 
-export function toKibanaQuery(jsonFilter: JSONFilter | undefined) {
+export function toKibanaQuery(jsonFilter: JSONFilter | undefined): esb.Query {
+    if (jsonFilter) {
+        const filterFactory = new FilterFactory();
+        const filter = filterFactory.createFilter(jsonFilter);
+        return filter.toKibanaFilter();
+    }
+    throw new Error('jsonFilter is a mandatory parameter');
+}
+
+export function toKibanaJSON(jsonFilter: JSONFilter | undefined) {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
         return filter.toKibanaFilter().toJSON();
     }
-    return undefined;
+    throw new Error('jsonFilter is a mandatory parameter');
 }
 
 export function filter<T>(objects: T[], jsonFilter: JSONFilter | undefined): T[] {

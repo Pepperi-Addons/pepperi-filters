@@ -1,7 +1,7 @@
 import Filter from './filter';
 import { BasicOperations } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
-import esb, { existsQuery, Query, termQuery } from 'elastic-builder';
+import esb, { Query } from 'elastic-builder';
 
 export class GuidFilter extends Filter {
     constructor(apiName: string, private operation: BasicOperations, private filterValue: string) {
@@ -43,8 +43,8 @@ export class GuidFilter extends Filter {
     toKibanaFilter(): Query {
         const filterVal = (this.filterValue || emptyGuid).toLowerCase();
         const existsFilter = esb.existsQuery(`${this.apiName}`);
-        const termQueryEmpty = esb.termQuery(`${this.apiName}.keyword`, emptyGuid);
-        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, filterVal);
+        const termQueryEmpty = esb.termQuery(`${this.apiName}`, emptyGuid);
+        const termQueryValue = esb.termQuery(`${this.apiName}`, filterVal);
 
         const res = esb.boolQuery();
         switch (this.operation) {

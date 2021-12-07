@@ -62,11 +62,11 @@ export class NumberFilter extends Filter {
 
     toKibanaFilter(): Query {
         const existsFilter = esb.existsQuery(`${this.apiName}`);
-        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, this.filterValues[0]);
+        const termQueryValue = esb.termQuery(`${this.apiName}`, this.filterValues[0]);
         const rangeQuery = esb.rangeQuery(`${this.apiName}`);
 
         const termsQueryValues = esb.termsQuery(
-            `${this.apiName}.keyword`,
+            `${this.apiName}`,
             this.filterValues.map((val) => val.toString()),
         );
 

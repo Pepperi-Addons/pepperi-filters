@@ -1,6 +1,6 @@
 import Filter from './filter';
 import { DateOperation } from '../json-filter';
-import esb, { Query, termQuery } from 'elastic-builder';
+import esb, { Query } from 'elastic-builder';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
@@ -85,12 +85,12 @@ export class DateFilter extends Filter {
     }
 
     toKibanaFilter(): Query {
-        const filterVal = this.filterValues[0];
         const existsFilter = esb.existsQuery(`${this.apiName}`);
         const boolQuery = esb.boolQuery();
         const rangeQuery = esb.rangeQuery(this.apiName);
-        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, filterVal);
-
+        const termQueryValue = esb.termQuery(`${this.apiName}`, this.filterValues[0]);
+        let unit;
+        
         switch (this.operation) {
             case 'IsEmpty':
                 return boolQuery.mustNot(existsFilter);
@@ -101,26 +101,83 @@ export class DateFilter extends Filter {
             case '!=':
                 return boolQuery.mustNot(termQueryValue);
             case '>':
-                return rangeQuery.gt(filterVal);
+                return rangeQuery.gt(this.filterValues[0]);
             case '>=':
-                return rangeQuery.gte(filterVal);
+                return rangeQuery.gte(this.filterValues[0]);
             case '<':
-                return rangeQuery.lt(filterVal);
+                return rangeQuery.lt(this.filterValues[0]);
             case '<=':
-                return rangeQuery.lte(filterVal);
+                return rangeQuery.lte(this.filterValues[0]);
             case 'Today':
+                // From 00:00 today till the end of the day
+                // "/d" rounded down to UTC 00:00
+                boolQuery.must([rangeQuery.lt('now+1d/d'), rangeQuery.gte('now/d')]);
             case 'ThisWeek':
+                // From Sunday 00:00 till the end of the week
+                // This should find the beginning of the current week for the start of the range
+                // and the beginning of the next week for the end of the range.
+                return boolQuery.must([rangeQuery.lt('(now+1w)/w - 1d'), rangeQuery.gte('now/w-1d')]);
             case 'ThisMonth':
+                // From 1sh current month 00:00 till now
+                return boolQuery.must([rangeQuery.lt('now'), rangeQuery.gte('now/M')]);
             case 'On':
+                // From 00:00 till 23:59
+                return boolQuery.must([rangeQuery.lt('now+1/d'), rangeQuery.gte('now/d')]);
             case 'After':
+                // After date + 1 (do not include the selected date)
+                return rangeQuery.gte(this.filterValues[0]);
             case 'Before':
+                // Before date - 1 including all empty dates
+                return boolQuery.should([boolQuery.mustNot(existsFilter), rangeQuery.lt(this.filterValues[0])]);
             case 'Between':
+                // Between dates including the selected dates
+                return boolQuery.must([rangeQuery.gte(this.filterValues[0]), rangeQuery.lte(this.filterValues[1])]);
             case 'InTheLast':
+                // Data between today and backwards based on the number of days
+                unit = this.getUnitTimeCharachter();
+                return boolQuery.must([
+                    rangeQuery.lt(`now+1d/d`),
+                    rangeQuery.gte(`now-${this.filterValues[0]}${unit}/${unit}`),
+                ]);
             case 'NotInTheLast':
+                unit = this.getUnitTimeCharachter();
+                return boolQuery.mustNot([
+                    rangeQuery.lt(`now+1d/d`),
+                    rangeQuery.gte(`now-${this.filterValues[0]}${unit}/${unit}`),
+                ]);
             case 'DueIn':
+                // From now + number of days / weeks / months
+                unit = this.getUnitTimeCharachter();
+                return boolQuery.must([
+                    rangeQuery.gte(`now/${unit}`),
+                    rangeQuery.lt(`now-${this.filterValues[0]}${unit}/${unit}`),
+                ]);
             case 'NotDueIn': {
-                throw new Error(`Operation ${this.operation} isn't supported`);
+                unit = this.getUnitTimeCharachter();
+                return boolQuery.mustNot([
+                    rangeQuery.gte(`now/${unit}`),
+                    rangeQuery.lt(`now-${this.filterValues[0]}${unit}/${unit}`),
+                ]);
             }
         }
+    }
+
+    getUnitTimeCharachter() {
+        let unit;
+        switch (this.filterValues[1]) {
+            case 'Days':
+                unit = 'd';
+                break;
+            case 'Weeks':
+                unit = 'w';
+                break;
+            case 'Months':
+                unit = 'M';
+                break;
+            case 'Years':
+                unit = 'y';
+                break;
+        }
+        return unit;
     }
 }
