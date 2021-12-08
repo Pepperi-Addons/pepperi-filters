@@ -85,7 +85,7 @@ export function toKibanaQuery(jsonFilter: JSONFilter | undefined): esb.Query {
     throw new Error('jsonFilter is a mandatory parameter');
 }
 
-export function toKibanaJSON(jsonFilter: JSONFilter | undefined) {
+export function toKibanaQueryJSON(jsonFilter: JSONFilter | undefined) {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);

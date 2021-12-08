@@ -90,7 +90,6 @@ export class DateFilter extends Filter {
         const rangeQuery = esb.rangeQuery(this.apiName);
         const termQueryValue = esb.termQuery(`${this.apiName}`, this.filterValues[0]);
         let unit;
-        
         switch (this.operation) {
             case 'IsEmpty':
                 return boolQuery.mustNot(existsFilter);
@@ -111,18 +110,18 @@ export class DateFilter extends Filter {
             case 'Today':
                 // From 00:00 today till the end of the day
                 // "/d" rounded down to UTC 00:00
-                boolQuery.must([rangeQuery.lt('now+1d/d'), rangeQuery.gte('now/d')]);
+                return rangeQuery.lt('now+1d/d').gte('now/d');
             case 'ThisWeek':
                 // From Sunday 00:00 till the end of the week
                 // This should find the beginning of the current week for the start of the range
                 // and the beginning of the next week for the end of the range.
-                return boolQuery.must([rangeQuery.lt('(now+1w)/w - 1d'), rangeQuery.gte('now/w-1d')]);
+                return rangeQuery.lt('(now+1w)/w - 1d').gte('now/w-1d');
             case 'ThisMonth':
                 // From 1sh current month 00:00 till now
-                return boolQuery.must([rangeQuery.lt('now'), rangeQuery.gte('now/M')]);
+                return rangeQuery.lt('now').gte('now/M');
             case 'On':
                 // From 00:00 till 23:59
-                return boolQuery.must([rangeQuery.lt('now+1/d'), rangeQuery.gte('now/d')]);
+                return rangeQuery.lt('now+1/d').gte('now/d');
             case 'After':
                 // After date + 1 (do not include the selected date)
                 return rangeQuery.gte(this.filterValues[0]);
@@ -131,14 +130,11 @@ export class DateFilter extends Filter {
                 return boolQuery.should([boolQuery.mustNot(existsFilter), rangeQuery.lt(this.filterValues[0])]);
             case 'Between':
                 // Between dates including the selected dates
-                return boolQuery.must([rangeQuery.gte(this.filterValues[0]), rangeQuery.lte(this.filterValues[1])]);
+                return rangeQuery.gte(this.filterValues[0]).lte(this.filterValues[1]);
             case 'InTheLast':
                 // Data between today and backwards based on the number of days
                 unit = this.getUnitTimeCharachter();
-                return boolQuery.must([
-                    rangeQuery.lt(`now+1d/d`),
-                    rangeQuery.gte(`now-${this.filterValues[0]}${unit}/${unit}`),
-                ]);
+                return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}/${unit}`);
             case 'NotInTheLast':
                 unit = this.getUnitTimeCharachter();
                 return boolQuery.mustNot([
@@ -148,16 +144,10 @@ export class DateFilter extends Filter {
             case 'DueIn':
                 // From now + number of days / weeks / months
                 unit = this.getUnitTimeCharachter();
-                return boolQuery.must([
-                    rangeQuery.gte(`now/${unit}`),
-                    rangeQuery.lt(`now-${this.filterValues[0]}${unit}/${unit}`),
-                ]);
+                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}/${unit}`);
             case 'NotDueIn': {
                 unit = this.getUnitTimeCharachter();
-                return boolQuery.mustNot([
-                    rangeQuery.gte(`now/${unit}`),
-                    rangeQuery.lt(`now-${this.filterValues[0]}${unit}/${unit}`),
-                ]);
+                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}/${unit}`);
             }
         }
     }
