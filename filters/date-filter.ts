@@ -134,20 +134,17 @@ export class DateFilter extends Filter {
             case 'InTheLast':
                 // Data between today and backwards based on the number of days
                 unit = this.getUnitTimeCharachter();
-                return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}/${unit}`);
+                return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`);
             case 'NotInTheLast':
                 unit = this.getUnitTimeCharachter();
-                return boolQuery.mustNot([
-                    rangeQuery.lt(`now+1d/d`),
-                    rangeQuery.gte(`now-${this.filterValues[0]}${unit}/${unit}`),
-                ]);
+                return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`);
             case 'DueIn':
                 // From now + number of days / weeks / months
                 unit = this.getUnitTimeCharachter();
-                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}/${unit}`);
+                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}`);
             case 'NotDueIn': {
                 unit = this.getUnitTimeCharachter();
-                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}/${unit}`);
+                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}`);
             }
         }
     }
