@@ -43,8 +43,8 @@ export class GuidFilter extends Filter {
     toKibanaFilter(): Query {
         const filterVal = (this.filterValue || emptyGuid).toLowerCase();
         const existsFilter = esb.existsQuery(`${this.apiName}`);
-        const termQueryEmpty = esb.termQuery(`${this.apiName}.keyword`, emptyGuid);
-        const termQueryValue = esb.termQuery(`${this.apiName}.keyword`, filterVal);
+        const termQueryEmpty = esb.termQuery(`${this.apiName}`, emptyGuid);
+        const termQueryValue = esb.termQuery(`${this.apiName}`, filterVal);
 
         const res = esb.boolQuery();
         switch (this.operation) {

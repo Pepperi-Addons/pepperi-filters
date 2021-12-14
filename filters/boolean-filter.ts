@@ -26,6 +26,6 @@ export class BooleanFilter extends Filter {
 
     toKibanaFilter(): Query {
         const value = this.filterValue ? 'true' : 'false';
-        return esb.termQuery(`${this.apiName}.keyword`, value);
+        return esb.termQuery(`${this.apiName}`, value);
     }
 }

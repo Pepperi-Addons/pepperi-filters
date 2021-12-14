@@ -75,9 +75,9 @@ export class StringFilter extends Filter {
     toKibanaFilter(): Query {
         const res = esb.boolQuery();
         const existsFilter = esb.existsQuery(this.apiName);
-        const termQueryEmpty = esb.termQuery(`${this.apiName}.keyword`, '');
+        const termQueryEmpty = esb.termQuery(`${this.apiName}`, '');
         const termsQueryValues = esb.termsQuery(
-            `${this.apiName}.keyword`,
+            `${this.apiName}`,
             this.filterValues.map((val) => val.toString()),
         );
 
