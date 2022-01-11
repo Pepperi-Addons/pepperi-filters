@@ -120,8 +120,10 @@ export class DateFilter extends Filter {
                 // From 1sh current month 00:00 till now
                 return rangeQuery.lt('now').gte('now/M');
             case 'On':
+                const fromDate = new Date(this.filterValues[0]).setHours(0, 0, 0);
+                const toDate = new Date(this.filterValues[0]).setHours(23, 59, 59);
                 // From 00:00 till 23:59
-                return rangeQuery.lt('now+1/d').gte('now/d');
+                return rangeQuery.gte(fromDate).lte(toDate);
             case 'After':
                 // After date + 1 (do not include the selected date)
                 return rangeQuery.gte(this.filterValues[0]);
@@ -137,14 +139,14 @@ export class DateFilter extends Filter {
                 return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`);
             case 'NotInTheLast':
                 unit = this.getUnitTimeCharachter();
-                return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`);
+                return boolQuery.mustNot(rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`));
             case 'DueIn':
                 // From now + number of days / weeks / months
                 unit = this.getUnitTimeCharachter();
-                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}`);
+                return rangeQuery.gte(`now/${unit}`).lt(`now+${this.filterValues[0]}${unit}`);
             case 'NotDueIn': {
                 unit = this.getUnitTimeCharachter();
-                return rangeQuery.gte(`now/${unit}`).lt(`now-${this.filterValues[0]}${unit}`);
+                return boolQuery.mustNot(rangeQuery.gte(`now/${unit}`).lt(`now+${this.filterValues[0]}${unit}`));
             }
         }
     }
