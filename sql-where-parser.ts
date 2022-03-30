@@ -56,6 +56,16 @@ export class SQLWhereParser {
             operation = 'NOT IN';
         }
 
+        // BETWEEN
+        if (operation === 'BETWEEN' &&
+            expression[operation][1] &&
+            expression[operation][2]) {
+            expression = {
+                'Between': [expression[operation][0], [expression[operation][1], expression[operation][2]]],
+            };
+            operation = 'Between';
+        }
+
         // We only support where clauses that the ApiName is on the left side of each operation
         const apiName = expression[operation][0];
         if (!apiName) {
@@ -173,6 +183,7 @@ export class SQLWhereParser {
                 case '>':
                 case '>=':
                 case '<=':
+                case 'Between':
                 case '<': {
                     res = operator;
                     break;
@@ -240,6 +251,7 @@ export class SQLWhereParser {
             case '<=':
             case '<':
             case '>=':
+            case 'Between':
             case '>': {
                 res = operator;
                 break;

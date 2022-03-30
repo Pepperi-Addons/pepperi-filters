@@ -1,6 +1,7 @@
 import Filter from './filter';
 import { StringOperation } from '../json-filter';
 import esb, { Query, wildcardQuery } from 'elastic-builder';
+import { DynamoResultObject } from './DynamoObjectResult';
 
 export class StringFilter extends Filter {
     constructor(
@@ -99,5 +100,103 @@ export class StringFilter extends Filter {
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
         }
+    }
+
+    toDynamoWhereClause(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        var res = new DynamoResultObject(count, expressionAttributeNames, expressionAttributeValues, '');
+
+        switch (this.operation) {
+            case 'IsEmpty':
+                var markValue = ":" + letterForMark + count;
+                res.ExpressionAttributeValues[markValue] = ''
+                var markName = "#" + letterForMark + count;
+                res.ExpressionAttributeNames[markName] = this.apiName
+                count++;
+                res.ResString = `attribute_not_exists (${markName}) OR ${markName} = ${markValue}`;
+                res.Count = count;
+                return res;
+            case 'IsNotEmpty':
+                var markValue = ":" + letterForMark + count;
+                res.ExpressionAttributeValues[markValue] = ''
+                var markName = "#" + letterForMark + count;
+                res.ExpressionAttributeNames[markName] = this.apiName
+                count++;
+                res.ResString = `attribute_exists (${markName}) AND ${markName} <> ${markValue}`;
+                res.Count = count;
+                return res;
+            case 'IsEqual':
+                if(this.filterValues.length == 1){ // ==
+                    var filterNames = "";
+                    var markValue = ":" + letterForMark + count;
+                    var markName = "#" + letterForMark + count;
+                    res.ExpressionAttributeNames[markName] = this.apiName
+                    res.ExpressionAttributeValues[markValue] = this.filterValues[0]
+                    res.ResString = `${markName} = ${markValue}`;
+                    count++;
+                    res.Count = count;
+                }
+                else{ // in
+                    var filterNames = "";
+                    this.filterValues.forEach(function (value) {
+                        var mark = ":" + letterForMark + count;
+                        res.ExpressionAttributeValues[mark] = value
+                        count++;
+                        filterNames = filterNames + mark + ",";
+                    });
+                    filterNames = filterNames.slice(0, -1) // remove last ,
+                    var markName = "#" + letterForMark + count;
+                    res.ExpressionAttributeNames[markName] = this.apiName
+                    res.ResString = `${markName} IN (${filterNames})`;
+                    count++;
+                    res.Count = count;
+                }
+                return res;                
+            case 'IsNotEqual':
+                if(this.filterValues.length == 1){ // !=
+                    var filterNames = "";
+                    var markValue = ":" + letterForMark + count;
+                    var markName = "#" + letterForMark + count;
+                    res.ExpressionAttributeNames[markName] = this.apiName
+                    res.ExpressionAttributeValues[markValue] = this.filterValues[0]
+                    res.ResString = `${markName} <> ${markValue}`;
+                    count++;
+                    res.Count = count;
+                }
+                else{ // not in
+                    var filterNames = "";
+                    this.filterValues.forEach(function (value) {
+                        var mark = ":" + letterForMark + count;
+                        res.ExpressionAttributeValues[mark] = value
+                        count++;
+                        filterNames = filterNames + mark + ",";
+                    });
+                    filterNames = filterNames.slice(0, -1) // remove last ,
+                    var markName = "#" + letterForMark + count;
+                    res.ExpressionAttributeNames[markName] = this.apiName
+                    res.ResString = `NOT(${markName} IN (${filterNames}))`;
+                    count++;
+                    res.Count = count;
+                }
+                return res;                
+            case 'Contains':
+                var markValue = ":" + letterForMark + count;
+                var markName = "#" + letterForMark + count;
+                res.ExpressionAttributeNames[markName] = this.apiName
+                res.ExpressionAttributeValues[markValue] = this.filterValues[0]
+                count++;
+                res.ResString = `contains (${markName}, ${markValue})`;
+                res.Count = count;
+                return res;
+            case 'StartWith':
+                var markValue = ":" + letterForMark + count;
+                var markName = "#" + letterForMark + count;
+                res.ExpressionAttributeNames[markName] = this.apiName
+                res.ExpressionAttributeValues[markValue] = this.filterValues[0]
+                count++;
+                res.ResString = `begins_with (${markName}, ${markValue})`;
+                res.Count = count;
+                return res;
+        }
+        return res;
     }
 }

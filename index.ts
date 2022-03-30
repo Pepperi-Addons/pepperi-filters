@@ -4,6 +4,7 @@ import Filter from './filters/filter';
 import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
 import esb, { Query } from 'elastic-builder';
+import { DynamoResultObject } from './filters/DynamoObjectResult';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -90,6 +91,15 @@ export function toKibanaQueryJSON(jsonFilter: JSONFilter | undefined) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
         return filter.toKibanaFilter().toJSON();
+    }
+    throw new Error('jsonFilter is a mandatory parameter');
+}
+
+export function toDynamoQuery(jsonFilter: JSONFilter | undefined, letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+    if (jsonFilter) {
+        const filterFactory = new FilterFactory();
+        const filter = filterFactory.createDynamoFilter(jsonFilter);
+        return filter.toDynamoWhereClause(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
     }
     throw new Error('jsonFilter is a mandatory parameter');
 }

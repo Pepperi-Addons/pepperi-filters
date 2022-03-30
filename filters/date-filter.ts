@@ -1,6 +1,7 @@
 import Filter from './filter';
 import { DateOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
+import { DynamoResultObject } from './DynamoObjectResult';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
@@ -149,6 +150,10 @@ export class DateFilter extends Filter {
                 return boolQuery.mustNot(rangeQuery.gte(`now/${unit}`).lt(`now+${this.filterValues[0]}${unit}`));
             }
         }
+    }
+
+    toDynamoWhereClause(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        throw new Error('Method not implemented.'); // date saves as number in dynamo db
     }
 
     getUnitTimeCharachter() {
