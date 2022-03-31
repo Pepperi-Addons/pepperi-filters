@@ -66,12 +66,12 @@ export default class FilterCollection extends Filter {
         return boolQuery;
     }
 
-    toDynamoWhereClause(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
-        let res = new DynamoResultObject(count, expressionAttributeNames, expressionAttributeValues, '');
+    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        let res: DynamoResultObject = { Count: count, ExpressionAttributeNames: expressionAttributeNames, ExpressionAttributeValues: expressionAttributeValues, ResString: '' };
 
         this.filters.forEach((filter) => {
             count = res.Count;
-            var DynamoWhereClause = filter.toDynamoWhereClause(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
+            let DynamoWhereClause = filter.toDynamoDBQuery(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
             const innerClause = DynamoWhereClause.ResString;
             if (innerClause) {
                 // if it is not the first filter add the operation

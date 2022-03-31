@@ -65,7 +65,7 @@ export class GuidFilter extends Filter {
         return res;
     }
 
-    toDynamoWhereClause(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
-        throw new Error('Method not implemented.'); // uuid saves ad string in dynamo db
+    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        throw new Error('Method not implemented. There is no Guid type in DynamoDB');
     }
 }

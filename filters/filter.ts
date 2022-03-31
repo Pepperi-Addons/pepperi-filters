@@ -7,7 +7,7 @@ export default abstract class Filter {
     abstract apply(value: any): boolean;
     abstract toSQLWhereClause(): string;
     abstract toKibanaFilter(): Query;
-    abstract toDynamoWhereClause(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number) : DynamoResultObject;
+    abstract toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number) : DynamoResultObject;
 
     filter(object: any) {
         const value = this.getValue(object, this.apiName);
@@ -36,5 +36,17 @@ export default abstract class Filter {
         apiName = apiName.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
         const arr = apiName.split('.');
         return this.getValue(object[arr[0]], arr.slice(1).join('.'));
+    }
+
+    AddFilterValueToDynamoResultObject(res: DynamoResultObject, letterForMark: string, count: number, value: any): string{
+        let markValue = ":" + letterForMark + count;
+        res.ExpressionAttributeValues[markValue] = value;
+        return markValue;
+    }
+
+    AddFilterNameToDynamoResultObject(res: DynamoResultObject, letterForMark: string, count: number, name: any): string{
+        let markName = "#" + letterForMark + count;
+        res.ExpressionAttributeNames[markName] = name;
+        return markName;
     }
 }
