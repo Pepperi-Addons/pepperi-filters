@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import Filter from './filter';
 import { BasicOperations } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
@@ -65,7 +67,12 @@ export class GuidFilter extends Filter {
         return res;
     }
 
-    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+    toDynamoDBQuery(
+        letterForMark: string,
+        expressionAttributeNames: any,
+        expressionAttributeValues: any,
+        count: number,
+    ): DynamoResultObject {
         throw new Error('Method not implemented. There is no Guid type in DynamoDB');
     }
 }

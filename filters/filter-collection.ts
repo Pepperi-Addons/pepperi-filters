@@ -66,12 +66,27 @@ export default class FilterCollection extends Filter {
         return boolQuery;
     }
 
-    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
-        let res: DynamoResultObject = { Count: count, ExpressionAttributeNames: expressionAttributeNames, ExpressionAttributeValues: expressionAttributeValues, ResString: '' };
+    toDynamoDBQuery(
+        letterForMark: string,
+        expressionAttributeNames: any,
+        expressionAttributeValues: any,
+        count: number,
+    ): DynamoResultObject {
+        const res: DynamoResultObject = {
+            Count: count,
+            ExpressionAttributeNames: expressionAttributeNames,
+            ExpressionAttributeValues: expressionAttributeValues,
+            ResString: '',
+        };
 
         this.filters.forEach((filter) => {
             count = res.Count;
-            let DynamoWhereClause = filter.toDynamoDBQuery(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
+            const DynamoWhereClause = filter.toDynamoDBQuery(
+                letterForMark,
+                expressionAttributeNames,
+                expressionAttributeValues,
+                count,
+            );
             const innerClause = DynamoWhereClause.ResString;
             if (innerClause) {
                 // if it is not the first filter add the operation
@@ -82,10 +97,10 @@ export default class FilterCollection extends Filter {
                 res.ResString += `(${innerClause})`;
                 res.Count += DynamoWhereClause.Count;
                 Object.entries(DynamoWhereClause.ExpressionAttributeValues).forEach(
-                    ([key, value]) => res.ExpressionAttributeValues[key] = value
+                    ([key, value]) => (res.ExpressionAttributeValues[key] = value),
                 );
                 Object.entries(DynamoWhereClause.ExpressionAttributeNames).forEach(
-                    ([key, value]) => res.ExpressionAttributeNames[key] = value
+                    ([key, value]) => (res.ExpressionAttributeNames[key] = value),
                 );
             }
         });

@@ -17,7 +17,12 @@ describe('Dynamo: One level - Integer', () => {
     const tests: Test[] = [
         {
             title: 'Equals',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(value)}, ResString: '#a1 = :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(value) },
+                ResString: '#a1 = :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -27,7 +32,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'Not Equal (!=)',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(value)}, ResString: '#a1 <> :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(value) },
+                ResString: '#a1 <> :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -37,7 +47,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'In',
-            dynamoResultObject: {Count: 4, ExpressionAttributeNames: {'#a3':fieldName}, ExpressionAttributeValues: {':a1':Number(values[0]), ':a2':Number(values[1])}, ResString: '#a3 IN (:a1,:a2)'},
+            dynamoResultObject: {
+                Count: 4,
+                ExpressionAttributeNames: { '#a3': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(values[0]), ':a2': Number(values[1]) },
+                ResString: '#a3 IN (:a1,:a2)',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -47,7 +62,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'Not In',
-            dynamoResultObject: {Count: 4, ExpressionAttributeNames: {'#a3':fieldName}, ExpressionAttributeValues: {':a1':Number(values[0]), ':a2':Number(values[1])}, ResString: 'NOT(#a3 IN (:a1,:a2))'},
+            dynamoResultObject: {
+                Count: 4,
+                ExpressionAttributeNames: { '#a3': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(values[0]), ':a2': Number(values[1]) },
+                ResString: 'NOT(#a3 IN (:a1,:a2))',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -57,7 +77,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'BiggerThanOrEquals',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(value)}, ResString: '#a1 >= :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(value) },
+                ResString: '#a1 >= :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -67,7 +92,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'BiggerThan',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(value)}, ResString: '#a1 > :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(value) },
+                ResString: '#a1 > :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -77,7 +107,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'SmallerThanOrEquals',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(value)}, ResString: '#a1 <= :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(value) },
+                ResString: '#a1 <= :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -87,7 +122,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'SmallerThan',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(value)}, ResString: '#a1 < :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(value) },
+                ResString: '#a1 < :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -97,7 +137,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'Between',
-            dynamoResultObject: {Count: 3, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':Number(values[0]), ':a2':Number(values[1])}, ResString: '#a1 BETWEEN :a1 AND :a2'},
+            dynamoResultObject: {
+                Count: 3,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': Number(values[0]), ':a2': Number(values[1]) },
+                ResString: '#a1 BETWEEN :a1 AND :a2',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -107,7 +152,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'IS Empty',
-            dynamoResultObject: {Count: 1, ExpressionAttributeNames: {}, ExpressionAttributeValues: {}, ResString: `attribute_not_exists (${fieldName})`},
+            dynamoResultObject: {
+                Count: 1,
+                ExpressionAttributeNames: {},
+                ExpressionAttributeValues: {},
+                ResString: `attribute_not_exists (${fieldName})`,
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -117,7 +167,12 @@ describe('Dynamo: One level - Integer', () => {
         },
         {
             title: 'IS NOT Empty',
-            dynamoResultObject: {Count: 1, ExpressionAttributeNames: {}, ExpressionAttributeValues: {}, ResString: `attribute_exists (${fieldName})`},
+            dynamoResultObject: {
+                Count: 1,
+                ExpressionAttributeNames: {},
+                ExpressionAttributeValues: {},
+                ResString: `attribute_exists (${fieldName})`,
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -140,7 +195,12 @@ describe('Dynamo: One level - boolean', () => {
     const tests: Test[] = [
         {
             title: 'IsEqual',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':true}, ResString: '#a1 = :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': true },
+                ResString: '#a1 = :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: 'Bool',
@@ -150,7 +210,12 @@ describe('Dynamo: One level - boolean', () => {
         },
         {
             title: 'IsEqual',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':false}, ResString: '#a1 = :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': false },
+                ResString: '#a1 = :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: 'Bool',
@@ -176,7 +241,12 @@ describe('Dynamo: One level - String', () => {
     const tests: Test[] = [
         {
             title: 'Equals',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':value}, ResString: '#a1 = :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': value },
+                ResString: '#a1 = :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -186,7 +256,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'Not Equal (!=)',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':value}, ResString: '#a1 <> :a1'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': value },
+                ResString: '#a1 <> :a1',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -196,7 +271,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'In',
-            dynamoResultObject: {Count: 4, ExpressionAttributeNames: {'#a3':fieldName}, ExpressionAttributeValues: {':a1':values[0], ':a2':values[1]}, ResString: '#a3 IN (:a1,:a2)'},
+            dynamoResultObject: {
+                Count: 4,
+                ExpressionAttributeNames: { '#a3': fieldName },
+                ExpressionAttributeValues: { ':a1': values[0], ':a2': values[1] },
+                ResString: '#a3 IN (:a1,:a2)',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -206,7 +286,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'Not In',
-            dynamoResultObject: {Count: 4, ExpressionAttributeNames: {'#a3':fieldName}, ExpressionAttributeValues: {':a1':values[0], ':a2':values[1]}, ResString: 'NOT(#a3 IN (:a1,:a2))'},
+            dynamoResultObject: {
+                Count: 4,
+                ExpressionAttributeNames: { '#a3': fieldName },
+                ExpressionAttributeValues: { ':a1': values[0], ':a2': values[1] },
+                ResString: 'NOT(#a3 IN (:a1,:a2))',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -216,7 +301,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'IS Empty',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':""}, ResString: `attribute_not_exists (#a1) OR #a1 = :a1`},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': '' },
+                ResString: `attribute_not_exists (#a1) OR #a1 = :a1`,
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -226,7 +316,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'IS NOT Empty',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':""}, ResString: `attribute_exists (#a1) AND #a1 <> :a1`},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': '' },
+                ResString: `attribute_exists (#a1) AND #a1 <> :a1`,
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -236,7 +331,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'Contains',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':value}, ResString: 'contains (#a1, :a1)'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': value },
+                ResString: 'contains (#a1, :a1)',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -246,7 +346,12 @@ describe('Dynamo: One level - String', () => {
         },
         {
             title: 'StartsWith',
-            dynamoResultObject: {Count: 2, ExpressionAttributeNames: {'#a1':fieldName}, ExpressionAttributeValues: {':a1':value}, ResString: 'begins_with (#a1, :a1)'},
+            dynamoResultObject: {
+                Count: 2,
+                ExpressionAttributeNames: { '#a1': fieldName },
+                ExpressionAttributeValues: { ':a1': value },
+                ResString: 'begins_with (#a1, :a1)',
+            },
             filter: {
                 ApiName: fieldName,
                 FieldType: fieldType,
@@ -262,4 +367,3 @@ describe('Dynamo: One level - String', () => {
         });
     });
 });
-

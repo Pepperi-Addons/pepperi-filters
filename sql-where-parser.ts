@@ -57,11 +57,9 @@ export class SQLWhereParser {
         }
 
         // BETWEEN
-        if (operation === 'BETWEEN' &&
-            expression[operation][1] &&
-            expression[operation][2]) {
+        if (operation === 'BETWEEN' && expression[operation][1] && expression[operation][2]) {
             expression = {
-                'Between': [expression[operation][0], [expression[operation][1], expression[operation][2]]],
+                Between: [expression[operation][0], [expression[operation][1], expression[operation][2]]],
             };
             operation = 'Between';
         }

@@ -153,13 +153,22 @@ export class DateFilter extends Filter {
         }
     }
 
-    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
-        let timeInLong: number[] = [];
+    toDynamoDBQuery(
+        letterForMark: string,
+        expressionAttributeNames: any,
+        expressionAttributeValues: any,
+        count: number,
+    ): DynamoResultObject {
+        const timeInLong: number[] = [];
         this.filterValues.forEach(function (date) {
             timeInLong.push(Date.parse(date));
         });
 
-        let filter = new NumberFilter(this.apiName, this.operation as NumberOperation, timeInLong.map((x) => +x));
+        const filter = new NumberFilter(
+            this.apiName,
+            this.operation as NumberOperation,
+            timeInLong.map((x) => +x),
+        );
         return filter.toDynamoDBQuery(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
     }
 

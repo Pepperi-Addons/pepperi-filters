@@ -30,15 +30,20 @@ export class BooleanFilter extends Filter {
         return esb.termQuery(`${this.apiName}`, value);
     }
 
-    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
-        let res = {
+    toDynamoDBQuery(
+        letterForMark: string,
+        expressionAttributeNames: any,
+        expressionAttributeValues: any,
+        count: number,
+    ): DynamoResultObject {
+        const res = {
             Count: count,
             ExpressionAttributeValues: expressionAttributeValues,
             ExpressionAttributeNames: expressionAttributeNames,
-            ResString: ""
+            ResString: '',
         };
-        let markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
-        let markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValue);
+        const markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+        const markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValue);
         res.Count++;
         res.ResString = `${markName} = ${markValue}`;
         return res;

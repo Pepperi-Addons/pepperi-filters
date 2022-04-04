@@ -95,7 +95,13 @@ export function toKibanaQueryJSON(jsonFilter: JSONFilter | undefined) {
     throw new Error('jsonFilter is a mandatory parameter');
 }
 
-export function toDynamoDBQuery(jsonFilter: JSONFilter | undefined, letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+export function toDynamoDBQuery(
+    jsonFilter: JSONFilter | undefined,
+    letterForMark: string,
+    expressionAttributeNames: any,
+    expressionAttributeValues: any,
+    count: number,
+): DynamoResultObject {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
