@@ -1,6 +1,7 @@
 import Filter from './filter';
 import { StringOperation } from '../json-filter';
 import esb, { Query, wildcardQuery } from 'elastic-builder';
+import { DynamoResultObject } from './DynamoObjectResult';
 
 export class StringFilter extends Filter {
     constructor(
@@ -100,4 +101,91 @@ export class StringFilter extends Filter {
                 throw new Error("IsLoggedInUser isn't a supported filter");
         }
     }
+
+    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        let res: DynamoResultObject = { Count: count, ExpressionAttributeNames: expressionAttributeNames, ExpressionAttributeValues: expressionAttributeValues, ResString: '' };
+        let filterNames: string = "";
+        let markName: string = "";
+        let markValue: string  = "";
+
+        switch (this.operation) {
+            case 'IsEmpty':
+                markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, '');
+                count++;
+                res.ResString = `attribute_not_exists (${markName}) OR ${markName} = ${markValue}`;
+                res.Count = count;
+                return res;
+            case 'IsNotEmpty':
+                markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, '');
+                count++;
+                res.ResString = `attribute_exists (${markName}) AND ${markName} <> ${markValue}`;
+                res.Count = count;
+                return res;
+            case 'IsEqual':
+                if(this.filterValues.length == 1){ // ==
+                    filterNames = "";
+                    markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                    markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[0]);
+                    res.ResString = `${markName} = ${markValue}`;
+                    count++;
+                    res.Count = count;
+                }
+                else{ // in
+                    filterNames = "";
+                    for(let i = 0; i < this.filterValues.length; i++){
+                        markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[i]);
+                        count++;
+                        filterNames = filterNames + markValue + ",";
+                    }
+                    filterNames = filterNames.slice(0, -1) // remove last ,
+                    markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                    res.ResString = `${markName} IN (${filterNames})`;
+                    count++;
+                    res.Count = count;
+                }
+                return res;                
+            case 'IsNotEqual':
+                if(this.filterValues.length == 1){ // !=
+                    filterNames = "";
+                    markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                    markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[0]);
+                    res.ResString = `${markName} <> ${markValue}`;
+                    count++;
+                    res.Count = count;
+                }
+                else{ // not in
+                    filterNames = "";
+                    for(let i = 0; i < this.filterValues.length; i++){
+                        markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[i]);
+                        count++;
+                        filterNames = filterNames + markValue + ",";
+                    }
+                    filterNames = filterNames.slice(0, -1) // remove last ,
+                    markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                    res.ResString = `NOT(${markName} IN (${filterNames}))`;
+                    count++;
+                    res.Count = count;
+                }
+                return res;                
+            case 'Contains':
+                markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[0]);
+                count++;
+                res.ResString = `contains (${markName}, ${markValue})`;
+                res.Count = count;
+                return res;
+            case 'StartWith':              
+                markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+                markValue =this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[0]);
+                count++;
+                res.ResString = `begins_with (${markName}, ${markValue})`;
+                res.Count = count;
+                return res;
+        }
+        return res;
+    }
+
+    
 }

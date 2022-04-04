@@ -1,6 +1,8 @@
 import Filter from './filter';
-import { DateOperation } from '../json-filter';
+import { DateOperation, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
+import { DynamoResultObject } from './DynamoObjectResult';
+import { NumberFilter } from './number-filter';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
@@ -149,6 +151,16 @@ export class DateFilter extends Filter {
                 return boolQuery.mustNot(rangeQuery.gte(`now/${unit}`).lt(`now+${this.filterValues[0]}${unit}`));
             }
         }
+    }
+
+    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        let timeInLong: number[] = [];
+        this.filterValues.forEach(function (date) {
+            timeInLong.push(Date.parse(date));
+        });
+
+        let filter = new NumberFilter(this.apiName, this.operation as NumberOperation, timeInLong.map((x) => +x));
+        return filter.toDynamoDBQuery(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
     }
 
     getUnitTimeCharachter() {

@@ -2,6 +2,7 @@ import Filter from './filter';
 import { BasicOperations } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
 import esb, { Query } from 'elastic-builder';
+import { DynamoResultObject } from './DynamoObjectResult';
 
 export class GuidFilter extends Filter {
     constructor(apiName: string, private operation: BasicOperations, private filterValue: string) {
@@ -62,5 +63,9 @@ export class GuidFilter extends Filter {
                 break;
         }
         return res;
+    }
+
+    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        throw new Error('Method not implemented. There is no Guid type in DynamoDB');
     }
 }

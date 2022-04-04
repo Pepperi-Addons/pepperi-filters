@@ -1,6 +1,7 @@
 import Filter from './filter';
 import { str2Bool } from '../converters';
 import esb, { Query } from 'elastic-builder';
+import { DynamoResultObject } from './DynamoObjectResult';
 
 export class BooleanFilter extends Filter {
     constructor(apiName: string, private filterValue: boolean) {
@@ -27,5 +28,19 @@ export class BooleanFilter extends Filter {
     toKibanaFilter(): Query {
         const value = this.filterValue ? 'true' : 'false';
         return esb.termQuery(`${this.apiName}`, value);
+    }
+
+    toDynamoDBQuery(letterForMark: string, expressionAttributeNames: any, expressionAttributeValues: any, count: number): DynamoResultObject {
+        let res = {
+            Count: count,
+            ExpressionAttributeValues: expressionAttributeValues,
+            ExpressionAttributeNames: expressionAttributeNames,
+            ResString: ""
+        };
+        let markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
+        let markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValue);
+        res.Count++;
+        res.ResString = `${markName} = ${markValue}`;
+        return res;
     }
 }
