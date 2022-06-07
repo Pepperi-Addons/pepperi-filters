@@ -6,6 +6,7 @@ export type StringOperation = BasicOperations | 'Contains' | 'StartWith' | 'EndW
 
 export type DateOperation =
     | 'InTheLast'
+    | 'InTheLastCalendar'
     | 'Today'
     | 'ThisWeek'
     | 'ThisMonth'
@@ -15,6 +16,7 @@ export type DateOperation =
     | 'DueIn'
     | 'On'
     | 'NotInTheLast'
+    | 'NotInTheLastCalendar'
     | 'NotDueIn'
     | 'IsEmpty'
     | 'IsNotEmpty'
