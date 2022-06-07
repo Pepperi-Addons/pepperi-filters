@@ -35,7 +35,9 @@ export class DateFilter extends Filter {
             case 'Before':
             case 'Between':
             case 'InTheLast':
+            case 'InTheLastCalendar':
             case 'NotInTheLast':
+            case 'NotInTheLastCalendar':
             case 'DueIn':
             case 'NotDueIn': {
                 throw new Error(`Operation ${this.operation} isn't supported`);
@@ -69,7 +71,9 @@ export class DateFilter extends Filter {
             case 'Before':
             case 'Between':
             case 'InTheLast':
+            case 'InTheLastCalendar':
             case 'NotInTheLast':
+            case 'NotInTheLastCalendar':
             case 'DueIn':
             case 'NotDueIn': {
                 throw new Error(`Operation ${this.operation} isn't supported`);
@@ -139,9 +143,19 @@ export class DateFilter extends Filter {
                 // Data between today and backwards based on the number of days
                 unit = this.getUnitTimeCharachter();
                 return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`);
+            case 'InTheLastCalendar':
+                // same as 'InTheLast' but rounded by calendar (start of year/month/week)
+                unit = this.getUnitTimeCharachter();
+                return rangeQuery.lt(`now/${unit}`).gte(`now-${this.filterValues[0]}${unit}/${unit}`);
             case 'NotInTheLast':
                 unit = this.getUnitTimeCharachter();
                 return boolQuery.mustNot(rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`));
+            case 'NotInTheLastCalendar':
+                // same as 'NotInTheLastCalendar' but rounded by calendar (start of year/month/week)
+                unit = this.getUnitTimeCharachter();
+                return boolQuery.mustNot(
+                    rangeQuery.lt(`now/${unit}`).gte(`now-${this.filterValues[0]}${unit}/${unit}`),
+                );
             case 'DueIn':
                 // From now + number of days / weeks / months
                 unit = this.getUnitTimeCharachter();
