@@ -34,6 +34,7 @@ export class DateFilter extends Filter {
             case 'After':
             case 'Before':
             case 'Between':
+            case 'BetweenVariable':
             case 'InTheLast':
             case 'InTheLastCalendar':
             case 'NotInTheLast':
@@ -70,6 +71,7 @@ export class DateFilter extends Filter {
             case 'After':
             case 'Before':
             case 'Between':
+            case 'BetweenVariable':
             case 'InTheLast':
             case 'InTheLastCalendar':
             case 'NotInTheLast':
@@ -137,6 +139,7 @@ export class DateFilter extends Filter {
                 // Before date - 1 including all empty dates
                 return boolQuery.should([boolQuery.mustNot(existsFilter), rangeQuery.lt(this.filterValues[0])]);
             case 'Between':
+            case 'BetweenVariable':
                 // Between dates including the selected dates
                 return rangeQuery.gte(this.filterValues[0]).lte(this.filterValues[1]);
             case 'InTheLast':
