@@ -15,6 +15,7 @@ export class NumberFilter extends Filter {
             case 'IsNotEmpty':
                 return value != undefined;
             case 'IsEqual':
+            case 'IsEqualVariable':
                 return this.filterValues.find((x) => value === x) !== undefined;
             case 'IsNotEqual':
                 return this.filterValues.find((x) => value === x) === undefined;
@@ -23,10 +24,12 @@ export class NumberFilter extends Filter {
             case '!=':
                 return value !== this.filterValues[0];
             case '>':
+            case 'GreaterThanVarible':
                 return value > this.filterValues[0];
             case '>=':
                 return value >= this.filterValues[0];
             case '<':
+            case 'LessThanVarible':
                 return value < this.filterValues[0];
             case '<=':
                 return value <= this.filterValues[0];
@@ -41,6 +44,7 @@ export class NumberFilter extends Filter {
             case 'IsNotEmpty':
                 return `${this.apiName} IS NOT NULL`;
             case 'IsEqual':
+            case 'IsEqualVariable':
                 return `${this.apiName} IN (${this.filterValues.map((val) => val.toString()).join(', ')})`;
             case 'IsNotEqual':
                 return `${this.apiName} NOT IN (${this.filterValues.map((val) => val.toString()).join(', ')})`;
@@ -49,10 +53,12 @@ export class NumberFilter extends Filter {
             case '!=':
                 return `${this.apiName} != ${this.filterValues[0]}`;
             case '>':
+            case 'GreaterThanVarible':
                 return `${this.apiName} > ${this.filterValues[0]}`;
             case '>=':
                 return `${this.apiName} >= ${this.filterValues[0]}`;
             case '<':
+            case 'LessThanVarible':
                 return `${this.apiName} < ${this.filterValues[0]}`;
             case '<=':
                 return `${this.apiName} <= ${this.filterValues[0]}`;
@@ -78,6 +84,7 @@ export class NumberFilter extends Filter {
             case 'IsNotEmpty':
                 return res.must(existsFilter);
             case 'IsEqual':
+            case 'IsEqualVariable':
                 return res.must(termsQueryValues);
             case 'IsNotEqual':
                 return res.mustNot(termsQueryValues);
@@ -86,10 +93,12 @@ export class NumberFilter extends Filter {
             case '!=':
                 return res.mustNot(termQueryValue);
             case '>':
+            case 'GreaterThanVarible':
                 return rangeQuery.gt(this.filterValues[0]);
             case '>=':
                 return rangeQuery.gte(this.filterValues[0]);
             case '<':
+            case 'LessThanVarible':
                 return rangeQuery.lt(this.filterValues[0]);
             case '<=':
                 return rangeQuery.lte(this.filterValues[0]);
@@ -124,6 +133,7 @@ export class NumberFilter extends Filter {
                 res.Count = count;
                 return res;
             case 'IsEqual':
+            case 'IsEqualVariable':
                 if (this.filterValues.length == 1) {
                     // ==
                     filterNames = '';
@@ -205,6 +215,7 @@ export class NumberFilter extends Filter {
                 res.Count = count;
                 return res;
             case '>':
+            case 'GreaterThanVarible':
                 markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
                 markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[0]);
                 count++;
@@ -219,6 +230,7 @@ export class NumberFilter extends Filter {
                 res.Count = count;
                 return res;
             case '<':
+            case 'LessThanVarible':
                 markName = this.AddFilterNameToDynamoResultObject(res, letterForMark, count, this.apiName);
                 markValue = this.AddFilterValueToDynamoResultObject(res, letterForMark, count, this.filterValues[0]);
                 count++;

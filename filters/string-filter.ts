@@ -23,6 +23,7 @@ export class StringFilter extends Filter {
             case 'IsNotEmpty':
                 return stringVal !== '';
             case 'IsEqual':
+            case 'IsEqualVariable':
                 return this.compare(stringVal);
             case 'IsNotEqual':
                 return !this.compare(stringVal);
@@ -44,6 +45,7 @@ export class StringFilter extends Filter {
             case 'IsNotEmpty':
                 return `${this.apiName} IS NOT NULL AND ${this.apiName} != ''`;
             case 'IsEqual':
+            case 'IsEqualVariable':
                 return `${this.apiName} IN (${this.filterValues.map((str) => `'${str}'`).join(', ')})`;
             case 'IsNotEqual':
                 return `${this.apiName} NOT IN (${this.filterValues.map((str) => `'${str}'`).join(', ')})`;
@@ -88,6 +90,7 @@ export class StringFilter extends Filter {
             case 'IsNotEmpty':
                 return res.mustNot(termQueryEmpty).filter(existsFilter);
             case 'IsEqual':
+            case 'IsEqualVariable':
                 return res.must(termsQueryValues);
             case 'IsNotEqual':
                 return res.mustNot(termsQueryValues);
@@ -134,6 +137,7 @@ export class StringFilter extends Filter {
                 res.Count = count;
                 return res;
             case 'IsEqual':
+            case 'IsEqualVariable':
                 if (this.filterValues.length == 1) {
                     // ==
                     filterNames = '';
