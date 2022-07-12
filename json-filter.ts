@@ -1,16 +1,6 @@
-export type BasicOperations = 'IsEmpty' | 'IsNotEmpty' | 'IsEqual' | 'IsEqualVariable' | 'IsNotEqual';
+export type BasicOperations = 'IsEmpty' | 'IsNotEmpty' | 'IsEqual' | 'IsNotEqual';
 
-export type NumberOperation =
-    | BasicOperations
-    | '='
-    | '>'
-    | '>='
-    | '<'
-    | '<='
-    | '!='
-    | 'Between'
-    | 'LessThanVarible'
-    | 'GreaterThanVarible';
+export type NumberOperation = BasicOperations | '=' | '>' | '>=' | '<' | '<=' | '!=' | 'Between';
 
 export type StringOperation = BasicOperations | 'Contains' | 'StartWith' | 'EndWith' | 'IsLoggedInUser';
 
@@ -23,7 +13,6 @@ export type DateOperation =
     | 'Before'
     | 'After'
     | 'Between'
-    | 'BetweenVariable'
     | 'DueIn'
     | 'On'
     | 'NotInTheLast'
