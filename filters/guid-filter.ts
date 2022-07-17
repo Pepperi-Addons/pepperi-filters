@@ -18,7 +18,6 @@ export class GuidFilter extends Filter {
             case 'IsNotEmpty':
                 return this.standardize(value) !== this.standardize(emptyGuid);
             case 'IsEqual':
-            case 'IsEqualVariable':
                 return this.standardize(value) === this.standardize(this.filterValue);
             case 'IsNotEqual':
                 return this.standardize(value) !== this.standardize(this.filterValue);
@@ -38,7 +37,6 @@ export class GuidFilter extends Filter {
             case 'IsNotEmpty':
                 return `${this.apiName} IS NOT NULL AND ${this.apiName} != '${emptyGuid}'`;
             case 'IsEqual':
-            case 'IsEqualVariable':
                 return `${this.apiName} = '${filterVal}'`;
             case 'IsNotEqual':
                 return `${this.apiName} != '${filterVal}'`;
@@ -60,7 +58,6 @@ export class GuidFilter extends Filter {
                 res.mustNot(termQueryEmpty).must(existsFilter);
                 break;
             case 'IsEqual':
-            case 'IsEqualVariable':
                 res.must(termQueryValue);
                 break;
             case 'IsNotEqual':
