@@ -121,7 +121,7 @@ export class DateFilter extends Filter {
                 // From Sunday 00:00 till the end of the week
                 // This should find the beginning of the current week for the start of the range
                 // and the beginning of the next week for the end of the range.
-                return rangeQuery.lt('(now+1w)/w-1d').gte('now/w-1d');
+                return rangeQuery.lt('now+1w/w-1d').gte('now/w-1d');
             case 'ThisMonth':
                 // From 1sh current month 00:00 till now
                 return rangeQuery.lt('now').gte('now/M');
@@ -146,6 +146,16 @@ export class DateFilter extends Filter {
             case 'InTheLastCalendar':
                 // same as 'InTheLast' but rounded by calendar (start of year/month/week)
                 unit = this.getUnitTimeCharachter();
+                if (this.filterValues[0] == '0') {
+                    switch (unit) {
+                        case 'd':
+                            return rangeQuery.lt('now+1d/d').gte('now/d');
+                        case 'w':
+                            return rangeQuery.lt('now+1w/w-1d').gte('now/w-1d');
+                        case 'M':
+                            return rangeQuery.lt('now').gte('now/M');
+                    }
+                }
                 return rangeQuery.lt(`now/${unit}`).gte(`now-${this.filterValues[0]}${unit}/${unit}`);
             case 'NotInTheLast':
                 unit = this.getUnitTimeCharachter();
