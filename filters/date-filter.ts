@@ -121,10 +121,12 @@ export class DateFilter extends Filter {
                 // From Sunday 00:00 till the end of the week
                 // This should find the beginning of the current week for the start of the range
                 // and the beginning of the next week for the end of the range.
+                // gte note: now/w rounds to start of the week, which is Monday according to elastic documentation,
+                // therefore we added -1d (we need it to be Sunday)
                 return rangeQuery.lt('now+1w/w-1d').gte('now/w-1d');
             case 'ThisMonth':
                 // From 1sh current month 00:00 till now
-                return rangeQuery.lt('now').gte('now/M');
+                return rangeQuery.lt('now+1M/M').gte('now/M');
             case 'On':
                 const fromDate = new Date(this.filterValues[0]).setHours(0, 0, 0);
                 const toDate = new Date(this.filterValues[0]).setHours(23, 59, 59);
@@ -145,27 +147,13 @@ export class DateFilter extends Filter {
                 return rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`);
             case 'InTheLastCalendar':
                 // same as 'InTheLast' but rounded by calendar (start of year/month/week)
-                unit = this.getUnitTimeCharachter();
-                if (this.filterValues[0] == '0') {
-                    switch (unit) {
-                        case 'd':
-                            return rangeQuery.lt('now+1d/d').gte('now/d');
-                        case 'w':
-                            return rangeQuery.lt('now+1w/w-1d').gte('now/w-1d');
-                        case 'M':
-                            return rangeQuery.lt('now').gte('now/M');
-                    }
-                }
-                return rangeQuery.lt(`now/${unit}`).gte(`now-${this.filterValues[0]}${unit}/${unit}`);
+                return this.buildCalendarQuery(rangeQuery);
             case 'NotInTheLast':
                 unit = this.getUnitTimeCharachter();
                 return boolQuery.mustNot(rangeQuery.lt(`now+1d/d`).gte(`now-${this.filterValues[0]}${unit}`));
             case 'NotInTheLastCalendar':
-                // same as 'NotInTheLastCalendar' but rounded by calendar (start of year/month/week)
-                unit = this.getUnitTimeCharachter();
-                return boolQuery.mustNot(
-                    rangeQuery.lt(`now/${unit}`).gte(`now-${this.filterValues[0]}${unit}/${unit}`),
-                );
+                // same as 'NotInTheLast' but rounded by calendar (start of year/month/week)
+                return boolQuery.mustNot(this.buildCalendarQuery(rangeQuery));
             case 'DueIn':
                 // From now + number of days / weeks / months
                 unit = this.getUnitTimeCharachter();
@@ -213,5 +201,15 @@ export class DateFilter extends Filter {
                 break;
         }
         return unit;
+    }
+
+    buildCalendarQuery(rangeQuery: any) {
+        const unit = this.getUnitTimeCharachter();
+        // elastic's week starts on Monday, here we fix it to Sunday
+        const week_suffix = unit == 'w' ? '-1d' : '';
+        // '0' is a uniqe case in which we return the current day/week/month
+        const lt_prefix = this.filterValues[0] == '0' ? `now+1${unit}/${unit}` : `now/${unit}`;
+        const gte_prefix = this.filterValues[0] == '0' ? `now/${unit}` : `now-${this.filterValues[0]}${unit}/${unit}`;
+        return rangeQuery.lt(`${lt_prefix}${week_suffix}`).gte(`${gte_prefix}${week_suffix}`);
     }
 }
