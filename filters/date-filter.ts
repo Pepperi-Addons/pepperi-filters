@@ -207,9 +207,8 @@ export class DateFilter extends Filter {
         const unit = this.getUnitTimeCharachter();
         // elastic's week starts on Monday, here we fix it to Sunday
         const week_suffix = unit == 'w' ? '-1d' : '';
-        // '0' is a uniqe case in which we return the current day/week/month
-        const lt_prefix = this.filterValues[0] == '0' ? `now+1${unit}/${unit}` : `now/${unit}`;
-        const gte_prefix = this.filterValues[0] == '0' ? `now/${unit}` : `now-${this.filterValues[0]}${unit}/${unit}`;
+        const lt_prefix = `now+1${unit}/${unit}`;
+        const gte_prefix = `now-${this.filterValues[0]}${unit}/${unit}`;
         return rangeQuery.lt(`${lt_prefix}${week_suffix}`).gte(`${gte_prefix}${week_suffix}`);
     }
 }
