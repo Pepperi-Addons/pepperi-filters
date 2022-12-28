@@ -119,4 +119,18 @@ export function filter<T>(objects: T[], jsonFilter: JSONFilter | undefined): T[]
     return objects;
 }
 
+export async function filterAsync<T>(objects: IFilterObject<T>[], jsonFilter?: JSONFilter): Promise<T[]> {
+    if (jsonFilter) {
+        const filterFactory = new FilterFactory();
+        const filter = filterFactory.createFilter(jsonFilter);
+        objects = await Filter.filterAsync(objects, filter);
+    }
+    return objects.map((obj) => obj.Item);
+}
+
+export interface IFilterObject<T> {
+    Item: T;
+    GetValue: (apiName: string) => Promise<any>;
+}
+
 export * from './json-filter';
