@@ -3,6 +3,7 @@ import { DateOperation, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { NumberFilter } from './number-filter';
+import moment, { Moment } from 'moment';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
@@ -64,18 +65,36 @@ export class DateFilter extends Filter {
             case '<=':
                 return `${this.apiName} <= '${this.apiDateValue(this.filterValues[0])}'`;
             case 'Today':
+                return this.betweenSQLClause(moment().startOf('day').toISOString(), moment().endOf('day').toISOString());
             case 'ThisWeek':
+                return this.betweenSQLClause(moment().startOf('week').toISOString(), moment().endOf('week').toISOString());
             case 'ThisMonth':
+                return this.betweenSQLClause(moment().startOf('month').toISOString(), moment().endOf('month').toISOString());
             case 'On':
+                const day = this.filterValues[0];
+                return this.betweenSQLClause(moment(day).startOf('day').toISOString(), moment(day).endOf('day').toISOString());
             case 'After':
+                return `${this.apiName} > '${this.apiDateValue(this.filterValues[0])}'`;
             case 'Before':
+                return `${this.apiName} < '${this.apiDateValue(this.filterValues[0])}'`;
             case 'Between':
+                return this.betweenSQLClause(this.filterValues[0], this.filterValues[1]);
             case 'InTheLast':
-            case 'InTheLastCalendar':
+                return this.betweenSQLClause(
+                    moment().subtract(Number(this.filterValues[0]), this.getMomentUnit(this.filterValues[1])).toISOString(),
+                    moment().toISOString()
+                );
             case 'NotInTheLast':
-            case 'NotInTheLastCalendar':
+                return `${this.apiName} < '${DateFilter.momentToApiDateValue(moment().subtract(Number(this.filterValues[0]), this.getMomentUnit(this.filterValues[1])))}'`;
             case 'DueIn':
-            case 'NotDueIn': {
+                return this.betweenSQLClause(
+                    moment().toISOString(),
+                    moment().add(Number(this.filterValues[0]), this.getMomentUnit(this.filterValues[1])).toISOString()
+                )
+            case 'NotDueIn':
+                return `${this.apiName} < '${DateFilter.momentToApiDateValue(moment())}' OR ${this.apiName} > '${DateFilter.momentToApiDateValue(moment().add(Number(this.filterValues[0]), this.getMomentUnit(this.filterValues[1])))}'`;
+            case 'InTheLastCalendar':
+            case 'NotInTheLastCalendar': {
                 throw new Error(`Operation ${this.operation} isn't supported`);
             }
         }
@@ -84,6 +103,15 @@ export class DateFilter extends Filter {
     apiDateValue(val: string): string {
         let res = new Date(val).toISOString();
 
+        // get rid of ms at the end - API doesn't support this
+        res = res.split('.')[0] + 'Z';
+
+        return res;
+    }
+
+    static momentToApiDateValue(val: Moment): string {
+        let res = val.toISOString();
+        
         // get rid of ms at the end - API doesn't support this
         res = res.split('.')[0] + 'Z';
 
@@ -210,5 +238,22 @@ export class DateFilter extends Filter {
         const lt_prefix = `now+1${unit}/${unit}`;
         const gte_prefix = `now-${this.filterValues[0]}${unit}/${unit}`;
         return rangeQuery.lt(`${lt_prefix}${week_suffix}`).gte(`${gte_prefix}${week_suffix}`);
+    }
+
+    private betweenSQLClause(from: string, to: string): string {
+        return `${this.apiName} >= '${this.apiDateValue(from)}' AND ${this.apiName} <= '${this.apiDateValue(to)}'`
+    }
+
+    private getMomentUnit(unit: string) {
+        switch(unit) {
+            case 'Days':
+                return 'day';
+            case 'Weeks':
+                return 'week';
+            case 'Months':
+                return 'month';
+            case 'Years':
+                return 'year';
+        }
     }
 }
