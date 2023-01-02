@@ -1,6 +1,8 @@
 import 'mocha';
 import { expect } from 'chai';
 import { JSONFilter, toApiQueryString } from '../index';
+import moment from 'moment';
+import { DateFilter } from '../filters/date-filter';
 
 interface Test {
     title: string;
@@ -409,8 +411,152 @@ describe('One level - DateTime', () => {
                 Values: [],
             },
         },
+        {
+            title: 'today',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().startOf('day'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment().endOf('day'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'Today',
+                Values: [],
+            }
+        },
+        {
+            title: 'This week',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().startOf('week'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment().endOf('week'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'ThisWeek',
+                Values: [],
+            }
+        },
+        {
+            title: 'This month',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().startOf('month'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment().endOf('month'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'ThisMonth',
+                Values: [],
+            }
+        },
+        {
+            title: 'On - yesterday',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().subtract(1, 'day').startOf('day'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment().subtract(1, 'day').endOf('day'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'On',
+                Values: [
+                    moment().subtract(1, 'day').toISOString()
+                ],
+            }
+        },
+        {
+            title: 'Before - yesterday',
+            where: `${fieldName} < '${DateFilter.momentToApiDateValue(moment().subtract(1, 'day'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'Before',
+                Values: [
+                    moment().subtract(1, 'day').toISOString()
+                ],
+            }
+        },
+        {
+            title: 'After - yesterday',
+            where: `${fieldName} > '${DateFilter.momentToApiDateValue(moment().subtract(1, 'day'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'After',
+                Values: [
+                    moment().subtract(1, 'day').toISOString()
+                ],
+            }
+        },
+        {
+            title: 'Between',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().add(1, 'day'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment().add(3, 'day'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'Between',
+                Values: [
+                    moment().add(1, 'day').toISOString(),
+                    moment().add(3, 'day').toISOString()
+                ],
+            }
+        },
+        {
+            title: 'In the last 2 days',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().subtract(2, 'day'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment())}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'InTheLast',
+                Values: [
+                    '2',
+                    'Days'
+                ],
+            }
+        },
+        {
+            title: 'In the last 2 weeks',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment().subtract(2, 'week'))}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment())}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'InTheLast',
+                Values: [
+                    '2',
+                    'Weeks'
+                ],
+            }
+        },
+        {
+            title: 'Not in the last 2 months',
+            where: `${fieldName} < '${DateFilter.momentToApiDateValue(moment().subtract(2, 'month'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'NotInTheLast',
+                Values: [
+                    '2',
+                    'Months'
+                ],
+            }
+        },
+        {
+            title: 'Due in the next 2 days',
+            where: `${fieldName} >= '${DateFilter.momentToApiDateValue(moment())}' AND ${fieldName} <= '${DateFilter.momentToApiDateValue(moment().add(2, 'day'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DueIn',
+                Values: [
+                    '2',
+                    'Days'
+                ],
+            }
+        },
+        {
+            title: 'Not due in the next 3 years',
+            where: `${fieldName} < '${DateFilter.momentToApiDateValue(moment())}' OR ${fieldName} > '${DateFilter.momentToApiDateValue(moment().add(3, 'year'))}'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'NotDueIn',
+                Values: [
+                    '3',
+                    'Years'
+                ],
+            }
+        }
     ];
-
+    
     tests.forEach((test) => {
         it(test.title.padStart(15, ' ') + ' | ' + test.where, () => {
             expect(toApiQueryString(test.filter)).to.eql(test.where);
