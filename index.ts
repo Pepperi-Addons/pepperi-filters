@@ -130,7 +130,7 @@ export async function filterAsync<T>(objects: IFilterObject<T>[], jsonFilter?: J
 
 export interface IFilterObject<T> {
     Item: T;
-    GetValue: (apiName: string) => Promise<any>;
+    getValue: (fieldID: string) => Promise<any>;
 }
 
 export * from './json-filter';

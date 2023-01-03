@@ -25,7 +25,7 @@ export default abstract class Filter {
     }
 
     async filterAsync(object: IFilterObject<any>) {
-        const value = await object.GetValue(this.apiName);
+        const value = await object.getValue(this.apiName);
         return this.apply(value);
     }
 
