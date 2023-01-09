@@ -57,7 +57,7 @@ export class NumberFilter extends Filter {
             case '<=':
                 return `${this.apiName} <= ${this.filterValues[0]}`;
             case 'Between':
-                return `${this.apiName} >= ${this.filterValues[0]} AND ${this.apiName} <= ${this.filterValues[0]}`;
+                return `${this.apiName} >= ${this.filterValues[0]} AND ${this.apiName} <= ${this.filterValues[1]}`;
         }
     }
 
