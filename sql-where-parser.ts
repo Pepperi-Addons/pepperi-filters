@@ -190,6 +190,10 @@ export class SQLWhereParser {
                     res = 'IsEqual';
                     break;
                 }
+                case 'NOT IN': {
+                    res = 'IsNotEqual';
+                    break;
+                }
             }
         }
 
