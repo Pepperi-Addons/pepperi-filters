@@ -56,6 +56,18 @@ export class SQLWhereParser {
             operation = 'NOT IN';
         }
 
+        // NOT LIKE
+        if (
+            operation === 'LIKE' &&
+            typeof expression[operation][0] === 'object' &&
+            Object.keys(expression[operation][0])[0] === 'NOT'
+        ) {
+            expression = {
+                'NOT LIKE': [expression[operation][0].NOT[0], expression[operation][1]],
+            };
+            operation = 'NOT LIKE';
+        }
+
         // BETWEEN
         if (operation === 'BETWEEN' && expression[operation][1] && expression[operation][2]) {
             expression = {
@@ -226,6 +238,32 @@ export class SQLWhereParser {
                         } else {
                             // LIKE 'abcd'
                             res = 'IsEqual';
+                        }
+                        values[0] = val;
+                    }
+                    break;
+                }
+                case 'NOT LIKE': {
+                    if (values.length == 1) {
+                        let val = values[0];
+                        if (val.charAt(0) === '%') {
+                            // NOT LIKE '%acbd....
+                            if (val.charAt(val.length - 1) === '%') {
+                                // NOT LIKE '%acbd%'
+                                val = val.slice(1, val.length - 1);
+                                res = 'DoesNotContains';
+                            } else {
+                                // NOT LIKE '%acbd'
+                                val = val.slice(1, val.length);
+                                res = 'DoesNotEndWith';
+                            }
+                        } else if (val.charAt(val.length - 1) === '%') {
+                            // NOT LIKE 'abcd%'
+                            val = val.slice(0, val.length - 1);
+                            res = 'DoesNotStartWith';
+                        } else {
+                            // NOT LIKE 'abcd'
+                            res = 'IsNotEqual';
                         }
                         values[0] = val;
                     }

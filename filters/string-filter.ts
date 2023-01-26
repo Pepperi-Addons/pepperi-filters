@@ -97,6 +97,12 @@ export class StringFilter extends Filter {
                 return wildcardQuery(this.apiName, `${this.filterValues[0]}*`);
             case 'EndWith':
                 return wildcardQuery(this.apiName, `*${this.filterValues[0]}`);
+            case 'DoesNotContains':
+                return res.mustNot(wildcardQuery(this.apiName, `*${this.filterValues[0]}*`));
+            case 'DoesNotStartWith':
+                return res.mustNot(wildcardQuery(this.apiName, `${this.filterValues[0]}*`));
+            case 'DoesNotEndWith':
+                return res.mustNot(wildcardQuery(this.apiName, `*${this.filterValues[0]}`));
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
         }

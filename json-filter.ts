@@ -2,7 +2,15 @@ export type BasicOperations = 'IsEmpty' | 'IsNotEmpty' | 'IsEqual' | 'IsNotEqual
 
 export type NumberOperation = BasicOperations | '=' | '>' | '>=' | '<' | '<=' | '!=' | 'Between';
 
-export type StringOperation = BasicOperations | 'Contains' | 'StartWith' | 'EndWith' | 'IsLoggedInUser';
+export type StringOperation =
+    | BasicOperations
+    | 'Contains'
+    | 'StartWith'
+    | 'EndWith'
+    | 'IsLoggedInUser'
+    | 'DoesNotContains'
+    | 'DoesNotStartWith'
+    | 'DoesNotEndWith';
 
 export type DateOperation =
     | 'InTheLast'
