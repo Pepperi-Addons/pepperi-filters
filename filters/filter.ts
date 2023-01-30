@@ -1,4 +1,5 @@
 import { Query } from 'elastic-builder';
+import { IFilterObject } from '../index';
 import { DynamoResultObject } from './DynamoObjectResult';
 
 export default abstract class Filter {
@@ -21,6 +22,16 @@ export default abstract class Filter {
 
     static filter(objects: any[], filter: Filter) {
         return objects.filter((obj) => filter.filter(obj));
+    }
+
+    async filterAsync(object: IFilterObject<any>) {
+        const value = await object.getValue(this.apiName);
+        return this.apply(value);
+    }
+
+    static async filterAsync(objects: IFilterObject<any>[], filter: Filter) {
+        const results = await Promise.all(objects.map(async (obj) => await filter.filterAsync(obj)));
+        return objects.filter((_v, index) => results[index]);
     }
 
     getValue(object: any, apiName: string): any {
