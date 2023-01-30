@@ -129,6 +129,16 @@ describe('One level - Integer', () => {
             },
         },
         {
+            title: 'Between',
+            where: `${fieldName} >= ${123} AND ${fieldName} <= ${456}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'Between',
+                Values: ['123', '456'],
+            },
+        },
+        {
             title: 'IS NULL',
             where: `${fieldName} IS NULL`,
             filter: {
