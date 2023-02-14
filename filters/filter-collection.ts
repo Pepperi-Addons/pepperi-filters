@@ -29,6 +29,20 @@ export default class FilterCollection extends Filter {
         return res;
     }
 
+    async filterAsync(object: any) {
+        let res = true;
+
+        for (const filter of this.filters) {
+            res = await filter.filterAsync(object);
+
+            if (res != this.useAndOperation) {
+                break;
+            }
+        }
+
+        return res;
+    }
+
     toSQLWhereClause(): string {
         let res = '';
 
