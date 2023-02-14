@@ -8,7 +8,7 @@ export type StringOperation =
     | 'StartWith'
     | 'EndWith'
     | 'IsLoggedInUser'
-    | 'DoesNotContains'
+    | 'DoesNotContain'
     | 'DoesNotStartWith'
     | 'DoesNotEndWith';
 

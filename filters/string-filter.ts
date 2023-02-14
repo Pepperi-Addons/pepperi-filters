@@ -97,7 +97,7 @@ export class StringFilter extends Filter {
                 return wildcardQuery(this.apiName, `${this.filterValues[0]}*`);
             case 'EndWith':
                 return wildcardQuery(this.apiName, `*${this.filterValues[0]}`);
-            case 'DoesNotContains':
+            case 'DoesNotContain':
                 return res.mustNot(wildcardQuery(this.apiName, `*${this.filterValues[0]}*`));
             case 'DoesNotStartWith':
                 return res.mustNot(wildcardQuery(this.apiName, `${this.filterValues[0]}*`));
