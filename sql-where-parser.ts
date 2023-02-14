@@ -251,7 +251,7 @@ export class SQLWhereParser {
                             if (val.charAt(val.length - 1) === '%') {
                                 // NOT LIKE '%acbd%'
                                 val = val.slice(1, val.length - 1);
-                                res = 'DoesNotContains';
+                                res = 'DoesNotContain';
                             } else {
                                 // NOT LIKE '%acbd'
                                 val = val.slice(1, val.length);
