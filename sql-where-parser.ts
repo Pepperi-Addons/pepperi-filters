@@ -11,6 +11,20 @@ import {
 } from './json-filter';
 import { str2Bool } from './converters';
 
+const wildcardToLike: { [key: string]: StringOperation } = {
+    start: 'EndWith',
+    end: 'StartWith',
+    both: 'Contains',
+    none: 'IsEqual',
+};
+
+const wildcardToNotLike: { [key: string]: StringOperation } = {
+    start: 'DoesNotEndWith',
+    end: 'DoesNotStartWith',
+    both: 'DoesNotContain',
+    none: 'IsNotEqual',
+};
+
 export class SQLWhereParser {
     constructor(private fields: { [key: string]: FieldType }) {}
 
@@ -54,6 +68,18 @@ export class SQLWhereParser {
                 'NOT IN': [expression[operation][0].NOT[0], expression[operation][1]],
             };
             operation = 'NOT IN';
+        }
+
+        // NOT LIKE
+        if (
+            operation === 'LIKE' &&
+            typeof expression[operation][0] === 'object' &&
+            Object.keys(expression[operation][0])[0] === 'NOT'
+        ) {
+            expression = {
+                'NOT LIKE': [expression[operation][0].NOT[0], expression[operation][1]],
+            };
+            operation = 'NOT LIKE';
         }
 
         // BETWEEN
@@ -190,6 +216,10 @@ export class SQLWhereParser {
                     res = 'IsEqual';
                     break;
                 }
+                case 'NOT IN': {
+                    res = 'IsNotEqual';
+                    break;
+                }
             }
         }
 
@@ -202,29 +232,13 @@ export class SQLWhereParser {
         if (!res) {
             switch (operation) {
                 case 'LIKE': {
-                    if (values.length == 1) {
-                        let val = values[0];
-                        if (val.charAt(0) === '%') {
-                            // LIKE '%acbd....
-                            if (val.charAt(val.length - 1) === '%') {
-                                // LIKE '%acbd%'
-                                val = val.slice(1, val.length - 1);
-                                res = 'Contains';
-                            } else {
-                                // LIKE '%acbd'
-                                val = val.slice(1, val.length);
-                                res = 'EndWith';
-                            }
-                        } else if (val.charAt(val.length - 1) === '%') {
-                            // LIKE 'abcd%'
-                            val = val.slice(0, val.length - 1);
-                            res = 'StartWith';
-                        } else {
-                            // LIKE 'abcd'
-                            res = 'IsEqual';
-                        }
-                        values[0] = val;
-                    }
+                    const wildcardLocation = this.wildcardLocation(values);
+                    res = wildcardLocation ? wildcardToLike[wildcardLocation] : undefined;
+                    break;
+                }
+                case 'NOT LIKE': {
+                    const wildcardLocation = this.wildcardLocation(values);
+                    res = wildcardLocation ? wildcardToNotLike[wildcardLocation] : undefined;
                     break;
                 }
                 case 'IN': {
@@ -237,7 +251,34 @@ export class SQLWhereParser {
                 }
             }
         }
+        return res;
+    }
 
+    wildcardLocation(values: string[]): 'start' | 'end' | 'both' | 'none' | undefined {
+        let res: 'start' | 'end' | 'both' | 'none' | undefined;
+        if (values.length == 1) {
+            let val = values[0];
+            if (val.charAt(0) === '%') {
+                // LIKE '%acbd....
+                if (val.charAt(val.length - 1) === '%') {
+                    // LIKE '%acbd%'
+                    val = val.slice(1, val.length - 1);
+                    res = 'both';
+                } else {
+                    // LIKE '%acbd'
+                    val = val.slice(1, val.length);
+                    res = 'start';
+                }
+            } else if (val.charAt(val.length - 1) === '%') {
+                // LIKE 'abcd%'
+                val = val.slice(0, val.length - 1);
+                res = 'end';
+            } else {
+                // LIKE 'abcd'
+                res = 'none';
+            }
+            values[0] = val;
+        }
         return res;
     }
 

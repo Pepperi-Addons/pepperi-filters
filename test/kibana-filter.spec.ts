@@ -346,6 +346,36 @@ describe('Kibana: One level - String', () => {
             },
         },
         {
+            title: 'DoesNotContain',
+            kibanaQuery: `{"bool":{"must_not":{"wildcard":{"${fieldName}":"*${value}*"}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DoesNotContain',
+                Values: [value],
+            },
+        },
+        {
+            title: 'DoesNotStartWith',
+            kibanaQuery: `{"bool":{"must_not":{"wildcard":{"${fieldName}":"${value}*"}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DoesNotStartWith',
+                Values: [value],
+            },
+        },
+        {
+            title: 'DoesNotEndWith',
+            kibanaQuery: `{"bool":{"must_not":{"wildcard":{"${fieldName}":"*${value}"}}}}`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DoesNotEndWith',
+                Values: [value],
+            },
+        },
+        {
             title: 'IS NOT NULL',
             kibanaQuery: `{"bool":{"filter":{"exists":{"field":"${fieldName}"}},"must_not":{"term":{"${fieldName}":""}}}}`,
             filter: {
