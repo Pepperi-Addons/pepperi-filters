@@ -32,6 +32,12 @@ export class StringFilter extends Filter {
                 return stringVal.toLocaleLowerCase().startsWith(this.filterValues[0].toLocaleLowerCase());
             case 'EndWith':
                 return stringVal.toLocaleLowerCase().endsWith(this.filterValues[0].toLocaleLowerCase());
+            case 'DoesNotContain':
+                return !stringVal.toLocaleLowerCase().includes(this.filterValues[0].toLocaleLowerCase());
+            case 'DoesNotStartWith':
+                return !stringVal.toLocaleLowerCase().startsWith(this.filterValues[0].toLocaleLowerCase());
+            case 'DoesNotEndWith':
+                return !stringVal.toLocaleLowerCase().endsWith(this.filterValues[0].toLocaleLowerCase());
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
         }
@@ -53,6 +59,12 @@ export class StringFilter extends Filter {
                 return `${this.apiName} LIKE '${this.filterValues[0]}%'`;
             case 'EndWith':
                 return `${this.apiName} LIKE '%${this.filterValues[0]}'`;
+            case 'DoesNotContain':
+                return `${this.apiName} NOT LIKE '%${this.filterValues[0]}%'`;
+            case 'DoesNotStartWith':
+                return `${this.apiName} NOT LIKE '${this.filterValues[0]}%'`;
+            case 'DoesNotEndWith':
+                return `${this.apiName} NOT LIKE '%${this.filterValues[0]}'`;
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
         }
