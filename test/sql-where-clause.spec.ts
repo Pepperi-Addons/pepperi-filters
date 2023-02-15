@@ -317,6 +317,36 @@ describe('One level - String', () => {
             },
         },
         {
+            title: 'DoesNotContain',
+            where: `${fieldName} NOT LIKE '%Hi%'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DoesNotContain',
+                Values: ['Hi'],
+            },
+        },
+        {
+            title: 'DoesNotStartWith',
+            where: `${fieldName} NOT LIKE 'Hi%'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DoesNotStartWith',
+                Values: ['Hi'],
+            },
+        },
+        {
+            title: 'DoesNotEndWith',
+            where: `${fieldName} NOT LIKE '%Hi'`,
+            filter: {
+                ApiName: fieldName,
+                FieldType: fieldType,
+                Operation: 'DoesNotEndWith',
+                Values: ['Hi'],
+            },
+        },
+        {
             title: 'IS NOT NULL',
             where: `${fieldName} IS NOT NULL AND ${fieldName} != ''`,
             filter: {
