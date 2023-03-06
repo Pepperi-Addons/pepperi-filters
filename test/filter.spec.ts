@@ -88,15 +88,18 @@ describe('Filtering objects with JSON Filter', function () {
             });
 
             it('should return always true', function () {
-                const res = filter([{ TSABool: true }, { TSABool: false }], {
-                    FieldType: 'Bool',
-                    ApiName: 'TSABool',
-                    Operation: 'IsEqual',
-                    Values: ['true'],
-                },
-                (object: any, fieldName: string) => {
-                    return true;
-                });
+                const res = filter(
+                    [{ TSABool: true }, { TSABool: false }],
+                    {
+                        FieldType: 'Bool',
+                        ApiName: 'TSABool',
+                        Operation: 'IsEqual',
+                        Values: ['true'],
+                    },
+                    () => {
+                        return true;
+                    },
+                );
 
                 expect(res).to.be.an('array').with.lengthOf(2);
                 expect(res[0]).to.have.property('TSABool').that.is.true;
