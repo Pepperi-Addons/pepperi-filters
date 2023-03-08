@@ -110,27 +110,17 @@ export function toDynamoDBQuery(
     throw new Error('jsonFilter is a mandatory parameter');
 }
 
-export function filter<T>(objects: T[], jsonFilter: JSONFilter | undefined): T[] {
+export function filter<T>(
+    objects: T[],
+    jsonFilter: JSONFilter | undefined,
+    getValueFunc?: (object: any, apiName: string) => any,
+): T[] {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
-        return Filter.filter(objects, filter);
+        return Filter.filter(objects, filter, getValueFunc);
     }
     return objects;
-}
-
-export async function filterAsync<T>(objects: IFilterObject<T>[], jsonFilter?: JSONFilter): Promise<T[]> {
-    if (jsonFilter) {
-        const filterFactory = new FilterFactory();
-        const filter = filterFactory.createFilter(jsonFilter);
-        objects = await Filter.filterAsync(objects, filter);
-    }
-    return objects.map((obj) => obj.Item);
-}
-
-export interface IFilterObject<T> {
-    Item: T;
-    getValue: (fieldID: string) => Promise<any>;
 }
 
 export * from './json-filter';

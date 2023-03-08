@@ -86,6 +86,25 @@ describe('Filtering objects with JSON Filter', function () {
                 expect(res[1]).to.be.an('object').with.property('TSABool').that.is.an('array').which.is.empty;
                 expect(res[2]).to.be.an('object').with.property('TSABool').that.is.a('number').which.is.equal(-1);
             });
+
+            it('should return always true', function () {
+                const res = filter(
+                    [{ TSABool: true }, { TSABool: false }],
+                    {
+                        FieldType: 'Bool',
+                        ApiName: 'TSABool',
+                        Operation: 'IsEqual',
+                        Values: ['true'],
+                    },
+                    () => {
+                        return true;
+                    },
+                );
+
+                expect(res).to.be.an('array').with.lengthOf(2);
+                expect(res[0]).to.have.property('TSABool').that.is.true;
+                expect(res[1]).to.have.property('TSABool').that.is.false;
+            });
         });
 
         describe('false', function () {

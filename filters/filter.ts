@@ -1,5 +1,4 @@
 import { Query } from 'elastic-builder';
-import { IFilterObject } from '../index';
 import { DynamoResultObject } from './DynamoObjectResult';
 
 export default abstract class Filter {
@@ -15,23 +14,16 @@ export default abstract class Filter {
         count: number,
     ): DynamoResultObject;
 
-    filter(object: any) {
-        const value = this.getValue(object, this.apiName);
+    filter(object: any, getValueFunc?: (object: any, apiName: string) => any) {
+        const value =
+            typeof getValueFunc === 'function'
+                ? getValueFunc(object, this.apiName)
+                : this.getValue(object, this.apiName);
         return this.apply(value);
     }
 
-    static filter(objects: any[], filter: Filter) {
-        return objects.filter((obj) => filter.filter(obj));
-    }
-
-    async filterAsync(object: IFilterObject<any>) {
-        const value = await object.getValue(this.apiName);
-        return this.apply(value);
-    }
-
-    static async filterAsync(objects: IFilterObject<any>[], filter: Filter) {
-        const results = await Promise.all(objects.map(async (obj) => await filter.filterAsync(obj)));
-        return objects.filter((_v, index) => results[index]);
+    static filter(objects: any[], filter: Filter, getValueFunc?: (object: any, apiName: string) => any) {
+        return objects.filter((obj) => filter.filter(obj, getValueFunc));
     }
 
     getValue(object: any, apiName: string): any {
