@@ -5,7 +5,10 @@ import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './filters/DynamoObjectResult';
-import { NGXFilterOperationFactory } from './ngx-filters/ngx-filter-factory';
+import { NGXFilterOperationFactory } from './ngx-filters/json-to-ngx/ngx-filter-factory';
+import { SchemeFieldType } from './ngx-filters/ngx-to-json/metadata';
+import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngxToJsonFilterBuilder';
+import { IPepSmartFilterData } from './ngx-filters/json-to-ngx/ngx-types';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -20,7 +23,7 @@ export function concat(and: boolean, f1: JSONFilter, ...args: (JSONFilter | unde
  * @param f1 A where clause
  * @param f2 Another where clause
  * @param and use and operation. `true` by default.
- */
+ */ 
 export function concat(and: boolean, s1: string, ...args: (string | undefined)[]): string;
 
 export function concat(
@@ -119,6 +122,21 @@ export function toDynamoDBQuery(
 export function toNGXSmartFilter(filter: JSONRegularFilter){
     return NGXFilterOperationFactory.create(filter)
 }
+
+/**
+ * 
+ * @param filter IPepSmartFilterData 
+ * @param type SchemeFieldType
+ * @returns JSONRegularFilter
+ */
+export function ngxFilterToJsonFilter(filter: IPepSmartFilterData, type: SchemeFieldType): JSONRegularFilter{
+    try{
+        return NgxToJsonFilterBuilder.build(filter, type)
+    }catch(err){
+        throw Error(`error in ngxFilterToJsonFilter - ${err} `)
+    }
+}
+
 
 export function filter<T>(
     objects: T[],
