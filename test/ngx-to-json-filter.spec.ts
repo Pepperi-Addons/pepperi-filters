@@ -2,8 +2,7 @@ import 'mocha';
 import { expect } from 'chai';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { SchemeFieldType } from '../ngx-filters/ngx-to-json/metadata';
-import { NumberFilter } from '../filters/number-filter';
-import { JSONFilter, JSONIntegerFilter, JSONRegularFilter } from '../json-filter';
+import { JSONIntegerFilter } from '../json-filter';
 import { ngxFilterToJsonFilter } from '../index';
 
 describe('ngx integers filter to json filters', () => {
