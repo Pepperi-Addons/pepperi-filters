@@ -2,7 +2,7 @@ import 'mocha';
 import { expect } from 'chai';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { SchemeFieldType } from '../ngx-filters/ngx-to-json/metadata';
-import { JSONIntegerFilter, JSONRegularFilter } from '../json-filter';
+import { JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter } from '../json-filter';
 import { ngxFilterToJsonFilter } from '../index';
 describe('NGX Filters To JSON Filters', () => {
     describe('1. Integer Filters', () => {
@@ -141,7 +141,7 @@ describe('NGX Filters To JSON Filters', () => {
             },
         ]
         ngxIntegerFilters.forEach((ngxFilter, index) => {
-            it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], "Integer"))
+            it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type))
         })
     });
     describe('2. Double Filters', () => {
@@ -229,65 +229,64 @@ describe('NGX Filters To JSON Filters', () => {
             },
         ]
     
-        const expectedResults: JSONIntegerFilter[] = [
+        const expectedResults: JSONDoubleFilter[] = [
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'equalTo1',
                 Operation: '=',
                 Values: ['1']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'equalTo2',
                 Operation: '=',
                 Values: ['2']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'notEqualTo1',
                 Operation: '!=',
                 Values: ['1']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'notEqualTo2',
                 Operation: '!=',
                 Values: ['2']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'lessThan1',
                 Operation: '<',
                 Values: ['1']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'lessThan2',
                 Operation: '<',
                 Values: ['2']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'greaterThan1',
                 Operation: '>',
                 Values: ['1']
             },
             {
-                FieldType: 'Integer',
+                FieldType: 'Double',
                 ApiName: 'greaterThan2',
                 Operation: '>',
                 Values: ['2']
             },
         ]
         ngxIntegerFilters.forEach((ngxFilter, index) => {
-            it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], "Integer"))
+            it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type))
         })
     });
-    
 })
 
 
 
 function getNGXFilterTestCB(filter1: IPepSmartFilterData, filter2: JSONRegularFilter,  type: SchemeFieldType){
-    return () => expect(ngxFilterToJsonFilter(filter1, 'Integer')).to.be.eql(filter2)
+    return () => expect(ngxFilterToJsonFilter(filter1, type)).to.be.eql(filter2)
 }
