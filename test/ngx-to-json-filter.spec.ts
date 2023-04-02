@@ -145,18 +145,4 @@ describe('ngx integers filter to json filters', () => {
         it(`${index + 1}. ${ngxFilter.fieldId} test `, () => expect(ngxFilterToJsonFilter(ngxFilter, 'Integer')).to.be.eql(expectedResults[index]))
     })
 
-    // tests.forEach((test) => {
-    //     it(test.title.padStart(15, ' ') + ' | ' + test.kibanaQuery, () => {
-    //         expect(JSON.stringify(toKibanaQuery(test.filter))).to.be.equal(test.kibanaQuery);
-    //     });
-    // });
 });
-
-
-// function compareJsonRegularFilters(filter1: JSONRegularFilter, filter2: JSONRegularFilter): boolean{
-//     return filter1.ApiName == filter2.ApiName && 
-//         filter1.FieldType == filter2.FieldType &&
-//         filter1.Operation == filter2.Operation &&
-//         filter1.Values.length == filter2.Values.length &&
-//         filter1.Values.every((val, index) => val == filter2.Values[index])
-// }
