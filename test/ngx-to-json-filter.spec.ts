@@ -288,5 +288,6 @@ describe('NGX Filters To JSON Filters', () => {
 
 
 function getNGXFilterTestCB(filter1: IPepSmartFilterData, filter2: JSONRegularFilter,  type: SchemeFieldType){
-    return () => expect(ngxFilterToJsonFilter(filter1, type)).to.be.eql(filter2)
+    return () => expect(ngxFilterToJsonFilter(filter1, type
+        )).to.be.eql(filter2)
 }
