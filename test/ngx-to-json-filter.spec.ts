@@ -9,7 +9,7 @@ describe('NGX Filters To JSON Filters', () => {
         const type: SchemeFieldType = 'Integer'
         const ngxIntegerFilters: IPepSmartFilterData[] = [
             {
-                fieldId: 'equalTo1',
+                fieldId: 'equal to 1',
                 operator: {
                     id: 'eq',
                     name: 'EQUAL',
@@ -19,7 +19,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'equalTo2',
+                fieldId: 'equal to 2',
                 operator: {
                     id: 'eq',
                     name: 'EQUAL',
@@ -29,7 +29,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '2'} 
             },
             {
-                fieldId: 'notEqualTo1',
+                fieldId: 'not equal to 1',
                 operator: {
                     id: 'neq',
                     name: 'NOT_EQUAL',
@@ -39,7 +39,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'notEqualTo2',
+                fieldId: 'not equal to 2',
                 operator: {
                     id: 'neq',
                     name: 'NOT_EQUAL',
@@ -49,7 +49,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '2'} 
             },
             {
-                fieldId: 'lessThan1',
+                fieldId: 'less than 1',
                 operator: {
                     id: 'lt',
                     name: 'LESS_THEN',
@@ -59,7 +59,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'lessThan2',
+                fieldId: 'less than 2',
                 operator: {
                     id: 'lt',
                     name: 'LESS_THEN',
@@ -69,7 +69,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '2'} 
             },
             {
-                fieldId: 'greaterThan1',
+                fieldId: 'greater than 1',
                 operator: {
                     id: 'gt',
                     name: 'GREATER_THEN',
@@ -79,7 +79,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'greaterThan2',
+                fieldId: 'greater than 2',
                 operator: {
                     id: 'gt',
                     name: 'GREATER_THEN',
@@ -93,49 +93,49 @@ describe('NGX Filters To JSON Filters', () => {
         const expectedResults: JSONIntegerFilter[] = [
             {
                 FieldType: 'Integer',
-                ApiName: 'equalTo1',
+                ApiName: 'equal to 1',
                 Operation: '=',
                 Values: ['1']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'equalTo2',
+                ApiName: 'equal to 2',
                 Operation: '=',
                 Values: ['2']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'notEqualTo1',
+                ApiName: 'not equal to 1',
                 Operation: '!=',
                 Values: ['1']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'notEqualTo2',
+                ApiName: 'not equal to 2',
                 Operation: '!=',
                 Values: ['2']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'lessThan1',
+                ApiName: 'less than 1',
                 Operation: '<',
                 Values: ['1']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'lessThan2',
+                ApiName: 'less than 2',
                 Operation: '<',
                 Values: ['2']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'greaterThan1',
+                ApiName: 'greater than 1',
                 Operation: '>',
                 Values: ['1']
             },
             {
                 FieldType: 'Integer',
-                ApiName: 'greaterThan2',
+                ApiName: 'greater than 2',
                 Operation: '>',
                 Values: ['2']
             },
@@ -148,7 +148,7 @@ describe('NGX Filters To JSON Filters', () => {
         const type: SchemeFieldType = 'Double'
         const ngxIntegerFilters: IPepSmartFilterData[] = [
             {
-                fieldId: 'equalTo1',
+                fieldId: 'equal to 1',
                 operator: {
                     id: 'eq',
                     name: 'EQUAL',
@@ -158,7 +158,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'equalTo2',
+                fieldId: 'equal to 2',
                 operator: {
                     id: 'eq',
                     name: 'EQUAL',
@@ -168,7 +168,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '2'} 
             },
             {
-                fieldId: 'notEqualTo1',
+                fieldId: 'not equal to 1',
                 operator: {
                     id: 'neq',
                     name: 'NOT_EQUAL',
@@ -178,7 +178,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'notEqualTo2',
+                fieldId: 'not equal to 2',
                 operator: {
                     id: 'neq',
                     name: 'NOT_EQUAL',
@@ -188,7 +188,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '2'} 
             },
             {
-                fieldId: 'lessThan1',
+                fieldId: 'less than 1',
                 operator: {
                     id: 'lt',
                     name: 'LESS_THEN',
@@ -198,7 +198,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'lessThan2',
+                fieldId: 'less than 2',
                 operator: {
                     id: 'lt',
                     name: 'LESS_THEN',
@@ -208,7 +208,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '2'} 
             },
             {
-                fieldId: 'greaterThan1',
+                fieldId: 'greater than 1',
                 operator: {
                     id: 'gt',
                     name: 'GREATER_THEN',
@@ -218,7 +218,7 @@ describe('NGX Filters To JSON Filters', () => {
                 value: {first: '1'} 
             },
             {
-                fieldId: 'greaterThan2',
+                fieldId: 'greater than 2',
                 operator: {
                     id: 'gt',
                     name: 'GREATER_THEN',
@@ -232,49 +232,49 @@ describe('NGX Filters To JSON Filters', () => {
         const expectedResults: JSONDoubleFilter[] = [
             {
                 FieldType: 'Double',
-                ApiName: 'equalTo1',
+                ApiName: 'equal to 1',
                 Operation: '=',
                 Values: ['1']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'equalTo2',
+                ApiName: 'equal to 2',
                 Operation: '=',
                 Values: ['2']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'notEqualTo1',
+                ApiName: 'not equal to 1',
                 Operation: '!=',
                 Values: ['1']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'notEqualTo2',
+                ApiName: 'not equal to 2',
                 Operation: '!=',
                 Values: ['2']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'lessThan1',
+                ApiName: 'less than 1',
                 Operation: '<',
                 Values: ['1']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'lessThan2',
+                ApiName: 'less than 2',
                 Operation: '<',
                 Values: ['2']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'greaterThan1',
+                ApiName: 'greater than 1',
                 Operation: '>',
                 Values: ['1']
             },
             {
                 FieldType: 'Double',
-                ApiName: 'greaterThan2',
+                ApiName: 'greater than 2',
                 Operation: '>',
                 Values: ['2']
             },
