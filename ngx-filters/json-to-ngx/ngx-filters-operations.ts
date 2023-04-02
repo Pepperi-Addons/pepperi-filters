@@ -1,4 +1,4 @@
-import { JSONRegularFilter } from "../json-filter";
+import { JSONRegularFilter } from "../../json-filter";
 import { IPepSmartFilterData, IPepSmartFilterDataValue, IPepSmartFilterOperator, IPepSmartFilterOperatorUnit, PepSmartFilterOperatorUnitType } from "./ngx-types";
 
 export abstract class NGXFilterOperation implements IPepSmartFilterData{

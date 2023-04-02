@@ -1,4 +1,4 @@
-import { JSONRegularFilter } from "../json-filter"
+import { JSONRegularFilter } from "../../json-filter"
 import { NGXFilterBeginsWithOperation, NGXFilterBetweenOperationFactory, NGXFilterContainsOperation, NGXFilterDueInOperation, NGXFilterEndsWithOperation, NGXFilterGreaterThanOperation, NGXFilterInTheLastOperation, NGXFilterIsEmptyOperation, NGXFilterIsEqualOperation, NGXFilterIsNotEmptyOperation, NGXFilterLessThanOperation, NGXFilterNotDueInOperation, NGXFilterNotEqualOperation, NGXFilterOnOperation, NGXFilterOperation, NGXFilterThisMonthOperation, NGXFilterThisWeekOperation, NGXFilterTodayOperation } from "./ngx-filters-operations"
 
 export class NGXFilterOperationFactory{
