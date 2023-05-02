@@ -15,11 +15,11 @@ export default class FilterCollection extends Filter {
         throw new Error('Not implemented');
     }
 
-    filter(object: any) {
+    filter(object: any, getValueFunc?: (object: any, apiName: string) => any) {
         let res = true;
 
         for (const filter of this.filters) {
-            res = filter.filter(object);
+            res = filter.filter(object, getValueFunc);
 
             if (res != this.useAndOperation) {
                 break;
