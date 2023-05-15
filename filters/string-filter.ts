@@ -1,9 +1,11 @@
 import Filter from './filter';
-import { StringOperation } from '../json-filter';
+import { JSONRegularFilter, StringOperation } from '../json-filter';
 import esb, { Query, wildcardQuery } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
+import { NGXStringFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-string-filters-factory';
+import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 
-export class StringFilter extends Filter {
+export class StringFilter extends Filter{
     constructor(
         apiName: string,
         private operation: StringOperation,
@@ -83,6 +85,19 @@ export class StringFilter extends Filter {
             );
         });
         return first != undefined;
+    }
+
+    toNgxFilter(): IPepSmartFilterData{
+        if(this.filterValues.length == 0){
+            throw Error(`value must be exist in json string filter !`)
+        }
+        const filter: JSONRegularFilter & {FieldType: "String"} = {
+            Values: this.filterValues.map(val => val.toString()),
+            ApiName: this.apiName,
+            FieldType: "String",
+            Operation: this.operation
+        }
+        return NGXStringFiltersFactory.create(filter)
     }
 
     toKibanaFilter(): Query {

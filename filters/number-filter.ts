@@ -1,9 +1,11 @@
 import Filter from './filter';
-import { NumberOperation } from '../json-filter';
+import { JSONRegularFilter, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
+import { NGXNumberFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-number-filters-factory';
+import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 
-export class NumberFilter extends Filter {
+export class NumberFilter extends Filter{
     constructor(apiName: string, private operation: NumberOperation, private filterValues: number[] = []) {
         super(apiName);
     }
@@ -96,6 +98,21 @@ export class NumberFilter extends Filter {
             case 'Between':
                 return rangeQuery.lte(this.filterValues[0]).gte(this.filterValues[0]);
         }
+    }
+
+    toNgxFilter(): IPepSmartFilterData{
+        if(this.filterValues.length == 0){
+            throw Error(`value must be exist in json number filter !`)
+        }
+        const isInteger = this.filterValues[0] == Math.floor(this.filterValues[0])
+        const type = isInteger ? 'Integer' : 'Double'
+        const filter: JSONRegularFilter & {FieldType: "Integer" | "Double"} = {
+            Values: this.filterValues.map(val => val.toString()),
+            ApiName: this.apiName,
+            FieldType: type,
+            Operation: this.operation
+        }
+        return NGXNumberFiltersFactory.create(filter)
     }
 
     toDynamoDBQuery(

@@ -3,9 +3,8 @@ import { FilterFactory } from './filters/filter-factory';
 import Filter from './filters/filter';
 import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
-import esb, { Query } from 'elastic-builder';
+import esb from 'elastic-builder';
 import { DynamoResultObject } from './filters/DynamoObjectResult';
-import { NGXFilterOperationFactory } from './ngx-filters/json-to-ngx/ngx-filter-factory';
 import { SchemeFieldType } from './ngx-filters/ngx-to-json/metadata';
 import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngxToJsonFilterBuilder';
 import { IPepSmartFilterData } from './ngx-filters/json-to-ngx/ngx-types';
@@ -112,15 +111,6 @@ export function toDynamoDBQuery(
         return filter.toDynamoDBQuery(letterForMark, expressionAttributeNames, expressionAttributeValues, count);
     }
     throw new Error('jsonFilter is a mandatory parameter');
-}
-
-/**
- * 
- * @param filter - json regular filter 
- * @returns the correspond NGX smart filter
- */
-export function toNGXSmartFilter(filter: JSONRegularFilter){
-    return NGXFilterOperationFactory.create(filter)
 }
 
 /**

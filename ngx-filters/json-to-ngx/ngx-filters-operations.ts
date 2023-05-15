@@ -248,7 +248,7 @@ export class NGXFilterNotDueInOperation extends NGXFilterOperation{
             componentType: ['date'],
             id: "notDueIn",
             name: "NOT_DUE_IN",
-            short: "Not due In"
+            short: "Not Due In"
         }
         this.operatorUnit = {
             componentType: ['date'],

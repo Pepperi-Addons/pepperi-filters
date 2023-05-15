@@ -2,8 +2,12 @@ import Filter from './filter';
 import { str2Bool } from '../converters';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
+import { NGXFilterOnOperation, NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
 
 export class BooleanFilter extends Filter {
+    toNgxFilter(): NGXFilterOperation {
+        throw new Error('Method not implemented.');
+    }
     constructor(apiName: string, private filterValue: boolean) {
         super(apiName);
     }
@@ -21,6 +25,7 @@ export class BooleanFilter extends Filter {
 
         return boolVal === this.filterValue;
     }
+    
     toSQLWhereClause(): string {
         return `${this.apiName} = ${this.filterValue ? '1' : '0'}`;
     }

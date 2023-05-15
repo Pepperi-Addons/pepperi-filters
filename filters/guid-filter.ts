@@ -5,11 +5,16 @@ import { BasicOperations } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
+import { NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
 
 export class GuidFilter extends Filter {
+    toNgxFilter(): NGXFilterOperation {
+        throw new Error('Method not implemented.');
+    }
     constructor(apiName: string, private operation: BasicOperations, private filterValue: string) {
         super(apiName);
     }
+    
 
     apply(value: any): boolean {
         switch (this.operation) {

@@ -1,31 +1,47 @@
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import Filter from './filter';
+import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 
 export default class FilterCollection extends Filter {
+    toNgxFilter(): IPepSmartFilterData[] {
+        if(!this.useAndOperation){
+            throw new Error('Method not implemented.');
+        }
+        let result: IPepSmartFilterData[] = []
+        this.filters.forEach(filter => {
+            let ngxFilter = filter.toNgxFilter()
+            if(!Array.isArray(ngxFilter)){
+                ngxFilter = [ngxFilter]
+            }
+            result = result.concat(ngxFilter)
+        })
+        return result
+
+    }
     constructor(private useAndOperation: boolean = true, private filters: Filter[] = []) {
         super('');
     }
-
+    
     addFilter(filter: Filter) {
         this.filters.push(filter);
     }
-
+    
     apply(): boolean {
         throw new Error('Not implemented');
     }
-
+    
     filter(object: any) {
         let res = true;
-
+        
         for (const filter of this.filters) {
             res = filter.filter(object);
-
+            
             if (res != this.useAndOperation) {
                 break;
             }
         }
-
+        
         return res;
     }
 
