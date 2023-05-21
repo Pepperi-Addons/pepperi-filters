@@ -8,6 +8,7 @@ import { DynamoResultObject } from './filters/DynamoObjectResult';
 import { SchemeFieldType } from './ngx-filters/ngx-to-json/metadata';
 import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngxToJsonFilterBuilder';
 import { IPepSmartFilterData } from './ngx-filters/json-to-ngx/ngx-types';
+import { error } from 'console';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -115,16 +116,34 @@ export function toDynamoDBQuery(
 
 /**
  * 
- * @param filter IPepSmartFilterData 
+ * @param filters IPepSmartFilterData 
  * @param type SchemeFieldType
  * @returns JSONRegularFilter
  */
-export function ngxFilterToJsonFilter(filter: IPepSmartFilterData, type: SchemeFieldType): JSONRegularFilter{
-    try{
-        return NgxToJsonFilterBuilder.build(filter, type)
-    }catch(err){
-        throw Error(`error in ngxFilterToJsonFilter - ${err} `)
+export function ngxFilterToJsonFilter(filters: IPepSmartFilterData[], type: SchemeFieldType[]): JSONFilter;
+export function ngxFilterToJsonFilter(filters: IPepSmartFilterData, type: SchemeFieldType): JSONFilter;
+export function ngxFilterToJsonFilter(filters: IPepSmartFilterData | IPepSmartFilterData[], type: SchemeFieldType | SchemeFieldType[]): JSONFilter | undefined{
+    const isFiltersIsArray = Array.isArray(filters)
+    const isTypeIsArray =  Array.isArray(type)
+    let jsonFilters: JSONFilter[] = []
+
+    if(isFiltersIsArray && isTypeIsArray){
+        jsonFilters = filters.map((filter, index) => NgxToJsonFilterBuilder.build(filter, type[index]) )
     }
+
+    else if(isFiltersIsArray || isTypeIsArray){
+        throw error(`if filters is array so type should also be an array`)
+    }
+
+    else{
+        jsonFilters = [NgxToJsonFilterBuilder.build(filters, type)]
+    }
+    
+    const firstFilter = jsonFilters.pop()
+    if(!firstFilter){
+        return undefined
+    }
+    return concat(true, firstFilter, ...jsonFilters)
 }
 
 
