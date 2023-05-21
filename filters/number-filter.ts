@@ -1,5 +1,5 @@
 import Filter from './filter';
-import { JSONRegularFilter, NumberOperation } from '../json-filter';
+import { JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { NGXNumberFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-number-filters-factory';
@@ -106,7 +106,7 @@ export class NumberFilter extends Filter{
         }
         const isInteger = this.filterValues[0] == Math.floor(this.filterValues[0])
         const type = isInteger ? 'Integer' : 'Double'
-        const filter: JSONRegularFilter & {FieldType: "Integer" | "Double"} = {
+        const filter: JSONIntegerFilter | JSONDoubleFilter = {
             Values: this.filterValues.map(val => val.toString()),
             ApiName: this.apiName,
             FieldType: type,

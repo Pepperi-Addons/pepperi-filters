@@ -6,7 +6,7 @@ import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 export default class FilterCollection extends Filter {
     toNgxFilter(): IPepSmartFilterData[] {
         if(!this.useAndOperation){
-            throw new Error('Method not implemented.');
+            throw new Error('only and operation supported in IPepSmartFilterData array.');
         }
         let result: IPepSmartFilterData[] = []
         this.filters.forEach(filter => {

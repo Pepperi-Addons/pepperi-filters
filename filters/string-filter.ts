@@ -1,5 +1,5 @@
 import Filter from './filter';
-import { JSONRegularFilter, StringOperation } from '../json-filter';
+import { JSONRegularFilter, JSONStringFilter, StringOperation } from '../json-filter';
 import esb, { Query, wildcardQuery } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { NGXStringFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-string-filters-factory';
@@ -91,7 +91,7 @@ export class StringFilter extends Filter{
         if(this.filterValues.length == 0){
             throw Error(`value must be exist in json string filter !`)
         }
-        const filter: JSONRegularFilter & {FieldType: "String"} = {
+        const filter: JSONStringFilter = {
             Values: this.filterValues.map(val => val.toString()),
             ApiName: this.apiName,
             FieldType: "String",

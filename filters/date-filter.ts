@@ -1,5 +1,5 @@
 import Filter from './filter';
-import { DateOperation, JSONRegularFilter, NumberOperation } from '../json-filter';
+import { DateOperation, JSONDateFilter, JSONRegularFilter, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { NumberFilter } from './number-filter';
@@ -216,7 +216,7 @@ export class DateFilter extends Filter{
     }
 
     toNgxFilter(): IPepSmartFilterData{
-        const filter: JSONRegularFilter & {FieldType: "Date"} = {
+        const filter: JSONDateFilter = {
             Values: this.filterValues.map(val => val.toString()),
             ApiName: this.apiName,
             FieldType: "Date",
