@@ -6,6 +6,7 @@ import { StringFilter } from '../filters/string-filter';
 import { DateFilter } from '../filters/date-filter';
 import moment from 'moment';
 import FilterCollection from '../filters/filter-collection';
+import { GuidFilter } from '../filters/guid-filter';
 
 
 describe('JSON Filter To NGX Filters', () => {
@@ -480,6 +481,39 @@ describe('JSON Filter To NGX Filters', () => {
                         value: {first: 'c'}
                     },
                 ]
+                return expect(ngxFilter).to.be.eql(expectedResult)
+            })
+            
+        });
+        describe('5. Guid Filters', () => {
+            it('1. should support IsEqual operation ', () => {
+                const filter = new GuidFilter('first', 'IsEqual', 'a')
+                const ngxFilter = filter.toNgxFilter()
+                const expectedResult: IPepSmartFilterData = {
+                    fieldId: 'first',
+                    operator: {
+                        componentType: ['number', 'boolean', 'text'],
+                        id: 'eq',
+                        name: "EQUAL",
+                        short: "="
+                    },
+                    value: {first: 'a'}
+                }
+                return expect(ngxFilter).to.be.eql(expectedResult)
+            })
+            it('2. should support IsNotEqual operation ', () => {
+                const filter = new GuidFilter('first', 'IsNotEqual', 'a')
+                const ngxFilter = filter.toNgxFilter()
+                const expectedResult: IPepSmartFilterData = {
+                    fieldId: 'first',
+                    operator: {
+                        componentType: ['number', 'text'],
+                        id: 'neq',
+                        name: "NOT_EQUAL",
+                        short: "<>"
+                    },
+                    value: {first: 'a'}
+                }
                 return expect(ngxFilter).to.be.eql(expectedResult)
             })
         });
