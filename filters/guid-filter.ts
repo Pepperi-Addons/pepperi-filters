@@ -1,15 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Filter from './filter';
-import { BasicOperations } from '../json-filter';
+import { BasicOperations, JSONStringFilter } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
+import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { NGXStringFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-string-filters-factory';
 
 export class GuidFilter extends Filter {
-    toNgxFilter(): NGXFilterOperation {
-        throw new Error('Method not implemented.');
+
+    toNgxFilter(): IPepSmartFilterData{
+        const filter: JSONStringFilter = {
+            Values: [this.filterValue],
+            ApiName: this.apiName,
+            FieldType: "String",
+            Operation: this.operation
+        }
+        return NGXStringFiltersFactory.create(filter)
     }
     constructor(apiName: string, private operation: BasicOperations, private filterValue: string) {
         super(apiName);
