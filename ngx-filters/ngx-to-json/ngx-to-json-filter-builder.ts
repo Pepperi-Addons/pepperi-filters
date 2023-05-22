@@ -1,7 +1,7 @@
 import { JSONRegularFilter } from "../../json-filter"
 import { SchemeFieldType } from "./metadata"
 import { IPepSmartFilterData } from "../json-to-ngx/ngx-types"
-import { NgxToJsonDateFilterBuilder, NgxToJsonNumberFilterBuilder, NgxToJsonStringFilterBuilder } from "./ngx-to-json-builders"
+import { NgxToJsonBoolFilterBuilder, NgxToJsonDateFilterBuilder, NgxToJsonNumberFilterBuilder, NgxToJsonStringFilterBuilder } from "./ngx-to-json-builders"
 import _ from "lodash"
 import { concat } from "../.."
 
@@ -28,6 +28,8 @@ export class NgxToJsonFilterBuilder{
                     return  NgxToJsonStringFilterBuilder.build(filter)
                 case "DateTime":
                     return  NgxToJsonDateFilterBuilder.build(filter)
+                case "Bool":
+                    return NgxToJsonBoolFilterBuilder.build(filter)
                 default:
                     throw Error(`type ${type} is not supported yet`)
             }

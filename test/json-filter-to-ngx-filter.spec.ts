@@ -7,6 +7,7 @@ import { DateFilter } from '../filters/date-filter';
 import moment from 'moment';
 import FilterCollection from '../filters/filter-collection';
 import { GuidFilter } from '../filters/guid-filter';
+import { BooleanFilter } from '../filters/boolean-filter';
 
 
 describe('JSON Filter To NGX Filters', () => {
@@ -513,6 +514,23 @@ describe('JSON Filter To NGX Filters', () => {
                         short: "<>"
                     },
                     value: {first: 'a'}
+                }
+                return expect(ngxFilter).to.be.eql(expectedResult)
+            })
+        });
+        describe('6. Boolean Filters', () => {
+            it('1. should support IsEqual operation ', () => {
+                const filter = new BooleanFilter('first', true)
+                const ngxFilter = filter.toNgxFilter()
+                const expectedResult: IPepSmartFilterData = {
+                    fieldId: 'first',
+                    operator: {
+                        componentType: ['number', 'boolean', 'text'],
+                        id: 'eq',
+                        name: "EQUAL",
+                        short: "="
+                    },
+                    value: {first: 'true'}
                 }
                 return expect(ngxFilter).to.be.eql(expectedResult)
             })

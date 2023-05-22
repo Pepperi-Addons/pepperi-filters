@@ -9,13 +9,6 @@ import { NGXNumberFiltersFactory } from '../ngx-filters/ngx-filters-factories/ng
 
 export class BooleanFilter extends Filter {
     toNgxFilter(): IPepSmartFilterData{
-
-        const filter: JSONBoolFilter = {
-            Values: this.filterValue ? ['true']: ['false'],
-            ApiName: this.apiName,
-            FieldType: 'Bool',
-            Operation: 'IsEqual'
-        }
         return {
             operator: {
                 componentType: ['number', 'boolean', 'text'],
@@ -24,7 +17,7 @@ export class BooleanFilter extends Filter {
                 short: "="
             },
             fieldId: this.apiName,
-            value: {first: this.filterValue? ['true']: ['false']}
+            value: {first: this.filterValue? 'true': 'false'}
         }
     }
     constructor(apiName: string, private filterValue: boolean) {

@@ -2,7 +2,7 @@ import 'mocha';
 import { expect } from 'chai';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { SchemeFieldType } from '../ngx-filters/ngx-to-json/metadata';
-import { JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter } from '../json-filter';
+import { JSONBoolFilter, JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter } from '../json-filter';
 import { ngxFilterToJsonFilter } from '../index';
 import { concat } from '../build';
 
@@ -454,6 +454,33 @@ describe('NGX Filters To JSON Filters', () => {
             },
         ]
         ngxStringFilters.forEach((ngxFilter, index) => {
+            it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type))
+        })
+    });
+    describe('4. Boolean Filters', () => {
+        const type: SchemeFieldType = 'Bool'
+        const ngxBoolFilters: IPepSmartFilterData[] = [
+            {
+                fieldId: 'equal',
+                operator: {
+                    id: 'eq',
+                    name: 'EQUAL',
+                    short: "=",
+                    componentType: ["number", "boolean", "text"]
+                },
+                value: {first: 'true'} 
+            }
+        ]
+    
+        const expectedResults: JSONBoolFilter[] = [
+            {
+                FieldType: 'Bool',
+                ApiName: 'equal',
+                Operation: 'IsEqual',
+                Values: ['true']
+            },
+        ]
+        ngxBoolFilters.forEach((ngxFilter, index) => {
             it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type))
         })
     });
