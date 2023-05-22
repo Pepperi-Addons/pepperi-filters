@@ -4,7 +4,7 @@ import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { SchemeFieldType } from '../ngx-filters/ngx-to-json/metadata';
 import { JSONBoolFilter, JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter } from '../json-filter';
 import { ngxFilterToJsonFilter } from '../index';
-import { concat } from '../build';
+import { concat } from '../';
 
 
 describe('NGX Filters To JSON Filters', () => {
