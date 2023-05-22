@@ -6,7 +6,7 @@ import { JSONFilterTransformer, NodeTransformer } from './json-filter-transforme
 import esb from 'elastic-builder';
 import { DynamoResultObject } from './filters/DynamoObjectResult';
 import { SchemeFieldType } from './ngx-filters/ngx-to-json/metadata';
-import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngxToJsonFilterBuilder';
+import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngx-to-json-filter-builder';
 import { IPepSmartFilterData } from './ngx-filters/json-to-ngx/ngx-types';
 import { error } from 'console';
 
@@ -121,21 +121,7 @@ export function toDynamoDBQuery(
  * @returns JSONRegularFilter
  */
 export function ngxFilterToJsonFilter(filters: IPepSmartFilterData | IPepSmartFilterData[], types: {[key: string]: SchemeFieldType}): JSONFilter | undefined{
-    let jsonFilters: JSONFilter[] = []
-
-    if(Array.isArray(filters)){
-        jsonFilters = filters.map((filter) => NgxToJsonFilterBuilder.build(filter, types[filter.fieldId]) )
-    }
-
-    else{
-        jsonFilters = [NgxToJsonFilterBuilder.build(filters, types[filters.fieldId])]
-    }
-    
-    const firstFilter = jsonFilters.pop()
-    if(!firstFilter){
-        return undefined
-    }
-    return concat(true, firstFilter, ...jsonFilters)
+    return NgxToJsonFilterBuilder.build(filters, types)
 }
 
 
