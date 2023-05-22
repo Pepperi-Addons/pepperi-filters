@@ -117,26 +117,18 @@ export function toDynamoDBQuery(
 /**
  * 
  * @param filters IPepSmartFilterData 
- * @param type SchemeFieldType
+ * @param types SchemeFieldType
  * @returns JSONRegularFilter
  */
-export function ngxFilterToJsonFilter(filters: IPepSmartFilterData[], type: SchemeFieldType[]): JSONFilter;
-export function ngxFilterToJsonFilter(filters: IPepSmartFilterData, type: SchemeFieldType): JSONFilter;
-export function ngxFilterToJsonFilter(filters: IPepSmartFilterData | IPepSmartFilterData[], type: SchemeFieldType | SchemeFieldType[]): JSONFilter | undefined{
-    const isFiltersIsArray = Array.isArray(filters)
-    const isTypeIsArray =  Array.isArray(type)
+export function ngxFilterToJsonFilter(filters: IPepSmartFilterData | IPepSmartFilterData[], types: {[key: string]: SchemeFieldType}): JSONFilter | undefined{
     let jsonFilters: JSONFilter[] = []
 
-    if(isFiltersIsArray && isTypeIsArray){
-        jsonFilters = filters.map((filter, index) => NgxToJsonFilterBuilder.build(filter, type[index]) )
-    }
-
-    else if(isFiltersIsArray || isTypeIsArray){
-        throw error(`if filters is array so type should also be an array`)
+    if(Array.isArray(filters)){
+        jsonFilters = filters.map((filter) => NgxToJsonFilterBuilder.build(filter, types[filter.fieldId]) )
     }
 
     else{
-        jsonFilters = [NgxToJsonFilterBuilder.build(filters, type)]
+        jsonFilters = [NgxToJsonFilterBuilder.build(filters, types[filters.fieldId])]
     }
     
     const firstFilter = jsonFilters.pop()

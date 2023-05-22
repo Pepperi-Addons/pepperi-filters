@@ -457,7 +457,7 @@ describe('NGX Filters To JSON Filters', () => {
             it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type))
         })
     });
-    
+
     describe('3. String Filters', () => {
            const type: SchemeFieldType = 'String'
            const ngxIntegerFilters: IPepSmartFilterData[] = [
@@ -637,7 +637,7 @@ describe('NGX Filters To JSON Filters', () => {
            it(`json filter array with one element`,() => {
                const jsonFiltersArray: IPepSmartFilterData[] = [
                    {
-                       fieldId: 'equal to A',
+                       fieldId: 'equalToA',
                        operator: {
                            id: 'eq',
                            name: 'EQUAL',
@@ -648,26 +648,26 @@ describe('NGX Filters To JSON Filters', () => {
                    },
                ]
                const expectedResult: JSONStringFilter = {
-                   ApiName: 'equal to A',
+                   ApiName: 'equalToA',
                    FieldType: 'String',
                    Operation: 'IsEqual',
                    Values: [
                        'A'
                    ]
                }
-               const result = ngxFilterToJsonFilter(jsonFiltersArray, ['String'])
+               const result = ngxFilterToJsonFilter(jsonFiltersArray, {'equalToA': 'String'})
                expect(result).to.be.eql(expectedResult)
            })
            it(`json filter array with zero elements`,() => {
                const jsonFiltersArray: IPepSmartFilterData[] = []
                const expectedResult = undefined
-               const result = ngxFilterToJsonFilter(jsonFiltersArray, [])
+               const result = ngxFilterToJsonFilter(jsonFiltersArray, {})
                expect(result).to.be.eql(expectedResult)
            })
            it(`json filter array with two elements`,() => {
                const jsonFiltersArray: IPepSmartFilterData[] = [
                    {
-                       fieldId: 'equal to A',
+                       fieldId: 'equalToA',
                        operator: {
                            id: 'eq',
                            name: 'EQUAL',
@@ -677,7 +677,7 @@ describe('NGX Filters To JSON Filters', () => {
                        value: {first: 'A'} 
                    },
                    {
-                       fieldId: 'equal to B',
+                       fieldId: 'equalToB',
                        operator: {
                            id: 'eq',
                            name: 'EQUAL',
@@ -688,7 +688,7 @@ describe('NGX Filters To JSON Filters', () => {
                    },
                ]
                const firstFilter: JSONStringFilter = {
-                   ApiName: 'equal to A',
+                   ApiName: 'equalToA',
                    FieldType: 'String',
                    Operation: 'IsEqual',
                    Values: [
@@ -696,7 +696,7 @@ describe('NGX Filters To JSON Filters', () => {
                    ]
                }
                const secondFilter: JSONStringFilter = {
-                   ApiName: 'equal to B',
+                   ApiName: 'equalToB',
                    FieldType: 'String',
                    Operation: 'IsEqual',
                    Values: [
@@ -705,7 +705,7 @@ describe('NGX Filters To JSON Filters', () => {
                }
                //the test will fail if the json complex filters nodes will not be in the same order as in the expected result
                const expectedResult = concat(true, secondFilter, firstFilter)
-               const result = ngxFilterToJsonFilter(jsonFiltersArray, ['String', 'String'])
+               const result = ngxFilterToJsonFilter(jsonFiltersArray, {'equalToA': 'String', 'equalToB': 'String'})
                expect(result).to.be.eql(expectedResult)
            })
        })
@@ -713,6 +713,6 @@ describe('NGX Filters To JSON Filters', () => {
 
 
 function getNGXFilterTestCB(filter1: IPepSmartFilterData, filter2: JSONRegularFilter,  type: SchemeFieldType){
-    return () => expect(ngxFilterToJsonFilter(filter1, type
+    return () => expect(ngxFilterToJsonFilter(filter1, {[filter2.ApiName]: type}
         )).to.be.eql(filter2)
 }
