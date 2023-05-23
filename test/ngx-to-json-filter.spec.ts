@@ -3,8 +3,7 @@ import { expect } from 'chai';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { SchemeFieldType } from '../ngx-filters/ngx-to-json/metadata';
 import { JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter } from '../json-filter';
-import { ngxFilterToJsonFilter } from '../index';
-import { concat } from '../build';
+import { ngxFilterToJsonFilter, concat} from '../index';
 
 
 describe('NGX Filters To JSON Filters', () => {

@@ -2,13 +2,12 @@ import { JSONRegularFilter } from "../../json-filter"
 import { SchemeFieldType } from "./metadata"
 import { IPepSmartFilterData } from "../json-to-ngx/ngx-types"
 import { NgxToJsonDateFilterBuilder, NgxToJsonNumberFilterBuilder, NgxToJsonStringFilterBuilder } from "./ngx-to-json-builders"
-import _ from "lodash"
-import { concat } from "../.."
+import { concat } from '../../index'
 
 export class NgxToJsonFilterBuilder{
 
     static build(filters:IPepSmartFilterData | IPepSmartFilterData[], types: {[key: string]: SchemeFieldType}){
-        if(_.isArray(filters)){
+        if(Array.isArray(filters)){
             return this.buildComplexFilter(filters, types)
         }
         else{
