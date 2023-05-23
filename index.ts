@@ -23,7 +23,8 @@ export function concat(and: boolean, f1: JSONFilter, ...args: (JSONFilter | unde
  * @param f1 A where clause
  * @param f2 Another where clause
  * @param and use and operation. `true` by default.
- */ 
+ */
+
 export function concat(and: boolean, s1: string, ...args: (string | undefined)[]): string;
 
 export function concat(
@@ -115,15 +116,17 @@ export function toDynamoDBQuery(
 }
 
 /**
- * 
- * @param filters IPepSmartFilterData 
+ *
+ * @param filters IPepSmartFilterData
  * @param types SchemeFieldType
  * @returns JSONRegularFilter
  */
-export function ngxFilterToJsonFilter(filters: IPepSmartFilterData | IPepSmartFilterData[], types: {[key: string]: SchemeFieldType}): JSONFilter | undefined{
-    return NgxToJsonFilterBuilder.build(filters, types)
+export function ngxFilterToJsonFilter(
+    filters: IPepSmartFilterData | IPepSmartFilterData[],
+    types: { [key: string]: SchemeFieldType },
+): JSONFilter | undefined {
+    return NgxToJsonFilterBuilder.build(filters, types);
 }
-
 
 export function filter<T>(
     objects: T[],

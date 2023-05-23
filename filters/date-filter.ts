@@ -7,7 +7,7 @@ import moment, { Moment } from 'moment';
 import { NGXDateFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-date-filters-factory';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 
-export class DateFilter extends Filter{
+export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {
         super(apiName);
     }
@@ -215,14 +215,14 @@ export class DateFilter extends Filter{
         }
     }
 
-    toNgxFilter(): IPepSmartFilterData{
+    toNgxFilter(): IPepSmartFilterData {
         const filter: JSONDateFilter = {
-            Values: this.filterValues.map(val => val.toString()),
+            Values: this.filterValues.map((val) => val.toString()),
             ApiName: this.apiName,
-            FieldType: "Date",
-            Operation: this.operation
-        }
-        return NGXDateFiltersFactory.create(filter)
+            FieldType: 'Date',
+            Operation: this.operation,
+        };
+        return NGXDateFiltersFactory.create(filter);
     }
 
     toDynamoDBQuery(

@@ -5,7 +5,7 @@ import { DynamoResultObject } from './DynamoObjectResult';
 import { NGXNumberFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-number-filters-factory';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 
-export class NumberFilter extends Filter{
+export class NumberFilter extends Filter {
     constructor(apiName: string, private operation: NumberOperation, private filterValues: number[] = []) {
         super(apiName);
     }
@@ -100,19 +100,19 @@ export class NumberFilter extends Filter{
         }
     }
 
-    toNgxFilter(): IPepSmartFilterData{
-        if(this.filterValues.length == 0){
-            throw Error(`value must be exist in json number filter !`)
+    toNgxFilter(): IPepSmartFilterData {
+        if (this.filterValues.length == 0) {
+            throw Error(`value must be exist in json number filter !`);
         }
-        const isInteger = this.filterValues[0] == Math.floor(this.filterValues[0])
-        const type = isInteger ? 'Integer' : 'Double'
+        const isInteger = this.filterValues[0] == Math.floor(this.filterValues[0]);
+        const type = isInteger ? 'Integer' : 'Double';
         const filter: JSONIntegerFilter | JSONDoubleFilter = {
-            Values: this.filterValues.map(val => val.toString()),
+            Values: this.filterValues.map((val) => val.toString()),
             ApiName: this.apiName,
             FieldType: type,
-            Operation: this.operation
-        }
-        return NGXNumberFiltersFactory.create(filter)
+            Operation: this.operation,
+        };
+        return NGXNumberFiltersFactory.create(filter);
     }
 
     toDynamoDBQuery(

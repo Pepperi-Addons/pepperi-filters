@@ -10,20 +10,18 @@ import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { NGXStringFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-string-filters-factory';
 
 export class GuidFilter extends Filter {
-
-    toNgxFilter(): IPepSmartFilterData{
+    toNgxFilter(): IPepSmartFilterData {
         const filter: JSONStringFilter = {
             Values: [this.filterValue],
             ApiName: this.apiName,
-            FieldType: "String",
-            Operation: this.operation
-        }
-        return NGXStringFiltersFactory.create(filter)
+            FieldType: 'String',
+            Operation: this.operation,
+        };
+        return NGXStringFiltersFactory.create(filter);
     }
     constructor(apiName: string, private operation: BasicOperations, private filterValue: string) {
         super(apiName);
     }
-    
 
     apply(value: any): boolean {
         switch (this.operation) {
