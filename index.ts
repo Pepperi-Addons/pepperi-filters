@@ -1,10 +1,14 @@
-import { JSONFilter, FieldType } from './json-filter';
+import { JSONFilter, FieldType, JSONRegularFilter } from './json-filter';
 import { FilterFactory } from './filters/filter-factory';
 import Filter from './filters/filter';
 import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
-import esb, { Query } from 'elastic-builder';
+import esb from 'elastic-builder';
 import { DynamoResultObject } from './filters/DynamoObjectResult';
+import { SchemeFieldType } from './ngx-filters/ngx-to-json/metadata';
+import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngx-to-json-filter-builder';
+import { IPepSmartFilterData } from './ngx-filters/json-to-ngx/ngx-types';
+import { error } from 'console';
 
 /**
  * Concat two JSON Filters by combining them into one
@@ -19,7 +23,7 @@ export function concat(and: boolean, f1: JSONFilter, ...args: (JSONFilter | unde
  * @param f1 A where clause
  * @param f2 Another where clause
  * @param and use and operation. `true` by default.
- */
+ */ 
 export function concat(and: boolean, s1: string, ...args: (string | undefined)[]): string;
 
 export function concat(
@@ -109,6 +113,17 @@ export function toDynamoDBQuery(
     }
     throw new Error('jsonFilter is a mandatory parameter');
 }
+
+/**
+ * 
+ * @param filters IPepSmartFilterData 
+ * @param types SchemeFieldType
+ * @returns JSONRegularFilter
+ */
+export function ngxFilterToJsonFilter(filters: IPepSmartFilterData | IPepSmartFilterData[], types: {[key: string]: SchemeFieldType}): JSONFilter | undefined{
+    return NgxToJsonFilterBuilder.build(filters, types)
+}
+
 
 export function filter<T>(
     objects: T[],

@@ -1,5 +1,7 @@
 import { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
+import {NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
+import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 
 export default abstract class Filter {
     constructor(protected apiName: string) {}
@@ -7,6 +9,7 @@ export default abstract class Filter {
     abstract apply(value: any): boolean;
     abstract toSQLWhereClause(): string;
     abstract toKibanaFilter(): Query;
+    abstract toNgxFilter(): IPepSmartFilterData | IPepSmartFilterData[]
     abstract toDynamoDBQuery(
         letterForMark: string,
         expressionAttributeNames: any,

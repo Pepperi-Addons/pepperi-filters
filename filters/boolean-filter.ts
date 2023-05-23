@@ -2,8 +2,31 @@ import Filter from './filter';
 import { str2Bool } from '../converters';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
+import { NGXFilterOnOperation, NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
+import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { JSONBoolFilter } from '../json-filter';
+import { NGXNumberFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-number-filters-factory';
 
 export class BooleanFilter extends Filter {
+    toNgxFilter(): IPepSmartFilterData{
+
+        const filter: JSONBoolFilter = {
+            Values: this.filterValue ? ['true']: ['false'],
+            ApiName: this.apiName,
+            FieldType: 'Bool',
+            Operation: 'IsEqual'
+        }
+        return {
+            operator: {
+                componentType: ['number', 'boolean', 'text'],
+                id: 'eq',
+                name: "EQUAL",
+                short: "="
+            },
+            fieldId: this.apiName,
+            value: {first: this.filterValue? ['true']: ['false']}
+        }
+    }
     constructor(apiName: string, private filterValue: boolean) {
         super(apiName);
     }
@@ -21,6 +44,7 @@ export class BooleanFilter extends Filter {
 
         return boolVal === this.filterValue;
     }
+    
     toSQLWhereClause(): string {
         return `${this.apiName} = ${this.filterValue ? '1' : '0'}`;
     }
