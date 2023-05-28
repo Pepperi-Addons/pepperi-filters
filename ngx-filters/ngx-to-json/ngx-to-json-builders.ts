@@ -2,14 +2,13 @@ import {
     DateOperation,
     JSONDateFilter,
     JSONDoubleFilter,
-    JSONFilter,
     JSONIntegerFilter,
     JSONStringFilter,
     NumberOperation,
     StringOperation,
 } from '../../json-filter';
-import { IPepSmartFilterData } from '../json-to-ngx/ngx-types';
-import { capitalizeFirstLetter, SchemeFieldType } from './metadata';
+import { IPepSmartFilterData } from '../json-to-ngx';
+import { capitalizeFirstLetter } from './metadata';
 
 export class NgxToJsonNumberFilterBuilder {
     static build(filter: IPepSmartFilterData, type: 'Integer' | 'Double'): JSONIntegerFilter | JSONDoubleFilter {

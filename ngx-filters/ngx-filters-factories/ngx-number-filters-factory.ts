@@ -1,4 +1,4 @@
-import { JSONDoubleFilter, JSONIntegerFilter, filter } from '../..';
+import { JSONDoubleFilter, JSONIntegerFilter } from '../../json-filter';
 import {
     NGXFilterGreaterThanOperation,
     NGXFilterIsEqualOperation,
@@ -6,7 +6,7 @@ import {
     NGXFilterNotEqualOperation,
     NGXFilterNumberRangeOperation,
     NGXFilterOperation,
-} from '../json-to-ngx/ngx-filters-operations';
+} from '../json-to-ngx/';
 
 export class NGXNumberFiltersFactory {
     static create(filter: JSONIntegerFilter | JSONDoubleFilter): NGXFilterOperation {

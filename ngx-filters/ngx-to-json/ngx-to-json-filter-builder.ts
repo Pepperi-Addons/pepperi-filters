@@ -1,6 +1,6 @@
 import { JSONRegularFilter } from '../../json-filter';
 import { SchemeFieldType } from './metadata';
-import { IPepSmartFilterData } from '../json-to-ngx/ngx-types';
+import { IPepSmartFilterData } from '../json-to-ngx';
 import {
     NgxToJsonDateFilterBuilder,
     NgxToJsonNumberFilterBuilder,

@@ -1,11 +1,11 @@
 import Filter from './filter';
-import { DateOperation, JSONDateFilter, JSONRegularFilter, NumberOperation } from '../json-filter';
+import { DateOperation, JSONDateFilter, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { NumberFilter } from './number-filter';
 import moment, { Moment } from 'moment';
-import { NGXDateFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-date-filters-factory';
-import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { NGXDateFiltersFactory } from '../ngx-filters';
+import { IPepSmartFilterData } from '../ngx-filters';
 
 export class DateFilter extends Filter {
     constructor(apiName: string, private operation: DateOperation, private filterValues: string[]) {

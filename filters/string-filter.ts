@@ -1,9 +1,9 @@
 import Filter from './filter';
-import { JSONRegularFilter, JSONStringFilter, StringOperation } from '../json-filter';
+import { JSONStringFilter, StringOperation } from '../json-filter';
 import esb, { Query, wildcardQuery } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
-import { NGXStringFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-string-filters-factory';
-import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { NGXStringFiltersFactory } from '../ngx-filters';
+import { IPepSmartFilterData } from '../ngx-filters';
 
 export class StringFilter extends Filter {
     constructor(
