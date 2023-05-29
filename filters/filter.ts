@@ -1,7 +1,6 @@
 import { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
-import { NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
-import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { IPepSmartFilterData } from '../ngx-filters';
 
 export default abstract class Filter {
     constructor(protected apiName: string) {}

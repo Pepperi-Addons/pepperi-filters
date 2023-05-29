@@ -5,10 +5,9 @@ import { SQLWhereParser } from './sql-where-parser';
 import { JSONFilterTransformer, NodeTransformer } from './json-filter-transformer';
 import esb from 'elastic-builder';
 import { DynamoResultObject } from './filters/DynamoObjectResult';
-import { SchemeFieldType } from './ngx-filters/ngx-to-json/metadata';
-import { NgxToJsonFilterBuilder } from './ngx-filters/ngx-to-json/ngx-to-json-filter-builder';
-import { IPepSmartFilterData } from './ngx-filters/json-to-ngx/ngx-types';
-import { error } from 'console';
+import { SchemeFieldType } from './ngx-filters';
+import { NgxToJsonFilterBuilder } from './ngx-filters';
+import { IPepSmartFilterData } from './ngx-filters';
 
 /**
  * Concat two JSON Filters by combining them into one

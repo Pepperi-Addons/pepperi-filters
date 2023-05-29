@@ -1,4 +1,4 @@
-import { JSONStringFilter } from '../..';
+import { JSONStringFilter } from '../../json-filter';
 import {
     NGXFilterBeginsWithOperation,
     NGXFilterContainsOperation,
@@ -6,7 +6,7 @@ import {
     NGXFilterIsEqualOperation,
     NGXFilterNotEqualOperation,
     NGXFilterOperation,
-} from '../json-to-ngx/ngx-filters-operations';
+} from '../json-to-ngx';
 
 export class NGXStringFiltersFactory {
     static create(filter: JSONStringFilter): NGXFilterOperation {

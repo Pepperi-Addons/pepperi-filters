@@ -1,5 +1,4 @@
-import { JSONFilter } from './index';
-import { JSONBaseFilter } from './json-filter';
+import { JSONBaseFilter, JSONFilter } from './json-filter';
 
 export type NodeTransformer = ((node: JSONBaseFilter) => boolean | undefined | void) | false;
 

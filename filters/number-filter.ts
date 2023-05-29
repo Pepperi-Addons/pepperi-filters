@@ -1,9 +1,9 @@
 import Filter from './filter';
-import { JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, NumberOperation } from '../json-filter';
+import { JSONDoubleFilter, JSONIntegerFilter, NumberOperation } from '../json-filter';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
-import { NGXNumberFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-number-filters-factory';
-import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { NGXNumberFiltersFactory } from '../ngx-filters';
+import { IPepSmartFilterData } from '../ngx-filters';
 
 export class NumberFilter extends Filter {
     constructor(apiName: string, private operation: NumberOperation, private filterValues: number[] = []) {

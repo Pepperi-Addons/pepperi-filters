@@ -5,9 +5,8 @@ import { BasicOperations, JSONStringFilter } from '../json-filter';
 const emptyGuid = '00000000-0000-0000-0000-000000000000';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
-import { NGXFilterOperation } from '../ngx-filters/json-to-ngx/ngx-filters-operations';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
-import { NGXStringFiltersFactory } from '../ngx-filters/ngx-filters-factories/ngx-string-filters-factory';
+import { NGXStringFiltersFactory } from '../ngx-filters';
 
 export class GuidFilter extends Filter {
     toNgxFilter(): IPepSmartFilterData {

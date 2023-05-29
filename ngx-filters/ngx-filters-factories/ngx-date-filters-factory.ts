@@ -1,4 +1,4 @@
-import { JSONDateFilter } from '../..';
+import { JSONDateFilter } from '../../json-filter';
 import {
     NGXFilterDateRangeOperation,
     NGXFilterDueInOperation,
@@ -11,7 +11,7 @@ import {
     NGXFilterThisMonthOperation,
     NGXFilterThisWeekOperation,
     NGXFilterTodayOperation,
-} from '../json-to-ngx/ngx-filters-operations';
+} from '../json-to-ngx/';
 
 export class NGXDateFiltersFactory {
     static create(filter: JSONDateFilter): NGXFilterOperation {

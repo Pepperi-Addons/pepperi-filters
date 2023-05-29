@@ -1,7 +1,7 @@
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import Filter from './filter';
-import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
+import { IPepSmartFilterData } from '../ngx-filters';
 
 export default class FilterCollection extends Filter {
     toNgxFilter(): IPepSmartFilterData[] {
