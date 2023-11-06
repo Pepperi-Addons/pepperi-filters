@@ -10,7 +10,8 @@ export type StringOperation =
     | 'IsLoggedInUser'
     | 'DoesNotContain'
     | 'DoesNotStartWith'
-    | 'DoesNotEndWith';
+    | 'DoesNotEndWith'
+    | 'In';
 
 export type DateOperation =
     | 'InTheLast'

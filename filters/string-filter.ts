@@ -15,7 +15,7 @@ export class StringFilter extends Filter {
         super(apiName);
     }
 
-    apply(value: any): boolean {
+    apply(value: any): any {
         // anything that isn't a string is considered to be an empty value
         const stringVal = typeof value === 'string' ? value : '';
 
@@ -45,7 +45,7 @@ export class StringFilter extends Filter {
         }
     }
 
-    toSQLWhereClause(): string {
+    toSQLWhereClause(): any {
         switch (this.operation) {
             case 'IsEmpty':
                 return `${this.apiName} IS NULL OR ${this.apiName} = ''`;
@@ -67,6 +67,8 @@ export class StringFilter extends Filter {
                 return `${this.apiName} NOT LIKE '${this.filterValues[0]}%'`;
             case 'DoesNotEndWith':
                 return `${this.apiName} NOT LIKE '%${this.filterValues[0]}'`;
+            case 'In':
+                return `${this.apiName} IN '${this.filterValues[0]}'`;
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
         }
@@ -100,7 +102,7 @@ export class StringFilter extends Filter {
         return NGXStringFiltersFactory.create(filter);
     }
 
-    toKibanaFilter(): Query {
+    toKibanaFilter(): any {
         const res = esb.boolQuery();
         const existsFilter = esb.existsQuery(this.apiName);
         const termQueryEmpty = esb.termQuery(`${this.apiName}`, '');

@@ -12,7 +12,7 @@ export declare const SchemeFieldTypes: readonly [
     'DynamicResource',
     'ContainedDynamicResource',
 ];
-export declare type SchemeFieldType = typeof SchemeFieldTypes[number];
+export declare type SchemeFieldType = (typeof SchemeFieldTypes)[number];
 
 export function capitalizeFirstLetter(s: string) {
     return s.charAt(0).toUpperCase() + s.slice(1);
