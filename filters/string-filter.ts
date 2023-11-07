@@ -15,7 +15,7 @@ export class StringFilter extends Filter {
         super(apiName);
     }
 
-    apply(value: any): any {
+    apply(value: any): boolean {
         // anything that isn't a string is considered to be an empty value
         const stringVal = typeof value === 'string' ? value : '';
 
@@ -42,10 +42,12 @@ export class StringFilter extends Filter {
                 return !stringVal.toLocaleLowerCase().endsWith(this.filterValues[0].toLocaleLowerCase());
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
+            default:
+                throw new Error(`String filter operation ${this.operation} is not supported`);
         }
     }
 
-    toSQLWhereClause(): any {
+    toSQLWhereClause(): string {
         switch (this.operation) {
             case 'IsEmpty':
                 return `${this.apiName} IS NULL OR ${this.apiName} = ''`;
@@ -68,9 +70,11 @@ export class StringFilter extends Filter {
             case 'DoesNotEndWith':
                 return `${this.apiName} NOT LIKE '%${this.filterValues[0]}'`;
             case 'In':
-                return `${this.apiName} IN '${this.filterValues[0]}'`;
+                return `${this.apiName} IN (${this.filterValues.map((str) => `'${str}'`).join(', ')})`;
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
+            default:
+                throw new Error(`String filter operation ${this.operation} is not supported`);
         }
     }
 
@@ -102,7 +106,7 @@ export class StringFilter extends Filter {
         return NGXStringFiltersFactory.create(filter);
     }
 
-    toKibanaFilter(): any {
+    toKibanaFilter(): Query {
         const res = esb.boolQuery();
         const existsFilter = esb.existsQuery(this.apiName);
         const termQueryEmpty = esb.termQuery(`${this.apiName}`, '');
@@ -134,6 +138,8 @@ export class StringFilter extends Filter {
                 return res.mustNot(wildcardQuery(this.apiName, `*${this.filterValues[0]}`));
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
+            default:
+                throw new Error(`String filter operation ${this.operation} is not supported`);
         }
     }
 
