@@ -387,6 +387,16 @@ describe('NGX Filters To JSON Filters', () => {
                 },
                 value: { first: 'B' },
             },
+            {
+                fieldId: 'in ["A","B","C"]',
+                operator: {
+                    id: 'in',
+                    name: 'IN',
+                    short: 'In',
+                    componentType: ['multi-select'],
+                },
+                value: { first: ['A', 'B', 'C'] },
+            },
         ];
 
         const expectedResults: JSONStringFilter[] = [
@@ -449,6 +459,12 @@ describe('NGX Filters To JSON Filters', () => {
                 ApiName: 'ends with B',
                 Operation: 'EndWith',
                 Values: ['B'],
+            },
+            {
+                FieldType: 'String',
+                ApiName: 'in ["A","B","C"]',
+                Operation: 'IsEqual',
+                Values: ['A', 'B', 'C'],
             },
         ];
         ngxStringFilters.forEach((ngxFilter, index) => {
