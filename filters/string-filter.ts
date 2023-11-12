@@ -69,8 +69,6 @@ export class StringFilter extends Filter {
                 return `${this.apiName} NOT LIKE '${this.filterValues[0]}%'`;
             case 'DoesNotEndWith':
                 return `${this.apiName} NOT LIKE '%${this.filterValues[0]}'`;
-            case 'In':
-                return `${this.apiName} IN (${this.filterValues.map((str) => `'${str}'`).join(', ')})`;
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
             default:

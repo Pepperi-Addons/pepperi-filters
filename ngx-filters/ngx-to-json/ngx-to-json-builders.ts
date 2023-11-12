@@ -60,9 +60,6 @@ export class NgxToJsonStringFilterBuilder {
             case 'neq':
                 operation = 'IsNotEqual';
                 break;
-            case 'in':
-                operation = 'In';
-                break;
             default:
                 throw Error(`in to json string filter: operator ${filter.operator.id} is not supported`);
         }
