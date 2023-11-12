@@ -3,6 +3,7 @@ import { SchemeFieldType } from './metadata';
 import { IPepSmartFilterData } from '../json-to-ngx';
 import {
     NgxToJsonDateFilterBuilder,
+    NgxToJsonMultipleStringFilterBuilder,
     NgxToJsonNumberFilterBuilder,
     NgxToJsonStringFilterBuilder,
 } from './ngx-to-json-builders';
@@ -26,7 +27,11 @@ export class NgxToJsonFilterBuilder {
                 case 'ContainedResource':
                 case 'Resource':
                 case 'String':
-                    return NgxToJsonStringFilterBuilder.build(filter);
+                    if (filter.operator.id === 'in') {
+                        return NgxToJsonMultipleStringFilterBuilder.build(filter);
+                    } else {
+                        return NgxToJsonStringFilterBuilder.build(filter);
+                    }
                 case 'DateTime':
                     return NgxToJsonDateFilterBuilder.build(filter);
                 default:

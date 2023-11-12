@@ -72,6 +72,25 @@ export class NgxToJsonStringFilterBuilder {
     }
 }
 
+export class NgxToJsonMultipleStringFilterBuilder {
+    static build(filter: IPepSmartFilterData): JSONStringFilter {
+        let operation: StringOperation;
+        switch (filter.operator.id) {
+            case 'in':
+                operation = 'IsEqual';
+                break;
+            default:
+                throw Error(`in to json string filter: operator ${filter.operator.id} is not supported`);
+        }
+        return {
+            ApiName: filter.fieldId,
+            Operation: operation!,
+            FieldType: 'String',
+            Values: Object.values(filter.value.first),
+        };
+    }
+}
+
 export class NgxToJsonDateFilterBuilder {
     static build(filter: IPepSmartFilterData): JSONDateFilter {
         let operation: DateOperation;
