@@ -42,8 +42,6 @@ export class StringFilter extends Filter {
                 return !stringVal.toLocaleLowerCase().endsWith(this.filterValues[0].toLocaleLowerCase());
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
-            default:
-                throw new Error(`String filter operation ${this.operation} is not supported`);
         }
     }
 
@@ -71,8 +69,6 @@ export class StringFilter extends Filter {
                 return `${this.apiName} NOT LIKE '%${this.filterValues[0]}'`;
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
-            default:
-                throw new Error(`String filter operation ${this.operation} is not supported`);
         }
     }
 
@@ -136,8 +132,6 @@ export class StringFilter extends Filter {
                 return res.mustNot(wildcardQuery(this.apiName, `*${this.filterValues[0]}`));
             case 'IsLoggedInUser':
                 throw new Error("IsLoggedInUser isn't a supported filter");
-            default:
-                throw new Error(`String filter operation ${this.operation} is not supported`);
         }
     }
 
