@@ -140,10 +140,14 @@ export class DateFilter extends Filter {
         return res;
     }
 
-    toKibanaFilter(): Query {
+    // timeZoneOffset is passed to be used by range queries
+    toKibanaFilter(timeZoneOffset: string): Query {
         const existsFilter = esb.existsQuery(`${this.apiName}`);
         const boolQuery = esb.boolQuery();
-        const rangeQuery = esb.rangeQuery(this.apiName);
+        let rangeQuery = esb.rangeQuery(this.apiName);
+        if (timeZoneOffset) {
+            rangeQuery = rangeQuery.timeZone(timeZoneOffset);
+        }
         const termQueryValue = esb.termQuery(`${this.apiName}`, this.filterValues[0]);
         let unit;
         switch (this.operation) {

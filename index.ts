@@ -81,11 +81,11 @@ export function toApiQueryString(jsonFilter: JSONFilter | undefined) {
     return undefined;
 }
 
-export function toKibanaQuery(jsonFilter: JSONFilter | undefined): esb.Query {
+export function toKibanaQuery(jsonFilter: JSONFilter | undefined, timeZoneOffset?: string): esb.Query {
     if (jsonFilter) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
-        return filter.toKibanaFilter();
+        return filter.toKibanaFilter(timeZoneOffset);
     }
     throw new Error('jsonFilter is a mandatory parameter');
 }

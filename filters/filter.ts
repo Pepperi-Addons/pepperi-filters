@@ -7,7 +7,7 @@ export default abstract class Filter {
 
     abstract apply(value: any): boolean;
     abstract toSQLWhereClause(): string;
-    abstract toKibanaFilter(): Query;
+    abstract toKibanaFilter(timeZoneOffset?: string): Query;
     abstract toNgxFilter(): IPepSmartFilterData | IPepSmartFilterData[];
     abstract toDynamoDBQuery(
         letterForMark: string,
