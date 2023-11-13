@@ -140,6 +140,7 @@ export class DateFilter extends Filter {
         return res;
     }
 
+    // timeZoneOffset is passed to be used by range queries
     toKibanaFilter(timeZoneOffset: string): Query {
         const existsFilter = esb.existsQuery(`${this.apiName}`);
         const boolQuery = esb.boolQuery();
