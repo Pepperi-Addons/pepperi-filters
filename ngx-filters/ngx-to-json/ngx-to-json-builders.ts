@@ -95,7 +95,7 @@ export class NgxToJsonMultipleStringFilterBuilder {
 export class NgxToJsonDateFilterBuilder {
     static build(filter: IPepSmartFilterData): JSONDateFilter {
         let operation: DateOperation;
-        const values: string[] = [];
+        const values: string[] = Object.values(filter.value);
         switch (filter.operator.id) {
             case 'dateRange':
                 operation = 'Between';
@@ -140,7 +140,7 @@ export class NgxToJsonDateFilterBuilder {
             ApiName: filter.fieldId,
             Operation: operation,
             FieldType: 'Date',
-            Values: Object.values(filter.value),
+            Values: values,
         };
     }
 }
