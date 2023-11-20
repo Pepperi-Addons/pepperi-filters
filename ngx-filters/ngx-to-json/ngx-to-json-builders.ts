@@ -1,5 +1,6 @@
 import {
     DateOperation,
+    JSONBoolFilter,
     JSONDateFilter,
     JSONDoubleFilter,
     JSONIntegerFilter,
@@ -94,7 +95,7 @@ export class NgxToJsonMultipleStringFilterBuilder {
 export class NgxToJsonDateFilterBuilder {
     static build(filter: IPepSmartFilterData): JSONDateFilter {
         let operation: DateOperation;
-        const values: string[] = [];
+        const values: string[] = Object.values(filter.value);
         switch (filter.operator.id) {
             case 'dateRange':
                 operation = 'Between';
@@ -139,7 +140,23 @@ export class NgxToJsonDateFilterBuilder {
             ApiName: filter.fieldId,
             Operation: operation,
             FieldType: 'Date',
-            Values: Object.values(filter.value),
+            Values: values,
         };
+    }
+}
+
+export class NgxToJsonBoolFilterBuilder {
+    static build(filter: IPepSmartFilterData): JSONBoolFilter {
+        switch (filter.operator.id) {
+            case 'eq':
+                return {
+                    ApiName: filter.fieldId,
+                    Operation: 'IsEqual',
+                    FieldType: 'Bool',
+                    Values: Object.values(filter.value),
+                };
+            default:
+                throw Error(`boolean filter: operation ${filter.operator.id} is not supported`);
+        }
     }
 }

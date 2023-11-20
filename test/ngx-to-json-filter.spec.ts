@@ -2,7 +2,13 @@ import 'mocha';
 import { expect } from 'chai';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
 import { SchemeFieldType } from '../ngx-filters/ngx-to-json/metadata';
-import { JSONDoubleFilter, JSONIntegerFilter, JSONRegularFilter, JSONStringFilter } from '../json-filter';
+import {
+    JSONBoolFilter,
+    JSONDoubleFilter,
+    JSONIntegerFilter,
+    JSONRegularFilter,
+    JSONStringFilter,
+} from '../json-filter';
 import { ngxFilterToJsonFilter, concat } from '../index';
 
 describe('NGX Filters To JSON Filters', () => {
@@ -471,7 +477,50 @@ describe('NGX Filters To JSON Filters', () => {
             it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type));
         });
     });
-    describe('3. NGX Array Filters To Complex JSON Filter', () => {
+    describe('4. Bool Filters', () => {
+        const type: SchemeFieldType = 'Bool';
+        const ngxStringFilters: IPepSmartFilterData[] = [
+            {
+                fieldId: 'equal to true',
+                operator: {
+                    id: 'eq',
+                    name: 'EQUAL',
+                    short: '=',
+                    componentType: ['number', 'boolean', 'text'],
+                },
+                value: { first: 'true' },
+            },
+            {
+                fieldId: 'equal to false',
+                operator: {
+                    id: 'eq',
+                    name: 'EQUAL',
+                    short: '=',
+                    componentType: ['number', 'boolean', 'text'],
+                },
+                value: { first: 'false' },
+            },
+        ];
+
+        const expectedResults: JSONBoolFilter[] = [
+            {
+                FieldType: 'Bool',
+                ApiName: 'equal to true',
+                Operation: 'IsEqual',
+                Values: ['true'],
+            },
+            {
+                FieldType: 'Bool',
+                ApiName: 'equal to false',
+                Operation: 'IsEqual',
+                Values: ['false'],
+            },
+        ];
+        ngxStringFilters.forEach((ngxFilter, index) => {
+            it(`${index + 1}. ${ngxFilter.fieldId} test `, getNGXFilterTestCB(ngxFilter, expectedResults[index], type));
+        });
+    });
+    describe('5. NGX Array Filters To Complex JSON Filter', () => {
         const type: SchemeFieldType = 'String';
         it(`json filter array with one element`, () => {
             const jsonFiltersArray: IPepSmartFilterData[] = [
