@@ -62,11 +62,11 @@ export default class FilterCollection extends Filter {
         return res;
     }
 
-    toKibanaFilter(): Query {
+    toKibanaFilter(timeZoneOffset?: string): Query {
         const boolQuery = esb.boolQuery();
         const query: Query[] = [];
         this.filters.forEach((filter) => {
-            const innerClause = filter.toKibanaFilter();
+            const innerClause = filter.toKibanaFilter(timeZoneOffset);
             if (innerClause) {
                 query.push(innerClause);
             }
