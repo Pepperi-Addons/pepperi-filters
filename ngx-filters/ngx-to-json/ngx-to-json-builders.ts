@@ -118,6 +118,7 @@ export class NgxToJsonDateFilterBuilder {
                 break;
             case 'on':
                 operation = 'On';
+                break;
             case 'notInTheLast':
                 operation = 'NotInTheLast';
                 values.push(capitalizeFirstLetter(filter.operatorUnit!.id));
