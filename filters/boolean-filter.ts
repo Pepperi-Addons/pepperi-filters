@@ -47,8 +47,12 @@ export class BooleanFilter extends Filter {
     }
 
     toKibanaFilter(): Query {
-        const value = this.filterValue ? 'true' : 'false';
-        return esb.termQuery(`${this.apiName}`, value);
+        const value: boolean = this.filterValue ? true : false;
+        if (value) {
+            return esb.termQuery(`${this.apiName}`, 'true');
+        } else {
+            return esb.boolQuery().mustNot(esb.termQuery(`${this.apiName}`, 'true'));
+        }
     }
 
     toDynamoDBQuery(

@@ -175,7 +175,7 @@ describe('Kibana: One level - boolean', () => {
         },
         {
             title: 'IsEqual',
-            kibanaQuery: `{"term":{"${fieldName}":"false"}}`,
+            kibanaQuery: `{"bool":{"must_not":{"term":{"${fieldName}":"true"}}}}`,
             filter: {
                 ApiName: fieldName,
                 FieldType: 'Bool',
