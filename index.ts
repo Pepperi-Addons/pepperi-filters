@@ -1,4 +1,4 @@
-import { JSONFilter, FieldType, JSONRegularFilter } from './json-filter';
+import { JSONFilter, FieldType } from './json-filter';
 import { FilterFactory } from './filters/filter-factory';
 import Filter from './filters/filter';
 import { SQLWhereParser } from './sql-where-parser';
@@ -95,6 +95,14 @@ export function toKibanaQueryJSON(jsonFilter: JSONFilter | undefined) {
         const filterFactory = new FilterFactory();
         const filter = filterFactory.createFilter(jsonFilter);
         return filter.toKibanaFilter().toJSON();
+    }
+    throw new Error('jsonFilter is a mandatory parameter');
+}
+export function toNGXFilter(jsonFilter: JSONFilter | undefined): IPepSmartFilterData | IPepSmartFilterData[] {
+    if (jsonFilter) {
+        const filterFactory = new FilterFactory();
+        const filter = filterFactory.createFilter(jsonFilter);
+        return filter.toNgxFilter();
     }
     throw new Error('jsonFilter is a mandatory parameter');
 }

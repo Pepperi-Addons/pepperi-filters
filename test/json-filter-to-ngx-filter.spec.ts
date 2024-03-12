@@ -1,18 +1,19 @@
 import 'mocha';
 import { expect } from 'chai';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
-import { NumberFilter } from '../filters/number-filter';
-import { StringFilter } from '../filters/string-filter';
-import { DateFilter } from '../filters/date-filter';
 import moment from 'moment';
 import FilterCollection from '../filters/filter-collection';
-import { GuidFilter } from '../filters/guid-filter';
-
+import { JSONComplexFilter, JSONFilter, toNGXFilter } from '../index';
 describe('JSON Filter To NGX Filters', () => {
     describe('1. Number Filters', () => {
         it('1. should support IsEqual operation ', () => {
-            const filter = new NumberFilter('first', 'IsEqual', [1]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                Operation: 'IsEqual',
+                Values: ['1'],
+                ApiName: 'first',
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -26,8 +27,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('2. should support IsNotEqual operation ', () => {
-            const filter = new NumberFilter('first', 'IsNotEqual', [1]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                ApiName: 'first',
+                Operation: 'IsNotEqual',
+                Values: ['1'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -42,8 +48,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('3. should support < operation ', () => {
-            const filter = new NumberFilter('first', '<', [1]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                ApiName: 'first',
+                Operation: '<',
+                Values: ['1'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -57,8 +68,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('4. should support > operation ', () => {
-            const filter = new NumberFilter('first', '>', [1]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                ApiName: 'first',
+                Operation: '>',
+                Values: ['1'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -72,8 +88,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('5. should support = operation ', () => {
-            const filter = new NumberFilter('first', '=', [1]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                ApiName: 'first',
+                Operation: '=',
+                Values: ['1'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -87,8 +108,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('6. should support != operation ', () => {
-            const filter = new NumberFilter('first', '!=', [1]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                ApiName: 'first',
+                Operation: '!=',
+                Values: ['1'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -102,8 +128,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('7. should support Between operation ', () => {
-            const filter = new NumberFilter('first', 'Between', [1, 2]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Integer',
+                ApiName: 'first',
+                Operation: 'Between',
+                Values: ['1', '2'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -119,8 +150,13 @@ describe('JSON Filter To NGX Filters', () => {
     });
     describe('2. String Filters', () => {
         it('1. should support IsEqual operation ', () => {
-            const filter = new StringFilter('first', 'IsEqual', ['a']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'String',
+                ApiName: 'first',
+                Operation: 'IsEqual',
+                Values: ['a'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -134,8 +170,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('2. should support IsNotEqual operation ', () => {
-            const filter = new StringFilter('first', 'IsNotEqual', ['a']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'String',
+                ApiName: 'first',
+                Operation: 'IsNotEqual',
+                Values: ['a'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -150,8 +191,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('3. should support contains operation ', () => {
-            const filter = new StringFilter('first', 'Contains', ['a']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'String',
+                ApiName: 'first',
+                Operation: 'Contains',
+                Values: ['a'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -165,8 +211,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('4. should support StartWith operation ', () => {
-            const filter = new StringFilter('first', 'StartWith', ['a']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'String',
+                ApiName: 'first',
+                Operation: 'StartWith',
+                Values: ['a'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -180,8 +231,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('5. should support EndsWith operation ', () => {
-            const filter = new StringFilter('first', 'EndWith', ['a']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'String',
+                ApiName: 'first',
+                Operation: 'EndWith',
+                Values: ['a'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult = {
                 fieldId: 'first',
                 operator: {
@@ -197,8 +253,13 @@ describe('JSON Filter To NGX Filters', () => {
     });
     describe('3. Date Filters', () => {
         it('1. InTheLast 2 days test ', () => {
-            const filter = new DateFilter('first', 'InTheLast', ['2', 'Days']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'InTheLast',
+                Values: ['2', 'Days'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -217,8 +278,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('2. InTheLast 1 month test ', () => {
-            const filter = new DateFilter('first', 'InTheLast', ['1', 'Months']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'InTheLast',
+                Values: ['1', 'Months'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -237,8 +303,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('3. InTheLast 3 years test ', () => {
-            const filter = new DateFilter('first', 'InTheLast', ['3', 'Years']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'InTheLast',
+                Values: ['3', 'Years'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -259,8 +330,13 @@ describe('JSON Filter To NGX Filters', () => {
         it('4. should support Between operation ', () => {
             const now = moment();
             const tomorrow = moment().add(1, 'days');
-            const filter = new DateFilter('first', 'Between', [now.toString(), tomorrow.toString()]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'Between',
+                Values: [now.toString(), tomorrow.toString()],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -275,8 +351,14 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('5. should support Today operation ', () => {
-            const filter = new DateFilter('first', 'Today', []);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'Today',
+                Values: [],
+            };
+            const ngxFilter = toNGXFilter(filter);
+
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -290,8 +372,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('6. should support ThisWeek operation ', () => {
-            const filter = new DateFilter('first', 'ThisWeek', []);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'ThisWeek',
+                Values: [],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -305,8 +392,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('7. should support ThisMonth operation ', () => {
-            const filter = new DateFilter('first', 'ThisMonth', []);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'ThisMonth',
+                Values: [],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -320,8 +412,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('8. should support IsEmpty operation ', () => {
-            const filter = new DateFilter('first', 'IsEmpty', []);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'IsEmpty',
+                Values: [],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -335,8 +432,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('9. should support IsNotEmpty operation ', () => {
-            const filter = new DateFilter('first', 'IsNotEmpty', []);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'IsNotEmpty',
+                Values: [],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -351,8 +453,13 @@ describe('JSON Filter To NGX Filters', () => {
         });
         it('10. should support On operation ', () => {
             const tomorrowString = moment().add(1, 'days').toString();
-            const filter = new DateFilter('first', 'On', [tomorrowString]);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'On',
+                Values: [tomorrowString],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -366,8 +473,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('11. DueIn 10 days test ', () => {
-            const filter = new DateFilter('first', 'DueIn', ['10', 'days']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'DueIn',
+                Values: ['10', 'days'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -386,8 +498,13 @@ describe('JSON Filter To NGX Filters', () => {
             return expect(ngxFilter).to.be.eql(expectedResult);
         });
         it('12. NotDueIn 10 days test ', () => {
-            const filter = new DateFilter('first', 'NotDueIn', ['10', 'days']);
-            const ngxFilter = filter.toNgxFilter();
+            const filter: JSONFilter = {
+                FieldType: 'Date',
+                ApiName: 'first',
+                Operation: 'NotDueIn',
+                Values: ['10', 'days'],
+            };
+            const ngxFilter = toNGXFilter(filter);
             const expectedResult: IPepSmartFilterData = {
                 fieldId: 'first',
                 operator: {
@@ -407,10 +524,24 @@ describe('JSON Filter To NGX Filters', () => {
         });
         describe('4. Nested AND Filters', () => {
             it('1. should support IsEqual and IsEqual operation ', () => {
-                const filter = new StringFilter('first', 'IsEqual', ['a']);
-                const secondFilter = new StringFilter('second', 'IsEqual', ['b']);
-                const andFilter = new FilterCollection(true, [filter, secondFilter]);
-                const ngxFilter = andFilter.toNgxFilter();
+                const firstFilter: JSONFilter = {
+                    FieldType: 'String',
+                    Operation: 'IsEqual',
+                    Values: ['a'],
+                    ApiName: 'first',
+                };
+                const secondFilter: JSONFilter = {
+                    FieldType: 'String',
+                    Operation: 'IsEqual',
+                    Values: ['b'],
+                    ApiName: 'second',
+                };
+                const andFilter: JSONComplexFilter = {
+                    Operation: 'AND',
+                    RightNode: secondFilter,
+                    LeftNode: firstFilter,
+                };
+                const ngxFilter = toNGXFilter(andFilter);
                 const expectedResult: IPepSmartFilterData[] = [
                     {
                         fieldId: 'first',
@@ -442,12 +573,35 @@ describe('JSON Filter To NGX Filters', () => {
                 return expect(ngxFilter).to.be.eql(expectedResult);
             });
             it('3. nested AND test  ', () => {
-                const filter = new StringFilter('first', 'IsEqual', ['a']);
-                const secondFilter = new StringFilter('second', 'IsEqual', ['b']);
-                const andFilter = new FilterCollection(true, [filter, secondFilter]);
-                const thirdFilter = new StringFilter('third', 'IsEqual', ['c']);
-                const nestedFilter = new FilterCollection(true, [andFilter, thirdFilter]);
-                const ngxFilter = nestedFilter.toNgxFilter();
+                const firstFilter: JSONFilter = {
+                    FieldType: 'String',
+                    Operation: 'IsEqual',
+                    Values: ['a'],
+                    ApiName: 'first',
+                };
+                const secondFilter: JSONFilter = {
+                    FieldType: 'String',
+                    Operation: 'IsEqual',
+                    Values: ['b'],
+                    ApiName: 'second',
+                };
+                const andFilter: JSONComplexFilter = {
+                    Operation: 'AND',
+                    RightNode: secondFilter,
+                    LeftNode: firstFilter,
+                };
+                const thirdFilter: JSONFilter = {
+                    ApiName: 'third',
+                    Operation: 'IsEqual',
+                    FieldType: 'String',
+                    Values: ['c'],
+                };
+                const nestedFilter: JSONComplexFilter = {
+                    Operation: 'AND',
+                    LeftNode: andFilter,
+                    RightNode: thirdFilter,
+                };
+                const ngxFilter = toNGXFilter(nestedFilter);
                 const expectedResult: IPepSmartFilterData[] = [
                     {
                         fieldId: 'first',
@@ -485,8 +639,13 @@ describe('JSON Filter To NGX Filters', () => {
         });
         describe('5. Guid Filters', () => {
             it('1. should support IsEqual operation ', () => {
-                const filter = new GuidFilter('first', 'IsEqual', 'a');
-                const ngxFilter = filter.toNgxFilter();
+                const filter: JSONFilter = {
+                    FieldType: 'Guid',
+                    ApiName: 'first',
+                    Operation: 'IsEqual',
+                    Values: ['a'],
+                };
+                const ngxFilter = toNGXFilter(filter);
                 const expectedResult: IPepSmartFilterData = {
                     fieldId: 'first',
                     operator: {
@@ -500,8 +659,13 @@ describe('JSON Filter To NGX Filters', () => {
                 return expect(ngxFilter).to.be.eql(expectedResult);
             });
             it('2. should support IsNotEqual operation ', () => {
-                const filter = new GuidFilter('first', 'IsNotEqual', 'a');
-                const ngxFilter = filter.toNgxFilter();
+                const filter: JSONFilter = {
+                    FieldType: 'Guid',
+                    ApiName: 'first',
+                    Operation: 'IsNotEqual',
+                    Values: ['a'],
+                };
+                const ngxFilter = toNGXFilter(filter);
                 const expectedResult: IPepSmartFilterData = {
                     fieldId: 'first',
                     operator: {

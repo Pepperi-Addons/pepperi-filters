@@ -65,7 +65,7 @@ export class NgxToJsonStringFilterBuilder {
         }
         return {
             ApiName: filter.fieldId,
-            Operation: operation!,
+            Operation: operation,
             FieldType: 'String',
             Values: Object.values(filter.value),
         };
@@ -84,7 +84,7 @@ export class NgxToJsonMultipleStringFilterBuilder {
         }
         return {
             ApiName: filter.fieldId,
-            Operation: operation!,
+            Operation: operation,
             FieldType: 'String',
             Values: Object.values(filter.value.first),
         };
@@ -100,7 +100,7 @@ export class NgxToJsonDateFilterBuilder {
                 operation = 'Between';
                 break;
             case 'inTheLast':
-                values.push(capitalizeFirstLetter(filter.operatorUnit!.id));
+                values.push(capitalizeFirstLetter(filter.operatorUnit?.id || ''));
                 operation = 'InTheLast';
                 break;
             case 'today':
@@ -114,18 +114,18 @@ export class NgxToJsonDateFilterBuilder {
                 break;
             case 'dueIn':
                 operation = 'DueIn';
-                values.push(capitalizeFirstLetter(filter.operatorUnit!.id));
+                values.push(capitalizeFirstLetter(filter.operatorUnit?.id || ''));
                 break;
             case 'on':
                 operation = 'On';
                 break;
             case 'notInTheLast':
                 operation = 'NotInTheLast';
-                values.push(capitalizeFirstLetter(filter.operatorUnit!.id));
+                values.push(capitalizeFirstLetter(filter.operatorUnit?.id || ''));
                 break;
             case 'notDueIn':
                 operation = 'NotDueIn';
-                values.push(capitalizeFirstLetter(filter.operatorUnit!.id));
+                values.push(capitalizeFirstLetter(filter.operatorUnit?.id || ''));
                 break;
             case 'isEmpty':
                 operation = 'IsEmpty';
