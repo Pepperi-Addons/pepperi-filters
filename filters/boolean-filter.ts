@@ -3,16 +3,9 @@ import { str2Bool } from '../converters';
 import esb, { Query } from 'elastic-builder';
 import { DynamoResultObject } from './DynamoObjectResult';
 import { IPepSmartFilterData } from '../ngx-filters/json-to-ngx/ngx-types';
-import { JSONBoolFilter } from '../json-filter';
 
 export class BooleanFilter extends Filter {
     toNgxFilter(): IPepSmartFilterData {
-        const filter: JSONBoolFilter = {
-            Values: this.filterValue ? ['true'] : ['false'],
-            ApiName: this.apiName,
-            FieldType: 'Bool',
-            Operation: 'IsEqual',
-        };
         return {
             operator: {
                 componentType: ['number', 'boolean', 'text'],

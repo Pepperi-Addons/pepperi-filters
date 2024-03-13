@@ -472,7 +472,6 @@ describe('NGX Filters To JSON Filters', () => {
         });
     });
     describe('3. NGX Array Filters To Complex JSON Filter', () => {
-        const type: SchemeFieldType = 'String';
         it(`json filter array with one element`, () => {
             const jsonFiltersArray: IPepSmartFilterData[] = [
                 {
