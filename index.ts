@@ -137,12 +137,12 @@ export function ngxFilterToJsonFilter(
 
 export function filter<T>(
     objects: T[],
-    jsonFilter: JSONFilter | undefined,
+    jsonFilter: JSONFilter | undefined | Record<string, never>,
     getValueFunc?: (object: any, apiName: string) => any,
 ): T[] {
-    if (jsonFilter) {
+    if (jsonFilter && Object.keys(jsonFilter).length > 0) {
         const filterFactory = new FilterFactory();
-        const filter = filterFactory.createFilter(jsonFilter);
+        const filter = filterFactory.createFilter(jsonFilter as JSONFilter);
         return Filter.filter(objects, filter, getValueFunc);
     }
     return objects;
